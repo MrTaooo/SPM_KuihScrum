@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 import os, sys
@@ -7,20 +8,22 @@ import requests
 from invokes import invoke_http
 
 # -------------- Import for Notification Service (START) --------------
-import amqp_setup
-import pika
+# import amqp_setup
+# import pika
 import json
 # --------------- Import for Notification Service (End) ---------------
 
 # -------------- Import for Job Listing /createlisting (START) --------------
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 # -------------- Import for Job Listing /createlisting (END) --------------
 app = Flask(__name__)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih'  # Replace with your MySQL credentials
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Model Class: Role
@@ -28,7 +31,7 @@ class Role(db.Model):
     __tablename__ = 'Role'
 
     Role_Name = db.Column(db.String(20), primary_key=True)
-    Role_Desc = db.Column(db.Longtext, nullable=False)
+    Role_Desc = db.Column(db.Text, nullable=False)
 
     def __init__(self, Role_Name, Role_Desc):
         self.Role_Name = Role_Name
@@ -63,7 +66,7 @@ class JobListing(db.Model):
         }
 
 
-#Get roles in company
+#Get all roles in company
 @app.route("/roles")
 def get_all_roles():
     rolelist = Role.query.all()
@@ -102,6 +105,7 @@ def get_all_joblistings():
             "message": "There are no job listings that are currently open."
         }
     ), 404
+
 
 
 
@@ -176,4 +180,3 @@ if __name__ == "__main__":
     #   -- i.e., it gives permissions to hosts with any IP to access the flask program,
     #   -- as long as the hosts can already reach the machine running the flask program along the network;
     #   -- it doesn't mean to use http://0.0.0.0 to access the flask program.
-
