@@ -4,7 +4,7 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-         <!-- Bootstrap CSS -->
+        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
@@ -21,68 +21,84 @@
             </div>
         </nav>
 
-        <div class="container mt-4">
-            <div class="row">
-                <!-- Left Sidebar - Filter Menu -->
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Filter By</h5>
-                            <form>
-                                <!-- Add additional filter options here -->
+        <div id="jobsPage">
+            <div class="container mt-4">
+                <div class="row">
+                    <!-- Left Sidebar - Filter Menu -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Filter By</h5>
+                                <form>
+                                    <!-- Add additional filter options here -->
 
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Job Listings -->
-                <div id="listing_list" class="col-md-9">
-                    <h2>Job Listings</h2>
-                    <!-- Add job listings here -->
-
-                    <!-- posting 1 -->
-                    <div id="joblist-1" class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <!-- Created dummy cards with dummy text, replace with text from db -->
-
-                                
-                                <div class="col-md-8"> <!--adjust as needed -->
-                                    <h5 class="card-title"> Sales Manager</h5>
-                                    <p class="card-text">Under the Sales roles in Misty Daydream, you will take charge of potential business clients. This job nature will require you to be an excellent communicator and pitch the services with added value that will bring in potential clients to the company. Building trust and credibility with potential clients will be at the heart of your responsibilities. You will be responsible for listening to their needs, addressing their concerns, and tailoring proposals that align with their business goals. Your ability to understand and empathize with our clients' challenges will be key in fostering strong, long-lasting relationships. Additionally, you will work closely with our product and service teams to stay updated on the latest offerings and innovations, ensuring that you can provide clients with the most relevant and up-to-date solutions. You will also collaborate with our marketing and support teams to ensure a seamless experience for our clients throughout their journey with us.
-                                </div>
-
-                                <div class="col-md-4 text-md-end"> <!--adjust as needed -->
-                                    <a href="#" class="btn btn-primary mt-2 mr-2">Apply Now</a> <!-- Replace # with your link -->
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- posting 2 -->
-                    <div id="joblist-2" class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <!-- Created dummy cards with dummy text, replace with text from db -->
+                    <!-- Job Listings -->
+                    <div id="listing_list" class="col-md-9">
+                        <h2>Job Listings</h2>
+                        
+                        <!-- Add job listings here -->
+                        <!-- Replace dummy card with these variables -->
+                        <div v-for="job in jobListings">
+                            {{job.JobList_ID}}
+                            {{job.Closing_date}}
+                            {{job.publish_Date}}
+                            {{job.Role_Name}}
+                        </div>
 
-                                
-                                <div class="col-md-8"> <!--adjust as needed -->
-                                    <h5 class="card-title"> Sales Manager</h5>
-                                    <p class="card-text">Under the Sales roles in Misty Daydream, you will take charge of potential business clients. This job nature will require you to be an excellent communicator and pitch the services with added value that will bring in potential clients to the company. Building trust and credibility with potential clients will be at the heart of your responsibilities. You will be responsible for listening to their needs, addressing their concerns, and tailoring proposals that align with their business goals. Your ability to understand and empathize with our clients' challenges will be key in fostering strong, long-lasting relationships. Additionally, you will work closely with our product and service teams to stay updated on the latest offerings and innovations, ensuring that you can provide clients with the most relevant and up-to-date solutions. You will also collaborate with our marketing and support teams to ensure a seamless experience for our clients throughout their journey with us.
-                                </div>
+                        <!-- posting 1 -->
+                        <div id="joblist-1" class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Created dummy cards with dummy text, replace with text from db -->
 
-                                <div class="col-md-4 text-md-end"> <!-- adjust as needed -->
-                                    <a href="#" class="btn btn-primary mt-2 mr-2">Apply Now</a> <!-- Replace # with your link -->
+                                    <div class="col-md-8"> <!--adjust as needed -->
+                                        <h5 class="card-title"> Sales Manager</h5>
+                                        <p class="card-text">Under the Sales roles in Misty Daydream, you will take charge of potential business clients. This job nature will require you to be an excellent communicator and pitch the services with added value that will bring in potential clients to the company. Building trust and credibility with potential clients will be at the heart of your responsibilities. You will be responsible for listening to their needs, addressing their concerns, and tailoring proposals that align with their business goals. Your ability to understand and empathize with our clients' challenges will be key in fostering strong, long-lasting relationships. Additionally, you will work closely with our product and service teams to stay updated on the latest offerings and innovations, ensuring that you can provide clients with the most relevant and up-to-date solutions. You will also collaborate with our marketing and support teams to ensure a seamless experience for our clients throughout their journey with us.
+                                    </div>
+
+                                    <div class="col-md-4 text-md-end"> <!--adjust as needed -->
+                                        <a href="#" class="btn btn-primary mt-2 mr-2">Apply Now</a> <!-- Replace # with your link -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- posting 2 -->
+                        <div id="joblist-2" class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Created dummy cards with dummy text, replace with text from db -->
+
+                                    
+                                    <div class="col-md-8"> <!--adjust as needed -->
+                                        <h5 class="card-title"> Sales Manager</h5>
+                                        <p class="card-text">Under the Sales roles in Misty Daydream, you will take charge of potential business clients. This job nature will require you to be an excellent communicator and pitch the services with added value that will bring in potential clients to the company. Building trust and credibility with potential clients will be at the heart of your responsibilities. You will be responsible for listening to their needs, addressing their concerns, and tailoring proposals that align with their business goals. Your ability to understand and empathize with our clients' challenges will be key in fostering strong, long-lasting relationships. Additionally, you will work closely with our product and service teams to stay updated on the latest offerings and innovations, ensuring that you can provide clients with the most relevant and up-to-date solutions. You will also collaborate with our marketing and support teams to ensure a seamless experience for our clients throughout their journey with us.
+                                    </div>
+
+                                    <div class="col-md-4 text-md-end"> <!-- adjust as needed -->
+                                        <a href="#" class="btn btn-primary mt-2 mr-2">Apply Now</a> <!-- Replace # with your link -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
                     </div>
-                    
-                    
                 </div>
             </div>
         </div>
 
+    </div>
+        <!-- Axios -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>  
+        <!-- Vue.js 3 CDN -->
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <!-- External js file -->
+        <script src="js/joblisting.js"></script>
     </body>
     
 </html>

@@ -1,26 +1,24 @@
-const form = document.querySelector("form");
-const roletitle = document.getElementById("roletitle").value;
-const closingdate = document.getElementById("closingdate").value;
+// const form = document.querySelector("form");
+// const roletitle = document.getElementById("roletitle").value;
+// const closingdate = document.getElementById("closingdate").value;
 
 
-form.addEventListener("submit", function (event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+// form.addEventListener("submit", function (event) {
+//   event.preventDefault(); // Prevent the default form submission behavior
   
-  // Send the data to the Flask backend using Axios
-  axios.post('https://127.0.0.1:5000/createlisting',  {,
-    "roletitle":  roletitle,
-    "closingdate" : closingdate, 
-    })
-    .then((response) => {
-      console.log("Data sent successfully:", response.data);
-    })
-    .catch((error) => {
-      console.error("Error sending data:", error);
+//   // Send the data to the Flask backend using Axios
+//   axios.post('https://127.0.0.1:5000/createlisting',  {
+//     "roletitle":  roletitle,
+//     "closingdate" : closingdate, 
+//     })
+//     .then((response) => {
+//       console.log("Data sent successfully:", response.data);
+//     })
+//     .catch((error) => {
+//       console.error("Error sending data:", error);
 
-    }); 
-});
-
-
+//     }); 
+// });
 
 
 const get_roles_URL = "http://localhost:5100/roles";
@@ -43,8 +41,9 @@ const jobsPage = Vue.createApp({
           .get(get_joblistings_URL)
           .then((response) => {
               console.log("job listings loaded");
-              console.log(response.data[0]);
-              this.jobListings = response.data["data"]["joblistings"];
+              console.log(response);
+              this.jobListings = response.data.data.joblistings;
+              console.log(this.jobListings);
 
           })
           .catch((error) => {
@@ -70,7 +69,7 @@ const jobsPage = Vue.createApp({
 
               });
 
-  },
+    },
 
   },
 });
