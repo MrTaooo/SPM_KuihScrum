@@ -14,12 +14,15 @@ import json
 
 # -------------- Import for Job Listing /createlisting (START) --------------
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 # -------------- Import for Job Listing /createlisting (END) --------------
-
-
-
 app = Flask(__name__)
 CORS(app)
+
+# -------------- Connection to mySQL DB --------------
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih'  # Replace with your MySQL credentials
+db = SQLAlchemy(app)
+
 
 @app.route("/apply_role", methods=['POST'])
 def apply_role():
@@ -65,13 +68,20 @@ def createlisting():
     date = datetime.now()
     if (closingdate < date): 
         return "Error, closing date cannot be the day before "
-    # elif (roletitle in (db) and closing date in (db)): 
-    #     return "Error, cannot have duplicate listings"
- 
-    # Return a response, for example, a confirmation message
-    else: 
-        return jsonify({"message": "Data received and processed successfully"})
+    # Check for duplicate job listings using a raw SQL query
+    query = "SELECT * FROM job_listings WHERE roletitle = %s AND closingdate = %s"
+    result = db.engine.execute(query, (roletitle, closingdate)).fetchone()
 
+    if result:
+        return "Error, cannot have duplicate listings"
+
+      # If no duplicate listing is found, insert the new job listing
+    insert_query = "INSERT INTO job_listings (roletitle, publish_date, closingdate) VALUES (%s, %s, %s)"
+    db.engine.execute(insert_query, (roletitle, date, closingdate))
+
+    # Return a response, for example, a confirmation message
+    return jsonify({"message": "Data received and processed successfully"})
+   
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
