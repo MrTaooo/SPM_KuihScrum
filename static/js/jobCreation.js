@@ -1,6 +1,18 @@
 const form = document.querySelector("form");
 const jobCreationButton = document.getElementById("jobCreationButton");
 
+// --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
+var today = new Date();
+var tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+var dd = String(tomorrow.getDate()).padStart(2, "0");
+var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
+var yyyy = tomorrow.getFullYear();
+
+tomorrow = yyyy + "-" + mm + "-" + dd;
+document.getElementById("closingDate").setAttribute("min", tomorrow);
+// --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
+
 jobCreationButton.addEventListener("click", function (event) {
   event.preventDefault(); // Prevent the default form submission behavior
 
@@ -27,6 +39,8 @@ jobCreationButton.addEventListener("click", function (event) {
           document.getElementById("successModal")
         );
         successModal.show();
+
+        // do we need the 2 lines below? what is the purpose?
         var errorMessageNode = document.getElementById("errorMessage");
         errorMessageNode.innerHTML = "";
       }
@@ -36,14 +50,3 @@ jobCreationButton.addEventListener("click", function (event) {
     });
 });
 
-// --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
-var today = new Date();
-var tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
-var dd = String(tomorrow.getDate()).padStart(2, "0");
-var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
-var yyyy = tomorrow.getFullYear();
-
-tomorrow = yyyy + "-" + mm + "-" + dd;
-document.getElementById("closingDate").setAttribute("min", tomorrow);
-// --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------

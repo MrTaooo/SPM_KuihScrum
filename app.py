@@ -25,8 +25,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Model Class: Role
-
-
 class Role(db.Model):
     __tablename__ = 'Role'
 
@@ -43,9 +41,8 @@ class Role(db.Model):
             "Role_Desc": self.Role_Desc
         }
 
+
 # Model Class: Job_Listing
-
-
 class JobListing(db.Model):
     __tablename__ = 'Job_Listing'
 
@@ -69,32 +66,7 @@ class JobListing(db.Model):
         }
 
 
-@app.route("/")
-def index():
-    if not session.get("user_name"):
-        return redirect("/login")
-    return render_template('index.html')
-
-
-@app.route('/login', methods=['GET','POST'])
-def login():
-    if request.method == 'POST':
-        # retrieve form data
-        user_type = request.form.get('user_type')
-        session['user_type'] = user_type
-        return render_template('index.html')
-    return render_template('login.html')
-
-
-@app.route('/logout')
-def logout():
-    # Remove the username from the session
-    session["user_type"] = None
-    return 'Logout successful'
-
 # Get all roles in company
-
-
 @app.route("/roles")
 def get_all_roles():
     rolelist = Role.query.all()
@@ -116,7 +88,6 @@ def get_all_roles():
 
 
 # Get all Role Descriptions 
-
 @app.route("/rolesDescription")
 def get_roles_description(): 
     roles = Role.query.all()
@@ -131,8 +102,6 @@ def get_roles_description():
 
 
 # Get all Job Listings
-
-
 @app.route("/joblistings")
 def get_all_joblistings():
     joblistings = JobListing.query.all()
