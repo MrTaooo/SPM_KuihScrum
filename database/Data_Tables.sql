@@ -44,7 +44,7 @@ CREATE TABLE Job_Listing (
     FOREIGN KEY (Role_Name) REFERENCES Role(Role_Name)
 );
 
-CREATE TABLE job_application (
+CREATE TABLE Job_Application (
     JobList_ID INT NOT NULL,
     Staff_ID INT NOT NULL,
     PRIMARY KEY (JobList_ID, staff_id),

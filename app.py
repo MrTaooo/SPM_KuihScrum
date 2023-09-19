@@ -144,9 +144,6 @@ def createListing():
     roleTitle = data["roleTitle"]
     closingDate = data["closingDate"]
     date = datetime.now()
-    print("FUCK")
-    print(date)
-    print("FUCK")
     print(closingDate)
     if (closingDate < str(date)):
         return jsonify({
