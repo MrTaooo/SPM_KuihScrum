@@ -43,7 +43,20 @@ const jobsPage = Vue.createApp({
               console.log("job listings loaded");
               console.log(response);
               this.jobListings = response.data.data.joblistings;
-              console.log(this.jobListings);
+              var current = new Date();
+              const year = current.getFullYear();
+              const month = (current.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero if needed
+              const day = current.getDate().toString().padStart(2, '0'); // Add leading zero if needed
+              const date = `${year}-${month}-${day}`;
+              console.log(date)
+              for (let i = this.jobListings.length - 1; i >= 0; i--) {
+                const listing = this.jobListings[i];
+                console.log(listing.Closing_date)
+                if (listing.Closing_date < date) {
+                    this.jobListings.splice(i, 1); // Remove the item at index i
+                }
+            }
+            console.log(this.jobListings);
 
           })
           .catch((error) => {
