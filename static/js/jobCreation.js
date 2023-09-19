@@ -27,6 +27,8 @@ jobCreationButton.addEventListener("click", function (event) {
           document.getElementById("successModal")
         );
         successModal.show();
+        var errorMessageNode = document.getElementById("errorMessage");
+        errorMessageNode.innerHTML = "";
       }
     })
     .catch((error) => {
