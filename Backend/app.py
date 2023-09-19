@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -56,6 +56,21 @@ class JobListing(db.Model):
             "Closing_date": self.Closing_date.strftime('%Y-%m-%d')
         }
 
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        # retrieve form data
+        user_type = request.form.get('user_type')
+        session['user_type'] = user_type
+        return redirect('../Frontend/index.html')
+    return render_template('../Frontend/login.html', user_type=user_type)
+
+
+@app.route('/logout')
+def logout():
+    # Remove the username from the session
+    session.pop('username', None)
+    return 'Logout successful'
 
 #Get all roles in company
 @app.route("/roles")
@@ -96,6 +111,44 @@ def get_all_joblistings():
             "message": "There are no job listings that are currently open."
         }
     ), 404
+
+
+
+
+
+@app.route("/apply_role", methods=['POST'])
+def apply_role():
+    # Simple check of input format and data of the request are JSON
+    if request.is_json:
+        try:
+            applicantDetails = request.get_json()
+            print("\nReceived an applicationDetails in JSON:", applicantDetails)
+
+            # do the actual work
+            # 1. Send applicationDetails
+            result = processApplication(applicantDetails)
+            print('\n------------------------')
+            print('\nresult: ', result)
+            return jsonify(result), result["code"]
+
+        except Exception as e:
+            # Unexpected error in code
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            print(ex_str)
+
+            return jsonify({
+                "code": 500,
+                "message": "app.py internal error: " + ex_str
+            }), 500
+
+    # if reached here, not a JSON request.
+    return jsonify({
+        "code": 400,
+        "message": "Invalid JSON input: " + str(request.get_data())
+    }), 400
+
 
 
 # Process job listing creation 
