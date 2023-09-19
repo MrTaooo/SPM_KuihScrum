@@ -23,7 +23,10 @@ jobCreationButton.addEventListener("click", function (event) {
         var errorMessageNode = document.getElementById("errorMessage");
         errorMessageNode.innerHTML = errorMessage;
       } else {
-        alert("Job listing created successfully!");
+        var successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
       }
     })
     .catch((error) => {
