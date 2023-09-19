@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_session import Session
 
 import os, sys
 
@@ -8,6 +9,10 @@ import os, sys
 from datetime import datetime
 # -------------- Import for Job Listing /createlisting (END) --------------
 app = Flask(__name__)
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_TYPE'] = 'filesystem'
+app.secret_key = 'super secret key'
+Session(app)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
@@ -56,20 +61,27 @@ class JobListing(db.Model):
             "Closing_date": self.Closing_date.strftime('%Y-%m-%d')
         }
 
+@app.route("/")
+def index():
+    if not session.get("user_name"):
+        return redirect("/login")
+    return render_template('../Frontend/index.html')
+
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
         # retrieve form data
         user_type = request.form.get('user_type')
         session['user_type'] = user_type
-        return redirect('../Frontend/index.html')
-    return render_template('../Frontend/login.html', user_type=user_type)
+        return render_template('../Frontend/index.html')
+    return render_template('../Frontend/login.html')
 
 
 @app.route('/logout')
 def logout():
     # Remove the username from the session
-    session.pop('username', None)
+    session["user_type"] = None
     return 'Logout successful'
 
 #Get all roles in company
