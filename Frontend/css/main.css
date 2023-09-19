@@ -5,3 +5,7 @@
 .profile-icon{
     color: rgb(255, 255, 255);
 }
+
+.input-group-append {
+    cursor: pointer;
+  }

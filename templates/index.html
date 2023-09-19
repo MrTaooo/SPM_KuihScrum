@@ -4,12 +4,19 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
+
+         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-        <link rel="stylesheet" href="css/main.css">
+        
+        <!-- Library for the datepicker in the create job listings and dropdown in create job listings-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="../Frontend/css/main.css">
 
+        <!-- Popper library for dropdown and dropdown -->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     </head> 
 
     <body>
@@ -38,8 +45,77 @@
                     </div>
                     <!-- Job Listings -->
                     <div id="listing_list" class="col-md-9">
-                        <h2>Job Listings</h2>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h2>Job Listings</h2>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <button type="button" class="btn nav-color text-white" data-bs-toggle="modal" data-bs-target="#createJob">
+                                    Create a Job Listing
+                                </button>
+                            </div>
+                        </div>
                         
+                        <!-- Modal form to create job listing -->
+                    <div class="modal fade modal-lg" id="createJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Create a new job listing</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <!-- Role -->
+                                                    <div class="form-group row">
+                                                        <label for="role" class="col-4 col-form-label text-end">Role:</label>
+                                                        <div class="col-8">
+                                                            <!-- Role dropdown box -->
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span id="selectedRole">Role</span> <!-- This span will display the selected role -->
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item" href="#" data-role="Staff">Staff</a></li>
+                                                                    <li><a class="dropdown-item" href="#" data-role="Manager">Manager</a></li>
+                                                                    <li><a class="dropdown-item" href="#" data-role="Something else here">Something else here</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- Closing Date -->
+                                                    <div class="form-group row form-inline">
+                                                        <label for="date" class="col-4 col-form-label text-end">Closing Date:</label>
+                                                        <div class="col-8">
+                                                            <div class="input-group date" id="datepicker">
+                                                                <input type="text" class="form-control" id="date"/>
+                                                                <span class="input-group-append">
+                                                                    <span class="input-group-text bg-light">
+                                                                        <i class="bi bi-calendar-date"></i>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Submit</button>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                         <!-- Add job listings here -->
                         <!-- Replace dummy card with these variables -->
                         <div v-for="job in jobListings">
@@ -92,7 +168,22 @@
             </div>
         </div>
 
-    </div>
+    </div> 
+        <!-- jQuery code to update the selected role dynamically -->
+        <script>
+            $(document).ready(function() {
+                $('.dropdown-item').click(function() {
+                    var selectedRole = $(this).data('role');
+                    $('#selectedRole').text(selectedRole);
+                });
+            });
+        </script>
+        <!-- Datepicker function -->
+        <script>
+            $(function(){
+            $('#datepicker').datepicker();  
+            });
+        </script>
         <!-- Axios -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>  
         <!-- Vue.js 3 CDN -->
