@@ -161,15 +161,17 @@ def createlisting():
     if (closingdate < str(date)): 
         return "Error, closing date cannot be the day before "
     # Check for duplicate job listings using a raw SQL query
-    query = "SELECT * FROM job_listing WHERE Role_Name = %s AND Closing_date = %s"
-    result = db.engine.execute(query, (roletitle, closingdate)).fetchone()
+    #query = "SELECT * FROM job_listing WHERE Role_Name = %s AND Closing_date = %s"
+    result = JobListing.query.filter_by(Role_Name=roletitle, Closing_date=closingdate).first()
+
 
     if result:
         return "Error, cannot have duplicate listings"
 
-      # If no duplicate listing is found, insert the new job listing
-    insert_query = "INSERT INTO job_listing (Role_Name, publish_date, Closing_date) VALUES (%s, %s, %s)"
-    db.engine.execute(insert_query, (roletitle, date, closingdate))
+    # If no duplicate listing found, save the new listing to the database
+    new_listing = JobListing(Role_Name=roletitle, publish_Date=date, Closing_date=closingdate)
+    db.session.add(new_listing)
+    db.session.commit()
 
     # Return a response, for example, a confirmation message
     return jsonify({"message": "Data received and processed successfully"})
