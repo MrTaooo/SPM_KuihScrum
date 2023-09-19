@@ -1,4 +1,5 @@
 const get_roles_URL = "http://localhost:5100/roles";
+const get_roles_description_URL = "http://localhost:5100/rolesDescription";
 const get_joblistings_URL = "http://localhost:5100/joblistings";
 
 // Vue
@@ -8,6 +9,7 @@ const jobsPage = Vue.createApp({
           jobListings: [],
           roles: [],
           accessRight: 0,
+          roleDescriptions: {}
       };
   },
 
@@ -34,6 +36,7 @@ const jobsPage = Vue.createApp({
                 }
             }
             console.log(this.jobListings);
+            
 
           })
           .catch((error) => {
@@ -60,6 +63,18 @@ const jobsPage = Vue.createApp({
               });
 
     },
+
+    getRolesDescription() {
+        axios
+          .get(get_roles_description_URL)
+          .then((response) => {
+            this.rolesDescriptions = response.data;
+            console.log(this.roleDescriptions)
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    }
 
   },
 });

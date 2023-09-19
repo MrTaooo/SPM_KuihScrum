@@ -18,8 +18,8 @@ CORS(app)
 
 # -------------- Connection to mySQL DB --------------
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -113,6 +113,22 @@ def get_all_roles():
             "message": "There are no roles available."
         }
     ), 404
+
+
+# Get all Role Descriptions 
+
+@app.route("/rolesDescription")
+def get_roles_description(): 
+    roles = Role.query.all()
+
+    # Convert the role objects into a dictionary format
+    role_listings = [role.json() for role in roles]
+
+    # Create a dictionary with Role_Name as keys
+    role_dict = {role["Role_Name"]: role["Role_Desc"] for role in role_listings}
+
+    return role_dict
+
 
 # Get all Job Listings
 
