@@ -12,7 +12,7 @@ CORS(app)
 
 # -------------- Connection to mySQL DB --------------
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -158,17 +158,17 @@ def createlisting():
     roletitle = data["roletitle"] 
     closingdate = data["closingdate"]
     date = datetime.now()
-    if (closingdate < date): 
+    if (closingdate < str(date)): 
         return "Error, closing date cannot be the day before "
     # Check for duplicate job listings using a raw SQL query
-    query = "SELECT * FROM job_listings WHERE roletitle = %s AND closingdate = %s"
+    query = "SELECT * FROM job_listing WHERE Role_Name = %s AND Closing_date = %s"
     result = db.engine.execute(query, (roletitle, closingdate)).fetchone()
 
     if result:
         return "Error, cannot have duplicate listings"
 
       # If no duplicate listing is found, insert the new job listing
-    insert_query = "INSERT INTO job_listings (roletitle, publish_date, closingdate) VALUES (%s, %s, %s)"
+    insert_query = "INSERT INTO job_listing (Role_Name, publish_date, Closing_date) VALUES (%s, %s, %s)"
     db.engine.execute(insert_query, (roletitle, date, closingdate))
 
     # Return a response, for example, a confirmation message
