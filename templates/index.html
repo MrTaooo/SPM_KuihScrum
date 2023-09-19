@@ -77,10 +77,11 @@
                                                                 <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                     <span id="selectedRole">Role</span> <!-- This span will display the selected role -->
                                                                 </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li><a class="dropdown-item" href="#" data-role="Staff">Staff</a></li>
-                                                                    <li><a class="dropdown-item" href="#" data-role="Manager">Manager</a></li>
-                                                                    <li><a class="dropdown-item" href="#" data-role="Something else here">Something else here</a></li>
+                                                                <ul class="dropdown-menu" id="roleTitle">
+                                                                    <li><a class="dropdown-item" href="#" data-role="Software Developer">Software Developer</a></li>
+                                                                    <li><a class="dropdown-item" href="#" data-role="Data Analyst">Data Analyst</a></li>
+                                                                    <li><a class="dropdown-item" href="#" data-role="Marketing Specialist">Marketing Specialist</a></li>
+                                                                    <li><a class="dropdown-item" href="#" data-role="Sales Representative">Sales Representative</a></li>
                                                                 </ul>
                                                             </div>
                                                             
@@ -91,15 +92,8 @@
                                                     <!-- Closing Date -->
                                                     <div class="form-group row form-inline">
                                                         <label for="date" class="col-4 col-form-label text-end">Closing Date:</label>
-                                                        <div class="col-8">
-                                                            <div class="input-group date" id="datepicker">
-                                                                <input type="text" class="form-control" id="date"/>
-                                                                <span class="input-group-append">
-                                                                    <span class="input-group-text bg-light">
-                                                                        <i class="bi bi-calendar-date"></i>
-                                                                    </span>
-                                                                </span>
-                                                            </div>
+                                                        <div class="col-8 mt-2">
+                                                                <input type="date" name="closingDate" id="closingDate">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,7 +103,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Submit</button>  
+                                    <button type="submit" id="jobCreationButton" class="btn btn-primary">Save</button> 
                                 </div>
                             </div>
                         </div>
