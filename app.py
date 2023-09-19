@@ -126,43 +126,6 @@ def get_all_joblistings():
 
 
 
-
-
-@app.route("/apply_role", methods=['POST'])
-def apply_role():
-    # Simple check of input format and data of the request are JSON
-    if request.is_json:
-        try:
-            applicantDetails = request.get_json()
-            print("\nReceived an applicationDetails in JSON:", applicantDetails)
-
-            # do the actual work
-            # 1. Send applicationDetails
-            result = processApplication(applicantDetails)
-            print('\n------------------------')
-            print('\nresult: ', result)
-            return jsonify(result), result["code"]
-
-        except Exception as e:
-            # Unexpected error in code
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
-            print(ex_str)
-
-            return jsonify({
-                "code": 500,
-                "message": "app.py internal error: " + ex_str
-            }), 500
-
-    # if reached here, not a JSON request.
-    return jsonify({
-        "code": 400,
-        "message": "Invalid JSON input: " + str(request.get_data())
-    }), 400
-
-
-
 # Process job listing creation 
 @app.route('/createlisting', methods=['POST'])
 def createlisting():
