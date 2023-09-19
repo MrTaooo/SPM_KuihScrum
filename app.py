@@ -65,7 +65,7 @@ class JobListing(db.Model):
 def index():
     if not session.get("user_name"):
         return redirect("/login")
-    return render_template('../Frontend/index.html')
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['POST'])
@@ -74,8 +74,8 @@ def login():
         # retrieve form data
         user_type = request.form.get('user_type')
         session['user_type'] = user_type
-        return render_template('../Frontend/index.html')
-    return render_template('../Frontend/login.html')
+        return render_template('index.html')
+    return render_template('login.html')
 
 
 @app.route('/logout')
