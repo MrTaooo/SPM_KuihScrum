@@ -6,7 +6,6 @@ import os, sys
 
 # -------------- Import for Job Listing /createlisting (START) --------------
 from datetime import datetime
-# from flask_sqlalchemy import SQLAlchemy
 # -------------- Import for Job Listing /createlisting (END) --------------
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +14,7 @@ CORS(app)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # Model Class: Role
@@ -133,3 +133,4 @@ if __name__ == "__main__":
     #   -- i.e., it gives permissions to hosts with any IP to access the flask program,
     #   -- as long as the hosts can already reach the machine running the flask program along the network;
     #   -- it doesn't mean to use http://0.0.0.0 to access the flask program.
+
