@@ -1,28 +1,32 @@
 from flask import Flask, request, jsonify, session, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_session import Session
+# from flask_session import Session
 
-import os, sys
+import os
+import sys
 
-# -------------- Import for Job Listing /createlisting (START) --------------
+# -------------- Import for Job Listing /createListing (START) --------------
 from datetime import datetime
-# -------------- Import for Job Listing /createlisting (END) --------------
+# -------------- Import for Job Listing /createListing (END) --------------
 app = Flask(__name__)
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'super secret key'
-Session(app)
+# Session(app)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
 # Model Class: Role
+
+
 class Role(db.Model):
     __tablename__ = 'Role'
 
@@ -35,16 +39,19 @@ class Role(db.Model):
 
     def json(self):
         return {
-                "Role_Name": self.Role_Name, 
-                "Role_Desc": self.Role_Desc
+            "Role_Name": self.Role_Name,
+            "Role_Desc": self.Role_Desc
         }
-    
+
 # Model Class: Job_Listing
+
+
 class JobListing(db.Model):
     __tablename__ = 'Job_Listing'
 
     JobList_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Role_Name = db.Column(db.String(50), db.ForeignKey('Role.Role_Name'), nullable=False)
+    Role_Name = db.Column(db.String(50), db.ForeignKey(
+        'Role.Role_Name'), nullable=False)
     publish_Date = db.Column(db.Date, nullable=False)
     Closing_date = db.Column(db.Date, nullable=False)
 
@@ -60,6 +67,7 @@ class JobListing(db.Model):
             "publish_Date": self.publish_Date.strftime('%Y-%m-%d'),
             "Closing_date": self.Closing_date.strftime('%Y-%m-%d')
         }
+
 
 @app.route("/")
 def index():
@@ -84,7 +92,9 @@ def logout():
     session["user_type"] = None
     return 'Logout successful'
 
-#Get all roles in company
+# Get all roles in company
+
+
 @app.route("/roles")
 def get_all_roles():
     rolelist = Role.query.all()
@@ -104,7 +114,9 @@ def get_all_roles():
         }
     ), 404
 
-#Get all Job Listings
+# Get all Job Listings
+
+
 @app.route("/joblistings")
 def get_all_joblistings():
     joblistings = JobListing.query.all()
@@ -125,42 +137,55 @@ def get_all_joblistings():
     ), 404
 
 
-
-# Process job listing creation 
-@app.route('/createlisting', methods=['POST'])
-def createlisting():
+# Process job listing creation
+@app.route('/createListing', methods=['POST'])
+def createListing():
     data = request.get_json()
-    roletitle = data["roletitle"] 
-    closingdate = data["closingdate"]
+    roleTitle = data["roleTitle"]
+    closingDate = data["closingDate"]
     date = datetime.now()
-    if (closingdate < str(date)): 
-        return "Error, closing date cannot be the day before "
+    print("FUCK")
+    print(date)
+    print("FUCK")
+    print(closingDate)
+    if (closingDate < str(date)):
+        return jsonify({
+            "code": 400,
+            "message": "Error, closing date cannot be the day before"
+        })
     # Check for duplicate job listings using a raw SQL query
     #query = "SELECT * FROM job_listing WHERE Role_Name = %s AND Closing_date = %s"
-    result = JobListing.query.filter_by(Role_Name=roletitle, Closing_date=closingdate).first()
-
+    result = JobListing.query.filter_by(
+        Role_Name=roleTitle, Closing_date=closingDate).first()
 
     if result:
-        return "Error, cannot have duplicate listings"
+        return jsonify({
+            "code": 409,
+            "message": "Error, cannot have duplicate listings"
+        })
 
     # If no duplicate listing found, save the new listing to the database
-    new_listing = JobListing(Role_Name=roletitle, publish_Date=date, Closing_date=closingdate)
+    new_listing = JobListing(
+        Role_Name=roleTitle, publish_Date=date, Closing_date=closingDate)
     db.session.add(new_listing)
     db.session.commit()
 
     # Return a response, for example, a confirmation message
-    return jsonify({"message": "Data received and processed successfully"})
-   
+    return jsonify({
+        "code": 201,
+        "message": "Data received and processed successfully"
+    })
+
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + " for All-in-one Skill-based Role Portal (SBRP)")
+    print("This is flask " + os.path.basename(__file__) +
+          " for All-in-one Skill-based Role Portal (SBRP)")
     app.run(host="0.0.0.0", port=5100, debug=True)
-    # Notes for the parameters: 
+    # Notes for the parameters:
     # - debug=True will reload the program automatically if a change is detected;
     #   -- it in fact starts two instances of the same flask program, and uses one of the instances to monitor the program changes;
     # - host="0.0.0.0" allows the flask program to accept requests sent from any IP/host (in addition to localhost),
     #   -- i.e., it gives permissions to hosts with any IP to access the flask program,
     #   -- as long as the hosts can already reach the machine running the flask program along the network;
     #   -- it doesn't mean to use http://0.0.0.0 to access the flask program.
-
