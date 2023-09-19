@@ -74,15 +74,12 @@
                                                         <div class="col-8">
                                                             <!-- Role dropdown box -->
                                                             <div class="btn-group">
-                                                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    <span id="selectedRole">Role</span> <!-- This span will display the selected role -->
-                                                                </button>
-                                                                <ul class="dropdown-menu" id="roleTitle">
-                                                                    <li><a class="dropdown-item" href="#" data-role="Software Developer">Software Developer</a></li>
-                                                                    <li><a class="dropdown-item" href="#" data-role="Data Analyst">Data Analyst</a></li>
-                                                                    <li><a class="dropdown-item" href="#" data-role="Marketing Specialist">Marketing Specialist</a></li>
-                                                                    <li><a class="dropdown-item" href="#" data-role="Sales Representative">Sales Representative</a></li>
-                                                                </ul>
+                                                                <select class="form-control" id="roleTitle">
+                                                                    <option>Software Developer</option>
+                                                                    <option>Data Analyst</option>
+                                                                    <option>Marketing Specialist</option>
+                                                                    <option>Sales Representative</option>
+                                                                  </select>
                                                             </div>
                                                             
                                                         </div>
@@ -100,6 +97,7 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <p style="margin-top: 1%; margin-left:11%; color: red; font-weight: bold;" id="errorMessage"></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -108,7 +106,23 @@
                             </div>
                         </div>
                     </div>
-
+                    <!-- Modal -->
+                    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">Success</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            Job listing created successfully!
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
 
                         <!-- Add job listings here -->
                         <!-- Replace dummy card with these variables -->
@@ -184,6 +198,7 @@
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
         <!-- External js file -->
         <script src="../static/js/index.js"></script>
+        <script src="../static/js/jobCreation.js"></script>
     </body>
     
 </html>
