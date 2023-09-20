@@ -25,8 +25,14 @@ const jobsPage = Vue.createApp({
     // this function is to get the user type, by default it will be 0, which is a normal user
     // 1 will be HR
     updateUserType() {
-      // Store the selected user-type in localStorage
-      this.accessRight = this.userType;
+      if(this.accessRight == 0)
+      {
+        this.accessRight = 1;
+      }
+      else
+      {
+        this.accessRight = 0;
+      }
     },
 
     // I created this method so that i can recall this after creating a new job listing

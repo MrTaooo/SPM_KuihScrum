@@ -37,11 +37,11 @@
                 <div class="col-md-3">
 
                     <!--Select user type here for current sprint-->
-                    <input type="radio" id="hr" name="user_type" value="1" v-model="userType" @change="updateUserType">
+                    <input type="radio" id="hr" name="user_type" value=1 v-model="userType" @change="updateUserType">
                     &nbsp;
                     <label for="hr"> HR </label>
                     &nbsp;&nbsp;
-                    <input type="radio" id="staff" name="user_type" value="0" v-model="userType" @change="updateUserType">
+                    <input type="radio" id="staff" name="user_type" value=0 v-model="userType" @change="updateUserType">
                     &nbsp;
                     <label for="staff"> Staff </label>
                     <!----------------------------END OF USER-TYPE SELECTION CODES---------------------------------->
@@ -63,7 +63,7 @@
                             <h2>Job Listings</h2>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <button v-if="accessRight === 1" type="button" class="btn nav-color text-white" data-bs-toggle="modal"
+                            <button v-if="accessRight === 1" type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#createJob">
                                 Create a Job Listing
                             </button>
@@ -168,7 +168,7 @@
                                         <!-- Replace # with your link -->
                                     </div>
                                     <div class="col-md text-md-end m-auto p-auto">
-                                        <button v-if="accessRight === 1" >Edit</button>
+                                        <button v-if="accessRight === 1" class="btn btn-link" >Edit</button>
                                     </div>
                                 </div>
                             </div>
