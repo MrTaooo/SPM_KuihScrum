@@ -149,28 +149,29 @@
                             <div class="card-body">
                                 <div class="row">
                                     <!-- Created dummy cards with dummy text, replace with text from db -->
-
-                                    <div class="col-md-6 p-0"> <!--adjust as needed -->
-                                        <h5 class="card-title"> {{job.Role_Name}} </h5>
-                                        <p class="card-text"> {{roleDescriptions[job.Role_Name]}} </p>
+                                    <div class="col-md-6 p-0">
+                                        <h5 class="card-title m-2">{{job.Role_Name}}</h5>
+                                        <p class="card-text m-2">{{roleDescriptions[job.Role_Name]}}</p>
                                     </div>
-
-                                    <div class="col-md-2 p-0 text-center">
-                                        <h5 class="card-title"> {{job.publish_Date}} </h5>
+                                
+                                    <div class="col-md-3 p-0 text-center">
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted: {{job.publish_Date}}</h5> <!-- Adjust the font size as needed -->
                                     </div>
-
-                                    <div class="col-md-2 p-0 text-center">
-                                        <h5 class="card-title"> {{job.Closing_date}} </h5>
+                                
+                                    <div class="col-md-3 text-center">
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date: {{job.Closing_date}}</h5> <!-- Adjust the font size as needed -->
                                     </div>
-
-                                    <div class="col-md text-md-end p-0 text-center"> <!--adjust as needed -->
-                                        <a href="#" class="btn btn-primary mt-2 mr-2">Apply Now</a>
+                                
+                                    <div class="col-md-3"> <!-- Adjust the width as needed -->
+                                        <a href="#" class="btn btn-primary btn-block mt-2">Apply Now</a> <!-- Added 'btn-block' class -->
                                         <!-- Replace # with your link -->
                                     </div>
-                                    <div class="col-md text-md-end m-auto p-auto">
-                                        <button v-if="accessRight === 1" class="btn btn-link" >Edit</button>
+                                
+                                    <div class="col-md text-md-end p-0 text-center">
+                                        <button v-if="accessRight === 1" class="btn btn-link">Edit</button>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
