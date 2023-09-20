@@ -10,6 +10,10 @@ driver = webdriver.Chrome()
 # get url
 driver.get("http://127.0.0.1:5500/templates/index.html")
 
+# ensure that 'staff' is clicked
+staff = driver.find_element(By.ID, "staff")
+staff.click()
+
 element = driver.find_element(By.XPATH, "//a[@class='navbar-brand text-white']")
 actual_title = element.text
 expected_title = "All in One"
