@@ -4,6 +4,7 @@ from flask_cors import CORS
 
 import os
 import sys
+import platform
 
 # -------------- Import for Job Listing /createListing (START) --------------
 from datetime import datetime
@@ -12,9 +13,20 @@ app = Flask(__name__)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/spm_kuih' # Replace with your MySQL credentials
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
+
+def check_os():
+    system = platform.system()  # Get the name of the operating system
+    print(system)
+    if system == 'Windows':
+        return 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # For Windows
+    elif system == 'Darwin':
+        return 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # For macOS
+    else:
+        raise ValueError("Unsupported operating system")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = check_os()  # Set the URI based on the OS
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
