@@ -17,3 +17,10 @@ VALUES
     ('Sales Representative', '2023-09-04', '2023-09-18'),
     ('Software Developer', '2023-09-05', '2023-09-19');
 
+-- Insert data into Role_Skill table 
+INSERT INTO Role_Skill (Role_Name, Skill_Name)
+VALUES
+    ('Software Developer', 'Web development, API integration, Debugging'),
+    ('Data Analyst', 'Data analysis, SQL, Data mining'),
+    ('Marketing Specialist', 'Content marketing, Branding, Public relations'),
+    ('Sales Representative', 'Relationship building, Communication skills, Product knowledge');

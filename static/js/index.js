@@ -1,5 +1,6 @@
 const get_roles_URL = "http://localhost:5100/roles";
 const get_roles_description_URL = "http://localhost:5100/rolesDescription";
+const get_roles_skills_URL = "http://localhost:5100/rolesSkills";
 const get_joblistings_URL = "http://localhost:5100/joblistings";
 
 // Vue
@@ -10,7 +11,8 @@ const jobsPage = Vue.createApp({
       roles: [],
       userType: 0,
       accessRight: 0,
-      roleDescriptions: {}
+      roleDescriptions: {},
+      roleSkills: {}
     };
   },
 
@@ -60,6 +62,7 @@ const jobsPage = Vue.createApp({
         // these 2 methods are called to populate the roles and roleDescriptions array when the page first loads
         this.getAllRoles();
         this.getRolesDescription();
+        this.getRolesSkills();
         console.log(this.jobListings);
 
 
@@ -95,6 +98,16 @@ const jobsPage = Vue.createApp({
           console.log(error);
         });
     },
+    getRolesSkills() {
+        axios
+          .get(get_roles_skills_URL)
+          .then((response) => {
+            this.roleSkills = response.data;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      },
 
     // When the user click on close for the success modal, this method will run to close the createjob modal 
     closeModals() {

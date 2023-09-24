@@ -23,7 +23,7 @@ CREATE TABLE Role (
 
 CREATE TABLE Role_Skill (
     Role_Name varchar(20),
-    Skill_Name varchar(50),
+    Skill_Name varchar(100),
     PRIMARY KEY (Role_Name, Skill_Name),
     FOREIGN KEY (Role_Name) REFERENCES Role(Role_Name),
     UNIQUE (Skill_Name)

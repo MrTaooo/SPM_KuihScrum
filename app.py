@@ -72,6 +72,24 @@ class JobListing(db.Model):
             "Closing_date": self.Closing_date.strftime('%Y-%m-%d')
         }
 
+# Model Class: RoleSkill
+class RoleSkill(db.Model):
+    __tablename__ = 'Role_Skill'
+
+    Role_Name = db.Column(db.String(20), db.ForeignKey('Role.Role_Name'), primary_key=True)
+    Skill_Name = db.Column(db.Text, nullable=False)
+
+    def __init__(self, Role_Name, Skill_Name):
+        self.Role_Name = Role_Name
+        self.Skill_Name = Skill_Name
+
+    def json(self):
+        return {
+            "Role_Name": self.Role_Name,
+            "Skill_Name": self.Skill_Name
+        }
+
+
 
 # Get all roles in company
 @app.route("/roles")
@@ -94,15 +112,37 @@ def get_all_roles():
     ), 404
 
 
-# Get all Role Descriptions 
+# Get all related skills for each role
+@app.route("/rolesSkills")
+def get_roles_skills():
+    role_skills = RoleSkill.query.all()
+
+    role_skill_dict = {}
+
+    for role_skill in role_skills:
+        role_name = role_skill.Role_Name
+        skill_names = role_skill.Skill_Name.split(', ')
+
+        if role_name not in role_skill_dict:
+            role_skill_dict[role_name] = []
+
+        # Append each skill individually
+        role_skill_dict[role_name].extend(skill_names)
+
+    # Join the skills back into a comma-separated string
+    role_skill_dict = {role: ', '.join(skills) for role, skills in role_skill_dict.items()}
+
+    return role_skill_dict
+
+
+
+# Get all related skills for each job listing 
 @app.route("/rolesDescription")
 def get_roles_description(): 
     roles = Role.query.all()
 
-    # Convert the role objects into a dictionary format
     role_listings = [role.json() for role in roles]
 
-    # Create a dictionary with Role_Name as keys
     role_dict = {role["Role_Name"]: role["Role_Desc"] for role in role_listings}
 
     return role_dict
