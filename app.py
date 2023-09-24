@@ -180,7 +180,7 @@ def createListing():
     if (closingDate == ''): 
           return jsonify({
             "code": 409,
-            "message": "Error, closing date cannot be empty"
+            "message": "Please select a date"
         })
 
     if (closingDate < str(date)):
