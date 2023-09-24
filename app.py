@@ -137,9 +137,15 @@ def createListing():
     closingDate = data["closingDate"]
     date = datetime.now()
     print(closingDate)
+    if (closingDate == ''): 
+          return jsonify({
+            "code": 409,
+            "message": "Error, closing date cannot be empty"
+        })
+
     if (closingDate < str(date)):
         return jsonify({
-            "code": 400,
+            "code": 409,
             "message": "Error, closing date cannot be the day before"
         })
     # Check for duplicate job listings using a raw SQL query
