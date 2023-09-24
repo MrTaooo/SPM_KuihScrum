@@ -190,10 +190,23 @@ def createListing():
         })
     # Check for duplicate job listings using a raw SQL query
     #query = "SELECT * FROM job_listing WHERE Role_Name = %s AND Closing_date = %s"
-    result = JobListing.query.filter_by(
-        Role_Name=roleTitle, Closing_date=closingDate).first()
+    # result = JobListing.query.filter_by(
+    #     Role_Name=roleTitle, Closing_date=closingDate).first()
 
-    if result:
+    # if result:
+    #     return jsonify({
+    #         "code": 409,
+    #         "message": "Error, cannot have duplicate listings"
+    #     })
+
+    # Check if the role listing for the role exists in the database
+    overlapping_listings = db.session.query(JobListing).filter(
+        JobListing.Role_Name == roleTitle,
+        JobListing.publish_Date <= closingDate,
+        JobListing.Closing_date >= date
+    ).all()
+
+    if overlapping_listings:
         return jsonify({
             "code": 409,
             "message": "Error, cannot have duplicate listings"
