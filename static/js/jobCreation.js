@@ -16,37 +16,46 @@ document.getElementById("closingDate").setAttribute("min", tomorrow);
 jobCreationButton.addEventListener("click", function (event) {
   event.preventDefault(); // Prevent the default form submission behavior
 
-  const roleTitle = document.getElementById("roleTitle").value;
+  // Get the value of the date input field
   const closingDate = document.getElementById("closingDate").value;
 
-  // Send the data to the Flask backend using Axios
-  axios
-    .post("http://127.0.0.1:5100/createListing", {
-      roleTitle: roleTitle,
-      closingDate: closingDate,
-    })
-    .then((response) => {
-      console.log("Data sent successfully:", response.data);
+  // Check if a date has been selected
+  if (closingDate) {
 
-      var responseCode = response.data.code;
-      if (responseCode === 409) {
-        var errorMessage = response.data.message;
-        console.log(errorMessage);
-        var errorMessageNode = document.getElementById("errorMessage");
-        errorMessageNode.innerHTML = errorMessage;
-      } else {
-        var successModal = new bootstrap.Modal(
-          document.getElementById("successModal")
-        );
-        successModal.show();
+    const roleTitle = document.getElementById("roleTitle").value;
 
-        // do we need the 2 lines below? what is the purpose?
-        var errorMessageNode = document.getElementById("errorMessage");
-        errorMessageNode.innerHTML = "";
-      }
-    })
-    .catch((error) => {
-      console.error("Error sending data:", error);
-    });
+    // Send the data to the Flask backend using Axios
+    axios
+      .post("http://127.0.0.1:5100/createListing", {
+        roleTitle: roleTitle,
+        closingDate: closingDate,
+      })
+      .then((response) => {
+        console.log("Data sent successfully:", response.data);
+
+        var responseCode = response.data.code;
+        if (responseCode === 409) {
+          var errorMessage = response.data.message;
+          console.log(errorMessage);
+          var errorMessageNode = document.getElementById("errorMessage");
+          errorMessageNode.innerHTML = errorMessage;
+        } else {
+          var successModal = new bootstrap.Modal(
+            document.getElementById("successModal")
+          );
+          successModal.show();
+
+          // do we need the 2 lines below? what is the purpose?
+          var errorMessageNode = document.getElementById("errorMessage");
+          errorMessageNode.innerHTML = "";
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending data:", error);
+      });
+  }
+  else {
+    var errorMessageNode = document.getElementById("errorMessage");
+    errorMessageNode.innerHTML = "Please select a date";
+  }
 });
-
