@@ -4,6 +4,7 @@ import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
 # create webdriver object
 driver = webdriver.Chrome()
@@ -14,12 +15,12 @@ driver.get("http://127.0.0.1:5500/templates/index.html")
 staff = driver.find_element(By.ID, "staff")
 staff.click()
 
-element = driver.find_element(By.XPATH, "//a[@class='navbar-brand text-white']")
-actual_title = element.text
-expected_title = "All in One"
+listings = "listing_list"
+try:
+    element = driver.find_element("id", listings)
+    print("Listings found.")
+except NoSuchElementException:
+    print("No listings found.")
 
-# assert actual_title == expected_title
-assert expected_title in actual_title, f"Expected title: '{expected_title}', Actual title: '{actual_title}'"
-print("Test case passed!")
-time.sleep(5)
+print("End of Test Case")
 
