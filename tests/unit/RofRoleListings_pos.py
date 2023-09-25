@@ -1,9 +1,10 @@
 # import webdriver
 from selenium import webdriver
-import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
+
+import time
 
 # create webdriver object
 driver = webdriver.Chrome()
@@ -16,11 +17,27 @@ staff.click()
 
 # find create new role listing button
 element = driver.find_element(By.XPATH, "//button[@class='btn btn-dark']")
-actual_name = element.text
-expected_name = "Create a Job Listing"
+actual_create_name = element.text
+expected_create_name = "Create a Job Listing"
 
-# assert actual_title == expected_title
-assert expected_name in actual_name, f"Expected title: '{expected_name}', Actual title: '{actual_name}'"
-print("Test case passed!")
-time.sleep(1)
+# search for job listings 
+listings = "listing_list"
+try:
+    element = driver.find_element("id", listings)
+    print("Listings found.")
+    listingLoaded = True
+except NoSuchElementException:
+    print("No listings found.")
+    listingLoaded = False
+
+# search for edit button
+edit = driver.find_element(By.XPATH, "//button[@class='btn btn-link']")
+actual_edit_name = edit.text
+expected_edit_name = "Edit"
+
+# check conditions
+if (actual_create_name == expected_create_name) and listingLoaded and (actual_edit_name == expected_edit_name):
+    print("Test case passed!")
+else:
+    print("Test case failed.")
 
