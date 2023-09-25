@@ -1,10 +1,10 @@
 # import webdriver
 from selenium import webdriver
-import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+
+import time
 
 # create webdriver object
 driver = webdriver.Chrome()
@@ -15,6 +15,7 @@ driver.get("http://127.0.0.1:5500/templates/index.html")
 staff = driver.find_element(By.ID, "staff")
 staff.click()
 
+# check for job listings
 listings = "listing_list"
 try:
     element = driver.find_element("id", listings)
