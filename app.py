@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import *
 from flask_cors import CORS
 
 import os
@@ -151,7 +152,7 @@ def get_roles_description():
 # Get all Job Listings
 @app.route("/joblistings")
 def get_all_joblistings():
-    joblistings = JobListing.query.all()
+    joblistings = JobListing.query.order_by(desc(JobListing.publish_Date)).all()
     if len(joblistings):
         return jsonify(
             {
