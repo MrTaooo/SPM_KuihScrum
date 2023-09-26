@@ -41,3 +41,5 @@ if (actual_create_name == expected_create_name) and listingLoaded and (actual_ed
 else:
     print("Test case failed.")
 
+print("End of Test Case")
+
