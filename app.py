@@ -14,8 +14,9 @@ app = Flask(__name__)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
+
 
 def check_os():
     system = platform.system()  # Get the name of the operating system
@@ -27,12 +28,16 @@ def check_os():
     else:
         raise ValueError("Unsupported operating system")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = check_os()  # Set the URI based on the OS
+
+# Set the URI based on the OS
+app.config['SQLALCHEMY_DATABASE_URI'] = check_os()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
 # Model Class: Role
+
+
 class Role(db.Model):
     __tablename__ = 'Role'
 
@@ -74,10 +79,13 @@ class JobListing(db.Model):
         }
 
 # Model Class: RoleSkill
+
+
 class RoleSkill(db.Model):
     __tablename__ = 'Role_Skill'
 
-    Role_Name = db.Column(db.String(20), db.ForeignKey('Role.Role_Name'), primary_key=True)
+    Role_Name = db.Column(db.String(20), db.ForeignKey(
+        'Role.Role_Name'), primary_key=True)
     Skill_Name = db.Column(db.Text, nullable=False)
 
     def __init__(self, Role_Name, Skill_Name):
@@ -89,7 +97,6 @@ class RoleSkill(db.Model):
             "Role_Name": self.Role_Name,
             "Skill_Name": self.Skill_Name
         }
-
 
 
 # Get all roles in company
@@ -131,20 +138,21 @@ def get_roles_skills():
         role_skill_dict[role_name].extend(skill_names)
 
     # Join the skills back into a comma-separated string
-    role_skill_dict = {role: ', '.join(skills) for role, skills in role_skill_dict.items()}
+    role_skill_dict = {role: ', '.join(skills)
+                       for role, skills in role_skill_dict.items()}
 
     return role_skill_dict
 
 
-
-# Get all related skills for each job listing 
+# Get all related skills for each job listing
 @app.route("/rolesDescription")
-def get_roles_description(): 
+def get_roles_description():
     roles = Role.query.all()
 
     role_listings = [role.json() for role in roles]
 
-    role_dict = {role["Role_Name"]: role["Role_Desc"] for role in role_listings}
+    role_dict = {role["Role_Name"]: role["Role_Desc"]
+                 for role in role_listings}
 
     return role_dict
 
@@ -152,7 +160,8 @@ def get_roles_description():
 # Get all Job Listings
 @app.route("/joblistings")
 def get_all_joblistings():
-    joblistings = JobListing.query.order_by(desc(JobListing.publish_Date)).all()
+    joblistings = JobListing.query.order_by(
+        desc(JobListing.publish_Date)).all()
     if len(joblistings):
         return jsonify(
             {
@@ -178,8 +187,8 @@ def createListing():
     closingDate = data["closingDate"]
     date = datetime.now()
     print(closingDate)
-    if (closingDate == ''): 
-          return jsonify({
+    if (closingDate == ''):
+        return jsonify({
             "code": 409,
             "message": "Please select a date"
         })
@@ -224,6 +233,58 @@ def createListing():
         "code": 201,
         "message": "Data received and processed successfully"
     })
+
+
+# ------------------------ Job Application (START) ------------------------
+class JobApplication(db.Model):
+    __tablename__ = 'Job_Application'
+
+    JobList_ID = db.Column(db.Integer, primary_key=True)
+    Staff_ID = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, JobList_ID, Staff_ID):
+        self.JobList_ID = JobList_ID
+        self.Staff_ID = Staff_ID
+
+    def json(self):
+        return {
+            "JobList_ID": self.JobList_ID,
+            "Staff_ID": self.Staff_ID
+        }
+
+
+@app.route("/apply_for_job", methods=['POST'])
+def apply_for_job():
+    data = request.get_json()
+    # print("Test 1 (START)")
+    # print(data)
+    # print("Test 1 (END)")
+    jobID = data['JobList_ID']
+    staffID = data['Staff_ID']
+    job_application = JobApplication(JobList_ID=jobID, Staff_ID=staffID)
+
+    try:
+        db.session.add(job_application)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"message": f"An error occurred while applying for the job. Error: {str(e)}"}), 500
+
+    return jsonify(job_application.json()), 201
+
+
+@app.route("/withdraw_application", methods=['POST'])
+def withdraw_application():
+    data = request.get_json()
+    job_application = JobApplication.query.filter_by(
+        JobList_ID=data['JobList_ID'], Staff_ID=data['Staff_ID']).first()
+
+    if job_application:
+        db.session.delete(job_application)
+        db.session.commit()
+        return jsonify({"message": "Successfully withdrew the application."}), 200
+    return jsonify({"message": "Application not found."}), 404
+
+# ------------------------ Job Application (END) ------------------------
 
 
 # Execute this program if it is run as a main script (not by 'import')
