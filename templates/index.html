@@ -158,6 +158,20 @@
                                         <h5 class="card-title m-2">{{job.Role_Name}}</h5>
                                         <p class="card-text m-2">{{roleDescriptions[job.Role_Name]}}</p>
                                         <p class="card-text m-2">Skills : {{roleSkills[job.Role_Name]}}</p>
+                                        <!-- Alignment Percentage -->
+                                        <p class="card-text m-2">
+                                            <strong>Alignment Percentage:</strong> 
+                                        </p>
+
+                                        <!-- Matched Skills -->
+                                        <p class="card-text m-2">
+                                            <strong>Matched Skills:</strong> <!-- {{ getMatchedSkills(job).join(', ') }} -->
+                                        </p>
+
+                                        <!-- Missing Skills -->
+                                        <p class="card-text m-2">
+                                            <strong>Missing Skills:</strong> <!-- {{ getMissingSkills(job).join(', ') }} -->
+                                        </p>
                                     </div>
                                 
                                     <div class="col-md-3 p-0 text-center">
