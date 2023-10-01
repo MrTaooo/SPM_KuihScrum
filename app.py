@@ -97,6 +97,29 @@ class RoleSkill(db.Model):
             "Role_Name": self.Role_Name,
             "Skill_Name": self.Skill_Name
         }
+    
+
+# Model Class: StaffSkill
+class StaffSkill(db.Model):
+    __tablename__ = 'Staff_Skill'
+
+    Staff_ID = db.Column(db.Integer, primary_key=True)
+    Skill_Name = db.Column(db.String(50), nullable=False)
+
+    def __init__(self, Staff_ID, Skill_Name):
+        self.Staff_ID = Staff_ID
+        self.Skill_Name = Skill_Name
+
+    def json(self):
+        return {
+            "Staff_ID": self.Staff_ID,
+            "Skill_Name": self.Skill_Name
+        }
+
+
+
+
+#-----------------------------------------------------    
 
 
 # Get all roles in company
@@ -234,7 +257,39 @@ def createListing():
         "message": "Data received and processed successfully"
     })
 
+@app.route('/calculateAlignment', methods=['GET'])
+def calculate_alignment():
+    userID = request.args.get('userID')
+    joblist_ID = request.args.get('joblist_ID')
+    
+    job_listings = JobListing.query.filter_by(JobList_ID=joblist_ID).all()
+    
+    if not job_listings: 
+        return jsonify({"error": "Job listing not found"}), 404
+    
+    job_listing = job_listings[0]
+    
+    role_name = job_listing.Role_Name
+    role_skills = RoleSkill.query.filter_by(Role_Name=role_name).all()
+    
+    if not role_skills:
+        return jsonify({"error": "Skills for the role not found"}), 404
+    
+    required_skills = [skill.Skill_Name for skill in role_skills]
+    user_skills = StaffSkill.query.filter_by(Staff_ID=userID).all()
+    user_skills_dict = [skill.Skill_Name for skill in user_skills]
 
+    aligned_skills = len(set(user_skills_dict).intersection(required_skills))
+    alignment_percentage = aligned_skills / len(required_skills) if required_skills else 0.0
+    
+    return jsonify({
+        "code": 400, 
+        "alignment_percentage": alignment_percentage
+    })
+
+
+
+   
 # ------------------------ Job Application (START) ------------------------
 class JobApplication(db.Model):
     __tablename__ = 'Job_Application'
