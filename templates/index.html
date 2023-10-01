@@ -164,7 +164,8 @@
                                     </div>
                                 
                                     <div class="col-md-3"> <!-- Adjust the width as needed -->
-                                        <a href="#" class="btn btn-primary btn-block mt-2">Apply Now</a> <!-- Added 'btn-block' class -->
+                                        <a href="#" v-if="applyBtn" v-bind:class="applyStyle" v-on:click="changeStatus()" >Apply Now</a> <!-- Added 'btn-block' class -->
+                                        <a href="#" v-else v-bind:class="withdrawStyle" v-on:click="changeStatus()" >Withdraw</a> <!-- Added 'btn-block' class -->
                                         <!-- Replace # with your link -->
                                     </div>
                                 

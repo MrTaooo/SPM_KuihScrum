@@ -1,11 +1,11 @@
-.nav-color{
-    background-color:rgb(9, 35, 15)
+.nav-color {
+    background-color: rgb(9, 35, 15)
 }
 
-.profile-icon{
+.profile-icon {
     color: rgb(255, 255, 255);
 }
 
 .input-group-append {
     cursor: pointer;
-  }
+}

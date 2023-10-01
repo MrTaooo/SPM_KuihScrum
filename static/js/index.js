@@ -12,7 +12,10 @@ const jobsPage = Vue.createApp({
       userType: 0,
       accessRight: 0,
       roleDescriptions: {},
-      roleSkills: {}
+      roleSkills: {},
+      applyBtn: true,
+      applyStyle: "btn btn-primary btn-block mt-2",
+      withdrawStyle: "btn btn-secondary btn-block mt-2",
     };
   },
 
@@ -116,6 +119,16 @@ const jobsPage = Vue.createApp({
       );
       createjobModal.hide();
       this.getAllJobListings();
+    },
+
+    changeStatus(){
+      if(this.applyBtn){
+        this.applyBtn = false;
+        console.log("Applied")
+      }else{
+        this.applyBtn = true;
+        console.log("Withdrawed")
+      }
     }
   },
 });
