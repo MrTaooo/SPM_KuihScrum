@@ -257,36 +257,57 @@ def createListing():
         "message": "Data received and processed successfully"
     })
 
-@app.route('/calculateAlignment', methods=['GET'])
+@app.route('/calculateAlignment', methods=['POST'])
 def calculate_alignment():
-    userID = request.args.get('userID')
-    joblist_ID = request.args.get('joblist_ID')
+    data = request.get_json()
+    userID = data['userID']
+    joblist_ID = data['joblist_ID']
+ 
+    job_listing = JobListing.query.filter_by(JobList_ID=joblist_ID).first() 
+    print(userID)
+    print("joblist_ID:", joblist_ID)
+    print("job_listing:", job_listing)
+
     
-    job_listings = JobListing.query.filter_by(JobList_ID=joblist_ID).all()
-    
-    if not job_listings: 
+    if job_listing is None:
         return jsonify({"error": "Job listing not found"}), 404
     
-    job_listing = job_listings[0]
-    
     role_name = job_listing.Role_Name
+    print("role_name:", role_name)
     role_skills = RoleSkill.query.filter_by(Role_Name=role_name).all()
+    print("role_skills:", role_skills)
     
     if not role_skills:
         return jsonify({"error": "Skills for the role not found"}), 404
     
-    required_skills = [skill.Skill_Name for skill in role_skills]
+    # Create a dictionary to store skills by role
+    skills_by_role = {}
+    
+    for skill_record in role_skills:
+        role = skill_record.Role_Name
+        skill = skill_record.Skill_Name
+        
+        # If the role is not in the dictionary, create a new entry
+        if role not in skills_by_role:
+            skills_by_role[role] = []
+        
+        # Add the skill to the list of skills for the role
+        skills_by_role[role].append(skill)
+
+    print("Skills by Role:", skills_by_role)
+    
     user_skills = StaffSkill.query.filter_by(Staff_ID=userID).all()
     user_skills_dict = [skill.Skill_Name for skill in user_skills]
 
-    aligned_skills = len(set(user_skills_dict).intersection(required_skills))
-    alignment_percentage = aligned_skills / len(required_skills) if required_skills else 0.0
+    aligned_skills = len(set(user_skills_dict).intersection(skills_by_role))
+    alignment_percentage = aligned_skills / len(skills_by_role) if skills_by_role else 0.0
     
     return jsonify({
         "code": 400, 
-        "alignment_percentage": alignment_percentage
+        "alignment_percentage": alignment_percentage,
+        "user_skills_dict": user_skills_dict,  # This will contain all the user's skills
+        "skills_by_role": skills_by_role,  # Dictionary of skills by role
     })
-
 
 
    
