@@ -89,15 +89,10 @@
                                                             class="col-4 col-form-label text-end">Role:</label>
                                                         <div class="col-8">
                                                             <!-- Role dropdown box -->
-                                                              <div class="btn-group">
-                                                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    Available Roles
-                                                                </button>
-                                                                <ul class="dropdown-menu" aria-labelledby="roleDropdown">
-                                                                    <li v-for="role in roles" :key="role">
-                                                                        <a class="dropdown-item">{{ role }}</a>
-                                                                    </li>
-                                                                </ul>
+                                                            <div class="btn-group">
+                                                                <select class="form-control" id="roleTitle">
+                                                                    <option v-for="role in roles" :key="role">{{ role }}</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
