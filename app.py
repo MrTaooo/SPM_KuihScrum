@@ -267,7 +267,6 @@ def calculate_alignment():
     print(userID)
     print("joblist_ID:", joblist_ID)
     print("job_listing:", job_listing)
-
     
     if job_listing is None:
         return jsonify({"error": "Job listing not found"}), 404
@@ -296,17 +295,22 @@ def calculate_alignment():
 
     print("Skills by Role:", skills_by_role)
     
-    user_skills = StaffSkill.query.filter_by(Staff_ID=userID).all()
-    user_skills_dict = [skill.Skill_Name for skill in user_skills]
+    user_skills = StaffSkill.query.filter(StaffSkill.Staff_ID == userID).all()
+
+     
+    user_listings = [user.json() for user in user_skills]
+    user_skills_dict = {user["Staff_ID"]: user["Skill_Name"] for user in user_listings}
+    print("user_skills_dict", user_skills_dict)
+
 
     aligned_skills = len(set(user_skills_dict).intersection(skills_by_role))
     alignment_percentage = aligned_skills / len(skills_by_role) if skills_by_role else 0.0
     
     return jsonify({
         "code": 400, 
-        "alignment_percentage": alignment_percentage,
+        "alignment_percentage": alignment_percentage, 
         "user_skills_dict": user_skills_dict,  # This will contain all the user's skills
-        "skills_by_role": skills_by_role,  # Dictionary of skills by role
+        "skills_by_role": skills_by_role,  # This will contain all skills related to the role 
     })
 
 
