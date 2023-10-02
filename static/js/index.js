@@ -3,6 +3,7 @@ const get_roles_description_URL = "http://localhost:5100/rolesDescription";
 const get_roles_skills_URL = "http://localhost:5100/rolesSkills";
 const get_joblistings_URL = "http://localhost:5100/joblistings";
 const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
+const get_calculatealignment_URL = "http://127.0.0.1:5100/calculateAlignment";
 
 // Vue
 const jobsPage = Vue.createApp({
@@ -14,6 +15,9 @@ const jobsPage = Vue.createApp({
       accessRight: 0,
       roleDescriptions: {},
       roleSkills: {},
+      alignmentpercentage: 0,
+      user_skills_dict: {},
+      skills_by_role: {},
       // ---------------- FOR APPLY/WITHDRAW (START) ----------------
       appliedJobs: [],
       applyStyle: "btn btn-primary btn-block mt-2",
@@ -125,6 +129,19 @@ const jobsPage = Vue.createApp({
         })
         .catch((error) => {
           console.error("Error fetching applied jobs:", error);
+        });
+    },
+
+    getCalculateAlignment() {
+      axios
+        .get(get_calculatealignment_URL)
+        .then((response) => {
+          this.alignment = response.data.alignmentpercentage;
+          this.user_skills_dict = response.data.user_skills_dict;
+          this.skills_by_role = response.data.skills_by_role;
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
 
