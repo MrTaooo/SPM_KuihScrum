@@ -72,11 +72,11 @@
 
                     <!-- Modal form to create job listing -->
                     <div class="modal fade modal-lg" id="createJob" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        aria-labelledby="applicantModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Create a new job listing</h5>
+                                    <h5 class="modal-title" id="applicantModalLabel">Create a new job listing</h5>
                                 </div>
                                 <div class="modal-body">
                                     <form>
@@ -181,6 +181,55 @@
                                         <a href="#" v-if="applyBtn" v-bind:class="applyStyle" v-on:click="changeStatus($event)" v-bind:apply-joblist-id="job.JobList_ID" apply-staff-id="1">Apply Now</a> <!-- Added 'btn-block' class -->
                                         <a href="#" v-else v-bind:class="withdrawStyle" v-on:click="changeStatus($event)" v-bind:apply-joblist-id="job.JobList_ID" apply-staff-id="1">Withdraw</a> <!-- Added 'btn-block' class -->
                                         <!-- Replace # with your link -->
+                                    </div>
+
+                                    <!-- Modal button to view Applicants -->
+                                    <div class="col text-center">
+                                    <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs" data-bs-toggle="modal"
+                                    data-bs-target="#viewApplicants">
+                                    View Applicants
+                                    </button>
+                                    </div>
+                                    <!-- Modal form to view Applicants -->
+                                    <div class="modal fade modal-lg" id="viewApplicants" tabindex="-1" role="dialog"
+                                    aria-labelledby="applicantModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="applicantModalLabel">View Applicants</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Department</th>
+                                                            <th>Email</th>
+                                                            <th>Country</th>
+                                                            <th>Skills</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- v-for loop through applicants for JobList_ID and display them in the table -->
+                                                        <!-- Demo -->
+                                                        <tr>
+                                                            <td>Lin Tao</td>
+                                                            <td>Engineering</td>
+                                                            <td>lintao@gmail.com</td>
+                                                            <td>United States</td>
+                                                            <td>Communication, Recruitment</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     </div>
                                 
                                     <div class="col-md text-md-end p-0 text-center">
