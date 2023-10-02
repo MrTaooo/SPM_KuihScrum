@@ -4,6 +4,7 @@ from sqlalchemy import *
 from flask_cors import CORS
 
 import os
+import sys
 import platform
 
 # -------------- Import for Job Listing /createListing (START) --------------
@@ -13,6 +14,8 @@ app = Flask(__name__)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
+
+
 def check_os():
     system = platform.system()  # Get the name of the operating system
     print(system)
@@ -81,7 +84,7 @@ class RoleSkill(db.Model):
 
     Role_Name = db.Column(db.String(20), db.ForeignKey(
         'Role.Role_Name'), primary_key=True)
-    Skill_Name = db.Column(db.Text, nullable=False)
+    Skill_Name = db.Column(db.Text, nullable=False, primary_key=True)
 
     def __init__(self, Role_Name, Skill_Name):
         self.Role_Name = Role_Name
@@ -98,8 +101,8 @@ class RoleSkill(db.Model):
 class StaffSkill(db.Model):
     __tablename__ = 'Staff_Skill'
 
-    Staff_ID = db.Column(db.Integer, primary_key=True)
-    Skill_Name = db.Column(db.String(50), nullable=False)
+    Staff_ID = db.Column(db.Integer, db.ForeignKey('Staff.Staff_ID'), primary_key=True)
+    Skill_Name = db.Column(db.Text, db.ForeignKey('Role_Skill.Skill_Name'), nullable=False, primary_key=True)
 
     def __init__(self, Staff_ID, Skill_Name):
         self.Staff_ID = Staff_ID
@@ -255,7 +258,7 @@ def createListing():
 @app.route('/calculateAlignment', methods=['POST'])
 def calculate_alignment():
     data = request.get_json()
-    userID = data['userID']
+    userID = data['user_ID']
     joblist_ID = data['joblist_ID']
  
     job_listing = JobListing.query.filter_by(JobList_ID=joblist_ID).first() 
@@ -267,42 +270,44 @@ def calculate_alignment():
         return jsonify({"error": "Job listing not found"}), 404
     
     role_name = job_listing.Role_Name
-    print("role_name:", role_name)
-    role_skills = RoleSkill.query.filter_by(Role_Name=role_name).all()
-    print("role_skills:", role_skills)
+
+    role_skills = db.session.query(RoleSkill).filter(RoleSkill.Role_Name==role_name).all()
     
     if not role_skills:
         return jsonify({"error": "Skills for the role not found"}), 404
-    
-    # Create a dictionary to store skills by role
+
     skills_by_role = {}
     
     for skill_record in role_skills:
         role = skill_record.Role_Name
         skill = skill_record.Skill_Name
         
-        # If the role is not in the dictionary, create a new entry
         if role not in skills_by_role:
             skills_by_role[role] = []
-        
-        # Add the skill to the list of skills for the role
+
         skills_by_role[role].append(skill)
 
     print("Skills by Role:", skills_by_role)
     
     user_skills = StaffSkill.query.filter(StaffSkill.Staff_ID == userID).all()
+    
+    user_skills_dict = {}
+    
+    for user_record in user_skills:
+        skill = user_record.Skill_Name
+        
+        # Add the skill to the list of skills for the user
+        user_skills_dict.setdefault("user_skills", []).append(skill)
 
-     
-    user_listings = [user.json() for user in user_skills]
-    user_skills_dict = {user["Staff_ID"]: user["Skill_Name"] for user in user_listings}
-    print("user_skills_dict", user_skills_dict)
+    user_skills_count = user_skills_dict.get("user_skills", [])  # Extract user skills
+    role_skills_count = skills_by_role.get(role_name, [])  # Extract role-specific skills
 
+    aligned_skills = len(set(user_skills_count).intersection(role_skills_count))
 
-    aligned_skills = len(set(user_skills_dict).intersection(skills_by_role))
-    alignment_percentage = aligned_skills / len(skills_by_role) if skills_by_role else 0.0
+    alignment_percentage = round((aligned_skills / len(role_skills_count)) * 100) if role_skills_count else 0.0
     
     return jsonify({
-        "code": 400, 
+        "code": 200, 
         "alignment_percentage": alignment_percentage, 
         "user_skills_dict": user_skills_dict,  # This will contain all the user's skills
         "skills_by_role": skills_by_role,  # This will contain all skills related to the role 
