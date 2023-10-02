@@ -2,6 +2,7 @@ const get_roles_URL = "http://localhost:5100/roles";
 const get_roles_description_URL = "http://localhost:5100/rolesDescription";
 const get_roles_skills_URL = "http://localhost:5100/rolesSkills";
 const get_joblistings_URL = "http://localhost:5100/joblistings";
+const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
 
 // Vue
 const jobsPage = Vue.createApp({
@@ -14,7 +15,7 @@ const jobsPage = Vue.createApp({
       roleDescriptions: {},
       roleSkills: {},
       // ---------------- FOR APPLY/WITHDRAW (START) ----------------
-      applyBtn: true,
+      appliedJobs: [],
       applyStyle: "btn btn-primary btn-block mt-2",
       withdrawStyle: "btn btn-secondary btn-block mt-2",
       // ---------------- FOR APPLY/WITHDRAW (END) ----------------
@@ -54,7 +55,7 @@ const jobsPage = Vue.createApp({
           const day = current.getDate().toString().padStart(2, "0"); // Add leading zero if needed
           const date = `${year}-${month}-${day}`;
           console.log(date);
-          
+
           // if the user is Staff, then the job listings will be filtered to only show the job listings that are not closed
           if (this.accessRight == 0) {
             for (let i = this.jobListings.length - 1; i >= 0; i--) {
@@ -70,6 +71,7 @@ const jobsPage = Vue.createApp({
           this.getAllRoles();
           this.getRolesDescription();
           this.getRolesSkills();
+          this.getAppliedJobs();
           console.log(this.jobListings);
         })
         .catch((error) => {
@@ -114,6 +116,18 @@ const jobsPage = Vue.createApp({
         });
     },
 
+    getAppliedJobs() {
+      staffID = "1385970"
+      axios
+        .get(get_appliedJobs_URL+ "/" + staffID)
+        .then((response) => {
+          this.appliedJobs = response.data.appliedJobs;
+        })
+        .catch((error) => {
+          console.error("Error fetching applied jobs:", error);
+        });
+    },
+
     // When the user click on close for the success modal, this method will run to close the createjob modal
     closeModals() {
       var createjobModal = bootstrap.Modal.getOrCreateInstance(
@@ -123,19 +137,11 @@ const jobsPage = Vue.createApp({
       this.getAllJobListings();
     },
 
-    changeStatus(event) {
-      if (this.applyBtn) {
-        this.applyBtn = false;
+    applyOrWithdraw(event, jobID) {
+      if (!this.appliedJobs.includes(jobID)) {
+        this.appliedJobs.push(jobID);
 
-        jobID = parseInt(event.target.getAttribute("apply-joblist-id"));
-        // console.log(typeof jobID)
         staffID = parseInt(event.target.getAttribute("apply-staff-id"));
-        // console.log(typeof staffID)
-
-        // console.log("TEST (START)")
-        // console.log(jobID)
-        // console.log(staffID)
-        // console.log("TEST (END)")
 
         dataToSend = {
           JobList_ID: jobID,
@@ -146,19 +152,19 @@ const jobsPage = Vue.createApp({
         axios
           .post("http://127.0.0.1:5100/apply_for_job", dataToSend)
           .then((response) => {
-            // Handle successful application, maybe show a success message
             console.log("Data sent successfully:", response.data);
           })
           .catch((error) => {
-            // Handle error, maybe show an error message
             console.error("Error sending data:", error);
           });
 
         console.log("Applied");
       } else {
-        this.applyBtn = true;
+        const index = this.appliedJobs.indexOf(jobID);
+        if (index > -1) {
+          this.appliedJobs.splice(index, 1);
+        }
 
-        jobID = parseInt(event.target.getAttribute("apply-joblist-id"));
         staffID = parseInt(event.target.getAttribute("apply-staff-id"));
 
         dataToSend = {
@@ -166,15 +172,13 @@ const jobsPage = Vue.createApp({
           Staff_ID: staffID, // Assuming you have the logged-in staff's ID accessible
         };
 
-        // Sending a POST request to apply
+        // Sending a POST request to withdraw
         axios
           .post("http://127.0.0.1:5100/withdraw_application", dataToSend)
           .then((response) => {
-            // Handle successful application, maybe show a success message
             console.log("Data sent successfully:", response.data);
           })
           .catch((error) => {
-            // Handle error, maybe show an error message
             console.error("Error sending data:", error);
           });
 

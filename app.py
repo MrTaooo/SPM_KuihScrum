@@ -16,6 +16,8 @@ CORS(app)
 # -------------- Connection to mySQL DB --------------
 
 
+
+
 def check_os():
     system = platform.system()  # Get the name of the operating system
     print(system)
@@ -95,7 +97,7 @@ class RoleSkill(db.Model):
             "Role_Name": self.Role_Name,
             "Skill_Name": self.Skill_Name
         }
-    
+
 
 # Model Class: StaffSkill
 class StaffSkill(db.Model):
@@ -115,9 +117,7 @@ class StaffSkill(db.Model):
         }
 
 
-
-
-#-----------------------------------------------------    
+# -----------------------------------------------------
 
 
 # Get all roles in company
@@ -255,20 +255,21 @@ def createListing():
         "message": "Data received and processed successfully"
     })
 
+
 @app.route('/calculateAlignment', methods=['POST'])
 def calculate_alignment():
     data = request.get_json()
     userID = data['user_ID']
     joblist_ID = data['joblist_ID']
- 
-    job_listing = JobListing.query.filter_by(JobList_ID=joblist_ID).first() 
+
+    job_listing = JobListing.query.filter_by(JobList_ID=joblist_ID).first()
     print(userID)
     print("joblist_ID:", joblist_ID)
     print("job_listing:", job_listing)
-    
+
     if job_listing is None:
         return jsonify({"error": "Job listing not found"}), 404
-    
+
     role_name = job_listing.Role_Name
 
     role_skills = db.session.query(RoleSkill).filter(RoleSkill.Role_Name==role_name).all()
@@ -277,7 +278,7 @@ def calculate_alignment():
         return jsonify({"error": "Skills for the role not found"}), 404
 
     skills_by_role = {}
-    
+
     for skill_record in role_skills:
         role = skill_record.Role_Name
         skill = skill_record.Skill_Name
@@ -288,7 +289,7 @@ def calculate_alignment():
         skills_by_role[role].append(skill)
 
     print("Skills by Role:", skills_by_role)
-    
+
     user_skills = StaffSkill.query.filter(StaffSkill.Staff_ID == userID).all()
     
     user_skills_dict = {}
@@ -310,13 +311,13 @@ def calculate_alignment():
         "code": 200, 
         "alignment_percentage": alignment_percentage, 
         "user_skills_dict": user_skills_dict,  # This will contain all the user's skills
-        "skills_by_role": skills_by_role,  # This will contain all skills related to the role 
+        # This will contain all skills related to the role
+        "skills_by_role": skills_by_role,
     })
 
 
-   
 # ------------------------ Job Application (START) ------------------------
-class JobApplication(db.Model):
+class Job_Application(db.Model):
     __tablename__ = 'Job_Application'
 
     JobList_ID = db.Column(db.Integer, primary_key=True)
@@ -332,6 +333,13 @@ class JobApplication(db.Model):
             "Staff_ID": self.Staff_ID
         }
 
+@app.route("/get_applied_jobs_for_user/<int:staff_id>", methods=['GET'])
+def get_applied_jobs_for_user(staff_id):
+    applied_jobs = Job_Application.query.filter_by(Staff_ID=staff_id).all()
+    return jsonify(
+        {"appliedJobs": [job.JobList_ID for job in applied_jobs]}
+    ), 200
+
 
 @app.route("/apply_for_job", methods=['POST'])
 def apply_for_job():
@@ -341,7 +349,8 @@ def apply_for_job():
     # print("Test 1 (END)")
     jobID = data['JobList_ID']
     staffID = data['Staff_ID']
-    job_application = JobApplication(JobList_ID=jobID, Staff_ID=staffID)
+
+    job_application = Job_Application(JobList_ID=jobID, Staff_ID=staffID)
 
     try:
         db.session.add(job_application)
@@ -355,7 +364,7 @@ def apply_for_job():
 @app.route("/withdraw_application", methods=['POST'])
 def withdraw_application():
     data = request.get_json()
-    job_application = JobApplication.query.filter_by(
+    job_application = Job_Application.query.filter_by(
         JobList_ID=data['JobList_ID'], Staff_ID=data['Staff_ID']).first()
 
     if job_application:

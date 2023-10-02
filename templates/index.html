@@ -91,7 +91,8 @@
                                                             <!-- Role dropdown box -->
                                                             <div class="btn-group">
                                                                 <select class="form-control" id="roleTitle">
-                                                                    <option v-for="role in roles" :key="role">{{ role }}</option>
+                                                                    <option v-for="role in roles" :key="role">{{ role }}
+                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -155,87 +156,96 @@
                                         <p class="card-text m-2">Skills : {{roleSkills[job.Role_Name]}}</p>
                                         <!-- Alignment Percentage -->
                                         <p class="card-text m-2">
-                                            <strong>Alignment Percentage:</strong> 
+                                            <strong>Alignment Percentage:</strong>
                                         </p>
 
                                         <!-- Matched Skills -->
                                         <p class="card-text m-2">
-                                            <strong>Matched Skills:</strong> <!-- {{ getMatchedSkills(job).join(', ') }} -->
+                                            <strong>Matched Skills:</strong>
+                                            <!-- {{ getMatchedSkills(job).join(', ') }} -->
                                         </p>
 
                                         <!-- Missing Skills -->
                                         <p class="card-text m-2">
-                                            <strong>Missing Skills:</strong> <!-- {{ getMissingSkills(job).join(', ') }} -->
+                                            <strong>Missing Skills:</strong>
+                                            <!-- {{ getMissingSkills(job).join(', ') }} -->
                                         </p>
                                     </div>
-                                
+
                                     <div class="col-md-3 p-0 text-center">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted: {{job.publish_Date}}</h5> <!-- Adjust the font size as needed -->
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted:
+                                            {{job.publish_Date}}</h5> <!-- Adjust the font size as needed -->
                                     </div>
-                                
+
                                     <div class="col-md-3 text-center">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date: {{job.Closing_date}}</h5> <!-- Adjust the font size as needed -->
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date:
+                                            {{job.Closing_date}}</h5> <!-- Adjust the font size as needed -->
                                     </div>
-                                
+
                                     <div class="col-md-3"> <!-- Adjust the width as needed -->
-                                        <a href="#" v-if="applyBtn" v-bind:class="applyStyle" v-on:click="changeStatus($event)" v-bind:apply-joblist-id="job.JobList_ID" apply-staff-id="1">Apply Now</a> <!-- Added 'btn-block' class -->
-                                        <a href="#" v-else v-bind:class="withdrawStyle" v-on:click="changeStatus($event)" v-bind:apply-joblist-id="job.JobList_ID" apply-staff-id="1">Withdraw</a> <!-- Added 'btn-block' class -->
+                                        <button :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
+                                            @click="applyOrWithdraw($event, job.JobList_ID)" apply-staff-id="1385970" >
+                                            {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw' : 'Apply Now' }}
+                                        </button>
                                         <!-- Replace # with your link -->
                                     </div>
 
                                     <!-- Modal button to view Applicants -->
                                     <div class="col text-center">
-                                    <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs" data-bs-toggle="modal"
-                                    data-bs-target="#viewApplicants">
-                                    View Applicants
-                                    </button>
+                                        <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs"
+                                            data-bs-toggle="modal" data-bs-target="#viewApplicants">
+                                            View Applicants
+                                        </button>
                                     </div>
                                     <!-- Modal table to view Applicants -->
                                     <div class="modal fade modal-lg" id="viewApplicants" tabindex="-1" role="dialog"
-                                    aria-labelledby="applicantModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-xl" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="applicantModalLabel">View Applicants</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-bod overflow-auto">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Department</th>
-                                                            <th>Email</th>
-                                                            <th>Country</th>
-                                                            <th>Skills</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- v-for loop through applicants for JobList_ID and display them in the table -->
-                                                        <!-- Demo -->
-                                                        <tr>
-                                                            <td>Lin Tao</td>
-                                                            <td>Engineering</td>
-                                                            <td>lintao@gmail.com</td>
-                                                            <td>United States</td>
-                                                            <td>Communication, Recruitment</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        aria-labelledby="applicantModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="applicantModalLabel">View Applicants
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-bod overflow-auto">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Department</th>
+                                                                <th>Email</th>
+                                                                <th>Country</th>
+                                                                <th>Skills</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- v-for loop through applicants for JobList_ID and display them in the table -->
+                                                            <!-- Demo -->
+                                                            <tr>
+                                                                <td>Lin Tao</td>
+                                                                <td>Engineering</td>
+                                                                <td>lintao@gmail.com</td>
+                                                                <td>United States</td>
+                                                                <td>Communication, Recruitment</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    </div>
 
-                                
+
                                     <div class="col-md text-md-end p-0 text-center">
                                         <button v-if="accessRight === 1" class="btn btn-link">Edit</button>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
