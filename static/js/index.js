@@ -33,8 +33,10 @@ const jobsPage = Vue.createApp({
     updateUserType() {
       if (this.accessRight == 0) {
         this.accessRight = 1;
+        this.getAllJobListings();
       } else {
         this.accessRight = 0;
+        this.getAllJobListings();
       }
     },
 
@@ -52,11 +54,15 @@ const jobsPage = Vue.createApp({
           const day = current.getDate().toString().padStart(2, "0"); // Add leading zero if needed
           const date = `${year}-${month}-${day}`;
           console.log(date);
-          for (let i = this.jobListings.length - 1; i >= 0; i--) {
-            const listing = this.jobListings[i];
-            console.log(listing.Closing_date);
-            if (listing.Closing_date < date) {
-              this.jobListings.splice(i, 1); // Remove the item at index i
+          
+          // if the user is Staff, then the job listings will be filtered to only show the job listings that are not closed
+          if (this.accessRight == 0) {
+            for (let i = this.jobListings.length - 1; i >= 0; i--) {
+              const listing = this.jobListings[i];
+              console.log(listing.Closing_date);
+              if (listing.Closing_date < date) {
+                this.jobListings.splice(i, 1); // Remove the item at index i
+              }
             }
           }
 

@@ -4,7 +4,6 @@ from sqlalchemy import *
 from flask_cors import CORS
 
 import os
-import sys
 import platform
 
 # -------------- Import for Job Listing /createListing (START) --------------
@@ -14,10 +13,6 @@ app = Flask(__name__)
 CORS(app)
 
 # -------------- Connection to mySQL DB --------------
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # FOR WINDOW
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # FOR MAC
-
-
 def check_os():
     system = platform.system()  # Get the name of the operating system
     print(system)
@@ -219,7 +214,7 @@ def createListing():
     if (closingDate < str(date)):
         return jsonify({
             "code": 409,
-            "message": "Error, closing date cannot be the day before"
+            "message": "Error, closing date cannot be in the past"
         })
     # Check for duplicate job listings using a raw SQL query
     #query = "SELECT * FROM job_listing WHERE Role_Name = %s AND Closing_date = %s"
