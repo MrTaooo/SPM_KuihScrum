@@ -31,12 +31,12 @@ jobCreationButton.addEventListener("click", function (event) {
         closingDate: closingDate,
       })
       .then((response) => {
-        console.log("Data sent successfully:", response.data);
+        // console.log("Data sent successfully:", response.data);
 
         var responseCode = response.data.code;
         if (responseCode === 409) {
           var errorMessage = response.data.message;
-          console.log(errorMessage);
+          // console.log(errorMessage);
           var errorMessageNode = document.getElementById("errorMessage");
           errorMessageNode.innerHTML = errorMessage;
         } else {
