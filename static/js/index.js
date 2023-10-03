@@ -3,7 +3,6 @@ const get_roles_skills_URL = "http://127.0.0.1:5100/rolesSkills";
 const get_joblistings_URL = "http://127.0.0.1:5100/joblistings";
 const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
 const get_calculatealignment_URL = "http://127.0.0.1:5100/calculateAlignment";
-
 const apply_job_URL = "http://127.0.0.1:5100/apply_for_job"
 const withdraw_application_URL = "http://127.0.0.1:5100/withdraw_application"
 
