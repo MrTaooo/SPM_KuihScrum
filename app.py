@@ -9,7 +9,7 @@ app = create_app()
 
 
 # Import and register the route functions from the route files
-from routes.apply_job import apply_for_job
+from routes.apply_for_job import apply_for_job
 from routes.calculate_alignment import calculate_alignment
 from routes.create_job_listing import create_listing
 from routes.get_all_job_listings import get_all_joblistings

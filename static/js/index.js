@@ -5,6 +5,9 @@ const get_joblistings_URL = "http://127.0.0.1:5100/joblistings";
 const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
 const get_calculatealignment_URL = "http://127.0.0.1:5100/calculateAlignment";
 
+const apply_job_URL = "http://127.0.0.1:5100/apply_for_job"
+const withdraw_application_URL = "http://127.0.0.1:5100/withdraw_application"
+
 // Vue
 const jobsPage = Vue.createApp({
   data() {
@@ -170,7 +173,7 @@ const jobsPage = Vue.createApp({
 
         // Sending a POST request to apply
         axios
-          .post("http://127.0.0.1:5100/apply_for_job", dataToSend)
+          .post(apply_job_URL, dataToSend)
           .then((response) => {
             console.log("Data sent successfully:", response.data);
           })
@@ -194,7 +197,7 @@ const jobsPage = Vue.createApp({
 
         // Sending a POST request to withdraw
         axios
-          .post("http://127.0.0.1:5100/withdraw_application", dataToSend)
+          .post(withdraw_application_URL, dataToSend)
           .then((response) => {
             console.log("Data sent successfully:", response.data);
           })
