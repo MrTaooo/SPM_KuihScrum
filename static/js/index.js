@@ -97,7 +97,7 @@ const jobsPage = Vue.createApp({
             const role_desc = role.Role_Desc;
             roleObject[role_name] = role_desc;
           });
-          console.log(roleObject)
+          
           this.roles = roleObject;
         })
         .catch((error) => {
@@ -111,7 +111,7 @@ const jobsPage = Vue.createApp({
       axios
         .get(get_roles_skills_URL)
         .then((response) => {
-          this.roleSkills = response.data;
+          this.roleSkills = response.data.data.roles_skills[0]
         })
         .catch((error) => {
           console.log(error);

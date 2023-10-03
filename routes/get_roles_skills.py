@@ -20,5 +20,5 @@ def get_roles_skills():
     # Join the skills back into a comma-separated string
     role_skill_dict = {role: ', '.join(skills)
                        for role, skills in role_skill_dict.items()}
-
-    return role_skill_dict
+    
+    return {"code": 200, "data": {"roles_skills": [role_skill_dict]}}
