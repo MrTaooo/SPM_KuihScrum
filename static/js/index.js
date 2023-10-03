@@ -79,6 +79,7 @@ const jobsPage = Vue.createApp({
           this.getAllRoles();
           this.getRolesDescription();
           this.getRolesSkills();
+          this.getAppliedJobs();
           // console.log(this.jobListings);
         })
         .catch((error) => {
