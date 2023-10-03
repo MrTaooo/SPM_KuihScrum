@@ -157,19 +157,11 @@ const jobsPage = Vue.createApp({
       this.getAllJobListings();
     },
 
-    changeStatus(event) {
-      if (this.applyBtn) {
-        this.applyBtn = false;
+    applyOrWithdraw(event, jobID) {
+      if (!this.appliedJobs.includes(jobID)) {
+        this.appliedJobs.push(jobID);
 
-        jobID = parseInt(event.target.getAttribute("apply-joblist-id"));
-        // console.log(typeof jobID)
         staffID = parseInt(event.target.getAttribute("apply-staff-id"));
-        // console.log(typeof staffID)
-
-        // console.log("TEST (START)")
-        // console.log(jobID)
-        // console.log(staffID)
-        // console.log("TEST (END)")
 
         dataToSend = {
           JobList_ID: jobID,
@@ -180,19 +172,19 @@ const jobsPage = Vue.createApp({
         axios
           .post("http://127.0.0.1:5100/apply_for_job", dataToSend)
           .then((response) => {
-            // Handle successful application, maybe show a success message
             console.log("Data sent successfully:", response.data);
           })
           .catch((error) => {
-            // Handle error, maybe show an error message
             console.error("Error sending data:", error);
           });
 
         console.log("Applied");
       } else {
-        this.applyBtn = true;
+        const index = this.appliedJobs.indexOf(jobID);
+        if (index > -1) {
+          this.appliedJobs.splice(index, 1);
+        }
 
-        jobID = parseInt(event.target.getAttribute("apply-joblist-id"));
         staffID = parseInt(event.target.getAttribute("apply-staff-id"));
 
         dataToSend = {
@@ -200,15 +192,13 @@ const jobsPage = Vue.createApp({
           Staff_ID: staffID, // Assuming you have the logged-in staff's ID accessible
         };
 
-        // Sending a POST request to apply
+        // Sending a POST request to withdraw
         axios
           .post("http://127.0.0.1:5100/withdraw_application", dataToSend)
           .then((response) => {
-            // Handle successful application, maybe show a success message
             console.log("Data sent successfully:", response.data);
           })
           .catch((error) => {
-            // Handle error, maybe show an error message
             console.error("Error sending data:", error);
           });
 

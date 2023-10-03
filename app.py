@@ -8,7 +8,6 @@ from sqlalchemy_define import create_app
 app = create_app()
 
 
-
 # Import and register the route functions from the route files
 from routes.apply_job import apply_for_job
 from routes.calculate_alignment import calculate_alignment
@@ -28,7 +27,6 @@ app.route("/roles")(get_all_roles)
 app.route("/rolesDescription")(get_roles_description)
 app.route("/rolesSkills")(get_roles_skills)
 app.route("/withdraw_application", methods=['POST'])(withdraw_application)
-
 
 
 # Execute this program if it is run as a main script (not by 'import')
