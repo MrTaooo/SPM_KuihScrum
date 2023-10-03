@@ -91,7 +91,7 @@
                                                             <!-- Role dropdown box -->
                                                             <div class="btn-group">
                                                                 <select class="form-control" id="roleTitle">
-                                                                    <option v-for="role in roles" :key="role">{{ role }}
+                                                                    <option v-for="roleName in Object.keys(roles)" :key="roleName">{{ roleName }}
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -152,7 +152,7 @@
                                     <!-- Created dummy cards with dummy text, replace with text from db -->
                                     <div class="col-md-6 p-0">
                                         <h5 class="card-title m-2">{{job.Role_Name}}</h5>
-                                        <p class="card-text m-2">{{roleDescriptions[job.Role_Name]}}</p>
+                                        <p class="card-text m-2">{{roles[job.Role_Name]}}</p>
                                         <p class="card-text m-2">Skills : {{roleSkills[job.Role_Name]}}</p>
                                         <!-- Alignment Percentage -->
                                         <p class="card-text m-2">

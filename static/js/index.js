@@ -1,5 +1,4 @@
 const get_roles_URL = "http://127.0.0.1:5100/roles";
-const get_roles_description_URL = "http://127.0.0.1:5100/rolesDescription";
 const get_roles_skills_URL = "http://127.0.0.1:5100/rolesSkills";
 const get_joblistings_URL = "http://127.0.0.1:5100/joblistings";
 const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
@@ -13,10 +12,9 @@ const jobsPage = Vue.createApp({
   data() {
     return {
       jobListings: [],
-      roles: [],
+      roles: {},
       userType: 0,
       accessRight: 0,
-      roleDescriptions: {},
       roleSkills: {},
       alignmentpercentage: 0,
       user_skills_dict: {},
@@ -77,7 +75,6 @@ const jobsPage = Vue.createApp({
 
           // these 2 methods are called to populate the roles and roleDescriptions array when the page first loads
           this.getAllRoles();
-          this.getRolesDescription();
           this.getRolesSkills();
           this.getAppliedJobs();
           // console.log(this.jobListings);
@@ -92,24 +89,20 @@ const jobsPage = Vue.createApp({
       axios
         .get(get_roles_URL)
         .then((response) => {
-          this.roles = response.data["data"]["roles"].map(
-            (role) => role.Role_Name
-          );
+          roles_list = response.data["data"]["roles"]
+          const roleObject = {};
+
+          roles_list.forEach(role => {
+            const role_name = role.Role_Name;
+            const role_desc = role.Role_Desc;
+            roleObject[role_name] = role_desc;
+          });
+          console.log(roleObject)
+          this.roles = roleObject;
         })
         .catch((error) => {
           // Errors when calling the service; such as network error,
           // service offline, etc
-          console.log(error);
-        });
-    },
-
-    getRolesDescription() {
-      axios
-        .get(get_roles_description_URL)
-        .then((response) => {
-          this.roleDescriptions = response.data;
-        })
-        .catch((error) => {
           console.log(error);
         });
     },

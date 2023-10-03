@@ -19,6 +19,6 @@ def get_all_joblistings():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no job listings that are currently open."
+            "message": "There are no job listings in the database."
         }
     ), 404

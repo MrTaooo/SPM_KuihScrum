@@ -14,7 +14,6 @@ from routes.calculate_alignment import calculate_alignment
 from routes.create_job_listing import create_listing
 from routes.get_all_job_listings import get_all_joblistings
 from routes.get_all_roles import get_all_roles
-from routes.get_roles_description import get_roles_description
 from routes.get_roles_skills import get_roles_skills
 from routes.withdraw_application import withdraw_application
 from routes.get_applied_jobs_for_user import get_applied_jobs_for_user
@@ -25,7 +24,6 @@ app.route('/calculateAlignment', methods=['POST'])(calculate_alignment)
 app.route('/createListing', methods=['POST'])(create_listing)
 app.route("/joblistings")(get_all_joblistings)
 app.route("/roles")(get_all_roles)
-app.route("/rolesDescription")(get_roles_description)
 app.route("/rolesSkills")(get_roles_skills)
 app.route("/withdraw_application", methods=['POST'])(withdraw_application)
 app.route("/get_applied_jobs_for_user/<int:staff_id>", methods=['GET'])(get_applied_jobs_for_user)
