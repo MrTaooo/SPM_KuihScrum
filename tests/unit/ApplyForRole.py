@@ -15,7 +15,7 @@ driver.get("http://127.0.0.1:5500/templates/index.html")
 driver.implicitly_wait(10)
 
 try:
-    applyJL = 'Software Developer' # job title
+    applyJL = 'Data Analyst' # job title
 
     # find all job cards on page
     job_cards = driver.find_elements(By.XPATH, "//div[@class='card mb-4']")
@@ -29,21 +29,16 @@ try:
             apply_button = card.find_element(By.XPATH, "//button[contains(text(), 'Apply Now')]")
             apply_button_text = apply_button.text
             print('Button text before clicking:', apply_button_text)
-
-            # Click the button
             apply_button.click()
-            print('Apply now button clicked.')
-
-            # Wait for the button text to change (adjust the timeout as needed)
+            # wait for the button text to change
             WebDriverWait(driver, 10).until(
                 EC.text_to_be_present_in_element((By.XPATH, "//div[@class='col-md-3']//button"), "Withdraw")
             )
-
-            # Find the button again to get its updated text
-            updated_apply_button = card.find_element(By.XPATH, "//button[contains(text(), 'Apply Now')]")
+            # check if button changed to withdraw
+            updated_apply_button = card.find_element(By.XPATH, "//button[contains(text(), 'Withdraw')]")
             updated_button_text = updated_apply_button.text
-            print('Button text after clicking:', updated_button_text)
-
+            print('Button text after clicking:', updated_button_text, '\n', "Test Case Successful!")
+            
             break
 
 except Exception as e:
