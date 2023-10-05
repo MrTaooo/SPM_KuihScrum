@@ -34,7 +34,7 @@
         <div class="container mt-4">
             <div class="row">
                 <!-- Left Sidebar - Filter Menu -->
-                <div class="col-md-3">
+                <div class="col-md-3" id="filter_menu">
 
                     <!--Select user type here for current sprint-->
                     <input type="radio" id="hr" name="user_type" value=1 v-model="userType" @change="updateUserType">
@@ -149,9 +149,9 @@
                         <div id="{{job.JobList_ID}}" class="card mb-4">
                             <div class="card-body">
                                 <div class="row">
-                                    <!-- Created dummy cards with dummy text, replace with text from db -->
                                     <div class="col-md-6 p-0">
                                         <h5 class="card-title m-2">{{job.Role_Name}}</h5>
+                                        <!--role description where role name is the key in the roles dictionary-->
                                         <p class="card-text m-2">{{roles[job.Role_Name]}}</p>
                                         <p class="card-text m-2">Skills : {{roleSkills[job.Role_Name]}}</p>
                                         <!-- Alignment Percentage -->
@@ -182,10 +182,11 @@
                                             {{job.Closing_date}}</h5> <!-- Adjust the font size as needed -->
                                     </div>
 
-                                    <div class="col-md-3"> <!-- Adjust the width as needed -->
+                                    <div class="col-md-3"> 
+                                        <!-- : refers to binding of html attribute to the data property of Vue (:<attribute> = <data property>)-->
                                         <button :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
-                                            @click="applyOrWithdraw($event, job.JobList_ID)" apply-staff-id="1385970" >
-                                            {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw' : 'Apply Now' }}
+                                            @click="applyOrWithdraw($event, job.JobList_ID)" :apply-staff-id="staffID" >
+                                            {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now' }}
                                         </button>
                                         <!-- Replace # with your link -->
                                     </div>
@@ -220,14 +221,12 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <!-- v-for loop through applicants for JobList_ID and display them in the table -->
-                                                            <!-- Demo -->
-                                                            <tr>
-                                                                <td>Lin Tao</td>
-                                                                <td>Engineering</td>
-                                                                <td>lintao@gmail.com</td>
-                                                                <td>United States</td>
-                                                                <td>Communication, Recruitment</td>
+                                                            <tr v-for="applicant in applicants[job.JobList_ID]">
+                                                                <td>{{ applicant["staff_name"] }}</td>
+                                                                <td>{{ applicant.dept }}</td>
+                                                                <td>{{ applicant.email }}</td>
+                                                                <td>{{ applicant.country }}</td>
+                                                                <!--<td>{{ applicant.skills }}</td> -->
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -240,7 +239,29 @@
                                         </div>
                                     </div>
 
+                                    <!-- Modal to show apply/withdraw error message-->
+                                    <!-- The modal structure with a dynamic error message and close button -->
+                                    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Error</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            <div class="modal-body">
+                                            <!-- Bind the error message to the Vue data property errorMsg -->
+                                                <p id="errorMessage">{{ errorMsg }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <!--edit button which is only visible by the HR-->
                                     <div class="col-md text-md-end p-0 text-center">
                                         <button v-if="accessRight === 1" class="btn btn-link">Edit</button>
                                     </div>
@@ -254,7 +275,7 @@
         </div>
     </div>
 
-    </div>
+
     <!-- jQuery code to update the selected role dynamically -->
     <script>
         $(document).ready(function () {

@@ -11,8 +11,8 @@ VALUES
 -- Insert data into the Job_Listing table
 INSERT INTO Job_Listing (Role_Name, publish_Date, Closing_date)
 VALUES
-    ('Software Developer', '2023-09-01', '2023-09-15'),
-    ('Data Analyst', '2023-09-02', '2023-09-16'),
+    ('Software Developer', '2023-09-01', '2023-12-15'),
+    ('Data Analyst', '2023-09-02', '2023-12-16'),
     ('Marketing Specialist', '2023-09-03', '2023-09-17'),
     ('Sales Representative', '2023-09-04', '2023-09-18'),
     ('Software Developer', '2023-09-05', '2023-09-19');
@@ -33,13 +33,13 @@ VALUES
     ('Sales Representative', 'Product knowledge'),
     ('Sales Representative', 'Communication skills');
 
--- Insert data into Role_Skill table 
-INSERT INTO Accessrights (Access_ID, Access_type)
+-- Insert data into Accessrights table 
+INSERT INTO AccessRights (Access_ID, Access_type)
 VALUES
     ('0', 'Staff'),
     ('1', 'HR');
 
-    -- Insert data into Staff table 
+-- Insert data into Staff table 
 INSERT INTO Staff (Staff_ID, Staff_FName, Staff_LName, Dept, Country, Email, Access_Rights)
 VALUES
     ('01385970', 'Lin', 'Tao', 'Engineering', 'United States', 'lintao@gmail.com', '1'),
@@ -62,3 +62,15 @@ VALUES
     ('01523071', 'Relationship building'),
     ('01523071', 'SQL'),
     ('01523071', 'Communication skills');
+
+INSERT INTO Job_Application (JobList_ID, Staff_ID)
+VALUES
+    ('1','01385970'),
+    ('1','01387909'),
+    ('1','01439201'),
+    ('1','01523071'),
+    ('2','01385970'),
+    ('2','01387909'),
+    ('2','01439201'),
+    ('3','01385970'),
+    ('3','01387909')
