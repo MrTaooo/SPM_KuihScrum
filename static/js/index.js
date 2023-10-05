@@ -14,6 +14,7 @@ const jobsPage = Vue.createApp({
       roles: {},
       userType: 0,
       accessRight: 0,
+      userId: '01385970',
       roleSkills: {},
       alignmentpercentage: 0,
       user_skills_dict: {},
