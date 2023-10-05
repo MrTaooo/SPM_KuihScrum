@@ -32,6 +32,7 @@ CREATE TABLE Role_Skill (
 CREATE TABLE Staff_Skill (
     Staff_ID int,
     Skill_Name Varchar(100),
+    PRIMARY KEY (Staff_ID, Skill_Name),
     FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID),
     FOREIGN KEY (Skill_Name) REFERENCES Role_Skill(Skill_Name)
 );
