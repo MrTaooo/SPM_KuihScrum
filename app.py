@@ -21,7 +21,7 @@ from routes.get_all_applicants import get_applicants
 
 # Register the route functions with the app
 app.route("/apply_for_job", methods=['POST'])(apply_for_job)
-app.route('/calculateAlignment', methods=['POST'])(calculate_alignment)
+app.route('/calculateAlignment', methods=['GET'])(calculate_alignment)
 app.route('/createListing', methods=['POST'])(create_listing)
 app.route("/joblistings")(get_all_joblistings)
 app.route("/roles")(get_all_roles)

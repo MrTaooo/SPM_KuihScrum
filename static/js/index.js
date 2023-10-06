@@ -19,8 +19,7 @@ const jobsPage = Vue.createApp({
       accessRight: 0,
       roleSkills: {},
       skill_match_dict: {},
-      user_skills_dict: {},
-      skills_by_role: {},
+      userSkills: [],
       // ---------------- FOR APPLY/WITHDRAW (START) ----------------
       appliedJobs: [],
       applyStyle: "btn btn-primary btn-block mt-2",
@@ -33,11 +32,7 @@ const jobsPage = Vue.createApp({
   },
 
   mounted() {
-    // console.log("-------In user mounted------");
-    // retrieve all job listings
-    this.getAllJobListings();
-    // hardcoded faux login userID
-    this.getUserSkills(this.staffID); 
+    this.getUserSkills(this.staffID);
   },
   
   methods: {
@@ -82,19 +77,16 @@ const jobsPage = Vue.createApp({
           // In JavaScript, you use the .then() method to work with Promises and handle the 
           // asynchronous result of an operation. Promises represent the eventual completion (either success or failure) 
           // of an asynchronous operation, and .then() is used to specify what should happen when the Promise is resolved (successfully completed).
-          for (let i = 0; i < this.jobListings.length; i++) {
-
-         
-
-            this.getCalculateAlignment(this.jobListings[i].JobList_ID)
-            .then((data) => {
-              this.skill_match_dict[this.jobListings[i].JobList_ID] = {
-                "alignment_percentage": data.alignment_percentage, 
-                "role_skills": data.skills_by_role,
-                "user_skills": data.user_skills_dict.user_skills
-              };
-            })            
-          }
+          this.jobListings.forEach((jobListing) => {
+            this.getCalculateAlignment(jobListing.JobList_ID)
+              .then((data) => {
+                this.skill_match_dict[jobListing.JobList_ID] = {
+                  "alignment_percentage": data.alignment_percentage,
+                  "role_skills": data.skills_by_role,
+                  "user_skills": this.userSkills
+                };
+              });
+          });
         
 
           // retrieve all the applied roles for the current user
@@ -110,7 +102,6 @@ const jobsPage = Vue.createApp({
           // these 2 methods are called to populate the roles and roleDescriptions array when the page first loads
           this.getAllRoles();
           this.getRolesSkills();
-          // console.log(this.jobListings);
         })
         .catch((error) => {
           console.log(error);
@@ -159,30 +150,47 @@ const jobsPage = Vue.createApp({
           params: { userID: userID }
         })
         .then((response) => {
-          this.user_skills_dict = response.data.data.user_skills[0];
-          // console.log('Lookie pookie',this.user_skills_dict);
+          this.userSkills = response.data.data.user_skills;
+          this.getAllJobListings();
         })
         .catch((error) => {
           console.log(error);
         });
     },
 
-    // this function will calculate the skill alignment percentage
-    async getCalculateAlignment(joblist_ID) {
-      // Create the data object with parameters
-      const postData = {
+    getCalculateAlignment(joblist_ID) {
+      let params = {
         joblist_ID: joblist_ID,
-        user_ID: this.staffID, // Staff ID is currently hardcoded since no login 
+        user_Skills: this.userSkills.join(',')
       };
-
-      try {
-        const response = await axios.post(get_calculatealignment_URL, postData);
-        return response.data.data;
-      }
-      catch (error) {
-        console.log('error:', error);
-      }
+      return axios
+        .get(get_calculatealignment_URL, {
+          params: params
+        })
+        .then((response) => {
+          return response.data.data;
+        })
+        .catch((error) => {
+          console.log('error:', error);
+        });
     },
+    // this function will calculate the skill alignment percentage
+    // async getCalculateAlignment(joblist_ID) {
+    //   // Create the data object with parameters
+    //   const postData = {
+    //     joblist_ID: joblist_ID,
+    //     user_ID: this.staffID, // Staff ID is currently hardcoded since no login 
+    //   };
+
+    //   try {
+    //     const response = await axios.post(get_calculatealignment_URL, postData);
+    //     return response.data.data;
+    //   }
+    //   catch (error) {
+    //     console.log('error:', error);
+    //   }
+    // },
+    
 
     // When the user click on close for the success modal, this method will run to close the createjob modal
     closeModals() {

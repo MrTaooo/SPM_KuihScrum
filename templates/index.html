@@ -147,7 +147,8 @@
                     <!-- Replace dummy card with these variables -->
                     <div v-for="job in jobListings">
                         <div id="{{job.JobList_ID}}" class="card mb-4">
-                            <div class="card-body">
+                            <div v-if="skill_match_dict[job.JobList_ID] && skill_match_dict[job.JobList_ID] !== undefined"
+                                class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 p-0">
                                         <h5 class="card-title m-2">{{job.Role_Name}}</h5>
@@ -158,7 +159,8 @@
                                         <p class="card-text m-2">
                                             <p class="card-text m-2">Alignment Percentage: 
                                                 <!-- Fix condition if needed -->
-                                                <span :class="{
+                                                <span 
+                                                    :class="{
                                                     'text-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
                                                     'text-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
                                                     'text-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
@@ -173,7 +175,8 @@
                                             <span class="mr-2">Skills:</span>
                                             <span v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
                                               <span
-                                                :class="{ 'badge rounded-pill bg-success user-skill-label': skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill), 'badge rounded-pill border border-success user-skill-label text-success': !skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill) }"
+                                                :class="{ 'badge rounded-pill bg-success user-skill-label': userSkills.includes(roleSkill), 
+                                                        'badge rounded-pill border border-success user-skill-label text-success': !userSkills.includes(roleSkill) }"
                                                 style="white-space: nowrap;">
                                                 {{ roleSkill }}
                                               </span>
