@@ -9,3 +9,9 @@
 .input-group-append {
     cursor: pointer;
 }
+
+.user-skill-label {
+    margin-left: 5px; 
+    margin-right: 5px; /* Add some space between labels */
+    font-size: 13px;
+}

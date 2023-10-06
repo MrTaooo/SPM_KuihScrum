@@ -11,12 +11,11 @@ const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 const jobsPage = Vue.createApp({
   data() {
     return {
-      staffID: "1385970", 
+      staffID: "1387909", 
       jobListings: [],
       roles: {},
       userType: 0,
       accessRight: 0,
-      userId: '01385970',
       roleSkills: {},
       skill_match_dict: {},
       user_skills_dict: {},
@@ -84,32 +83,33 @@ const jobsPage = Vue.createApp({
           // of an asynchronous operation, and .then() is used to specify what should happen when the Promise is resolved (successfully completed).
           for (let i = 0; i < this.jobListings.length; i++) {
 
-            // create a role skill string
-            role_skill_str = ''
-            // create a user skill string
-            user_skill_str = ''
+         
 
             this.getCalculateAlignment(this.jobListings[i].JobList_ID)
             .then((data) => {
-              
-              console.log(data.user_skills_dict.user_skills)
+              // create a role skill arr
+              role_skill_arr = []
+              // create a user skill arr
+              user_skill_arr = []
               // get the role skills and stringify them
               for (r_skill of data.skills_by_role)
               {
-                role_skill_str += r_skill + ", "
+                role_skill_arr.push(r_skill)
               }
               
               // get the user skills and stringify them
               for (u_skill of data.user_skills_dict.user_skills)
               {
-                user_skill_str += u_skill + ", "
+                user_skill_arr.push(u_skill)
               }
-
               // populate skill_match_dict
+              console.log(role_skill_arr)
+              console.log(user_skill_arr)
               this.skill_match_dict[this.jobListings[i].JobList_ID] = {
                 "alignment_percentage": data.alignment_percentage, 
-                "role_skills": role_skill_str.slice(0,-2),
-                "user_skills": user_skill_str.slice(0,-2)};
+                "role_skills": role_skill_arr,
+                "user_skills": user_skill_arr
+              };
             })            
           }
         
@@ -175,7 +175,7 @@ const jobsPage = Vue.createApp({
       // Create the data object with parameters
       const postData = {
         joblist_ID: joblist_ID,
-        user_ID: this.staffID,
+        user_ID: this.staffID, //Staff ID is currently hardcoded since no login 
       };
 
       try {
