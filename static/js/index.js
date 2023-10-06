@@ -18,7 +18,7 @@ const jobsPage = Vue.createApp({
       accessRight: 0,
       userId: '01385970',
       roleSkills: {},
-      alignmentpercentage: 0,
+      skill_match_dict: {},
       user_skills_dict: {},
       skills_by_role: {},
       // ---------------- FOR APPLY/WITHDRAW (START) ----------------
@@ -28,7 +28,7 @@ const jobsPage = Vue.createApp({
       // ---------------- FOR APPLY/WITHDRAW (END) ----------------
       // apply or withdraw errorMsg (for error modal)
       errorMsg: "",
-      applicants: {}
+      applicants: []
     };
   },
 
@@ -36,9 +36,8 @@ const jobsPage = Vue.createApp({
     // console.log("-------In user mounted------");
     // retrieve all job listings
     this.getAllJobListings();
-    this.getAllApllicants();
   },
-
+  
   methods: {
     // this function is to get the user type, by default it will be 0, which is a normal user
     // 1 will be HR
@@ -53,7 +52,8 @@ const jobsPage = Vue.createApp({
     },
 
     // this function will get all job listings for the staff and hr. Staff will only see job listings that are not closed. 
-    // within this function, it also calls 3 methods to populate the roles, populate the role descriptions and populate the applied jobs (data properties)
+    // within this function, it also calls 2 methods to populate the roles and populate the role descriptions (vue data properties)
+    // the 2 functions were not placed at mounted as the page would refresh after the hr creates a new listings wihch will activate the getAllJobListings() function
     getAllJobListings() {
       axios
         .get(get_joblistings_URL)
@@ -78,6 +78,41 @@ const jobsPage = Vue.createApp({
               }
             }
           }
+
+          // In JavaScript, you use the .then() method to work with Promises and handle the 
+          // asynchronous result of an operation. Promises represent the eventual completion (either success or failure) 
+          // of an asynchronous operation, and .then() is used to specify what should happen when the Promise is resolved (successfully completed).
+          for (let i = 0; i < this.jobListings.length; i++) {
+
+            // create a role skill string
+            role_skill_str = ''
+            // create a user skill string
+            user_skill_str = ''
+
+            this.getCalculateAlignment(this.jobListings[i].JobList_ID)
+            .then((data) => {
+              
+              console.log(data.user_skills_dict.user_skills)
+              // get the role skills and stringify them
+              for (r_skill of data.skills_by_role)
+              {
+                role_skill_str += r_skill + ", "
+              }
+              
+              // get the user skills and stringify them
+              for (u_skill of data.user_skills_dict.user_skills)
+              {
+                user_skill_str += u_skill + ", "
+              }
+
+              // populate skill_match_dict
+              this.skill_match_dict[this.jobListings[i].JobList_ID] = {
+                "alignment_percentage": data.alignment_percentage, 
+                "role_skills": role_skill_str.slice(0,-2),
+                "user_skills": user_skill_str.slice(0,-2)};
+            })            
+          }
+        
 
           // retrieve all the applied roles for the current user
           axios
@@ -136,19 +171,20 @@ const jobsPage = Vue.createApp({
     },
 
     // this function will calculate the skill alignment percentage
-    getCalculateAlignment() {
-      axios
-        .get(get_calculatealignment_URL)
-        .then((response) => {
-          this.alignment = response.data.alignmentpercentage;
-          this.user_skills_dict = response.data.user_skills_dict;
-          this.skills_by_role = response.data.skills_by_role;
-          console.log(this.alignment);
-          console.log(this.skills_by_role);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    async getCalculateAlignment(joblist_ID) {
+      // Create the data object with parameters
+      const postData = {
+        joblist_ID: joblist_ID,
+        user_ID: this.staffID,
+      };
+
+      try {
+        const response = await axios.post(get_calculatealignment_URL, postData);
+        return response.data.data;
+      }
+      catch (error) {
+        console.log('error:', error);
+      }
     },
 
     // When the user click on close for the success modal, this method will run to close the createjob modal
@@ -242,36 +278,12 @@ const jobsPage = Vue.createApp({
     },
 
     // this function will get all the applicants for the all the job listings
-    getAllApllicants() {
+    getAllApplicants(joblist_ID) {
       axios
-        .get(get_all_applicants_URL)
+        .get(get_all_applicants_URL+ "/" + joblist_ID)
         .then((response) => {
-          roles_list = response.data["data"]["roles"]
-          applicants = response.data["data"]["applicants"]['0']
-          for (job_list in applicants)
-          {            
-            job_list_id = job_list
-            console.log(job_list_id)
-            for (applicant in applicants[job_list_id])
-            {
-              country = applicants[job_list_id][applicant]['Country']
-              dept = applicants[job_list_id][applicant]['Dept']
-              email = applicants[job_list_id][applicant]['Email']
-              staff_name = applicants[job_list_id][applicant]['Staff_FName'] + " " + applicants[job_list_id][applicant]['Staff_LName']
-              staff_id = applicants[job_list_id][applicant]['Staff_ID']
-              // need to retrieve skill 
-
-              // Check if the job_list key exists in this.applicants
-              if (!this.applicants.hasOwnProperty(job_list_id)) {
-                // If it doesn't exist, create an empty array for it
-                this.applicants[job_list] = [{"country": country, "dept": dept, "email": email, "staff_name": staff_name, "staff_id": staff_id}];
-              }
-              else {
-                // Push the applicant object to the array
-                this.applicants[job_list].push({"country": country, "dept": dept, "email": email, "staff_name": staff_name, "staff_id": staff_id});
-              }
-            }
-          }
+          this.applicants = response.data["data"]["applicants"]
+          console.log(response.data["data"]["applicants"])
         })
         .catch((error) => {
           // Errors when calling the service; such as network error,

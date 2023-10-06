@@ -27,7 +27,7 @@ app.route("/roles")(get_all_roles)
 app.route("/rolesSkills")(get_roles_skills)
 app.route("/withdraw_application", methods=['POST'])(withdraw_application)
 app.route("/get_applied_jobs_for_user/<int:staff_id>", methods=['GET'])(get_applied_jobs_for_user)
-app.route("/get_all_applicants", methods=['GET'])(get_applicants)
+app.route("/get_all_applicants/<int:joblist_ID>", methods=['GET'])(get_applicants)
 
 
 # Execute this program if it is run as a main script (not by 'import')

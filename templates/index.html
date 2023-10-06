@@ -156,19 +156,19 @@
                                         <p class="card-text m-2">Skills : {{roleSkills[job.Role_Name]}}</p>
                                         <!-- Alignment Percentage -->
                                         <p class="card-text m-2">
-                                            <strong>Alignment Percentage:{{ this.getCalculateAlignment(jobid)}}</strong>
+                                            <strong>Alignment Percentage: {{ skill_match_dict[job.JobList_ID].alignment_percentage }}% </strong>
                                         </p>
 
                                         <!-- Matched Skills -->
                                         <p class="card-text m-2">
                                             <strong>Matched Skills:</strong>
-                                            <!-- {{ getMatchedSkills(job).join(', ') }} -->
+                                            {{ skill_match_dict[job.JobList_ID].role_skills}} 
                                         </p>
 
                                         <!-- Missing Skills -->
                                         <p class="card-text m-2">
                                             <strong>Missing Skills:</strong>
-                                            <!-- {{ getMissingSkills(job).join(', ') }} -->
+                                            {{ skill_match_dict[job.JobList_ID].user_skills}} 
                                         </p>
                                     </div>
 
@@ -194,6 +194,7 @@
                                     <!-- Modal button to view Applicants -->
                                     <div class="col text-center">
                                         <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs"
+                                            @click="getAllApplicants(job.JobList_ID)"
                                             data-bs-toggle="modal" data-bs-target="#viewApplicants">
                                             View Applicants
                                         </button>
@@ -221,6 +222,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                            <h1>{{job.JobList_ID}}</h1>
                                                             <tr v-for="applicant in applicants[job.JobList_ID]">
                                                                 <td>{{ applicant["staff_name"] }}</td>
                                                                 <td>{{ applicant.dept }}</td>
