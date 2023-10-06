@@ -157,49 +157,56 @@
                                         <!-- Alignment Percentage -->
                                         <p class="card-text m-2">
                                             <p class="card-text m-2">Alignment Percentage: <span class="text-success">{{ skill_match_dict[job.JobList_ID].alignment_percentage }}% </span></p>
+                                            <p class="card-text m-2">Alignment Percentage: 
+                                                <span :class="{
+                                                    'text-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
+                                                    'text-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
+                                                    'text-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
+                                                }">
+                                                    {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
+                                                </span>
                                         </p>
                                         <!-- <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p> --> <!-- Can remove alr ? since alr print-->
 
                                         <!-- Matched Skills -->
                                         <p class="card-text m-2">
-                                            <p class="card-text m-2">Skills needed:</p>
+                                            <span class="mr-2">Skills:</span>
                                             <span v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
-                                                <span
-                                                  :class="{ 'badge rounded-pill bg-success user-skill-label': skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill), 'badge rounded-pill bg-secondary user-skill-label': !skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill) }"
-                                                >
-                                                  {{ roleSkill }}
-                                                </span>
-                                            </span>  
+                                              <span
+                                                :class="{ 'badge rounded-pill bg-success user-skill-label': skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill), 'badge rounded-pill border border-success user-skill-label text-success': !skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill) }"
+                                                style="white-space: nowrap;">
+                                                {{ roleSkill }}
+                                              </span>
+                                            </span>
                                         </p>
+                                          
                                     </div>
 
-                                    <div class="col-md-3 p-0 text-center">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted:
-                                            {{job.publish_Date}}</h5> <!-- Adjust the font size as needed -->
+                                    <div class="col-md-3 p-0 m-md-0 m-2 ">
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted: {{job.publish_Date}}</h5>
                                     </div>
-
-                                    <div class="col-md-3 text-center">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date:
-                                            {{job.Closing_date}}</h5> <!-- Adjust the font size as needed -->
+                    
+                                    <div class="col-md-3 p-0 m-md-0 m-2">
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date: {{job.Closing_date}}</h5>
                                     </div>
-
-                                    <div class="col-md-3"> 
-                                        <!-- : refers to binding of html attribute to the data property of Vue (:<attribute> = <data property>)-->
-                                        <button :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
-                                            @click="applyOrWithdraw($event, job.JobList_ID)" :apply-staff-id="staffID" >
-                                            {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now' }}
-                                        </button>
-                                        <!-- Replace # with your link -->
+                                        
+                                    <div class="col d-flex">
+                                        <div class="me-2"> <!-- Add margin-right (me) spacing -->
+                                            <button :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
+                                                @click="applyOrWithdraw($event, job.JobList_ID)" :apply-staff-id="staffID">
+                                                {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now' }}
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs mt-2"
+                                                @click="getAllApplicants(job.JobList_ID)"
+                                                data-bs-toggle="modal" data-bs-target="#viewApplicants">
+                                                View Applicants
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <!-- Modal button to view Applicants -->
-                                    <div class="col text-center">
-                                        <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs"
-                                            @click="getAllApplicants(job.JobList_ID)"
-                                            data-bs-toggle="modal" data-bs-target="#viewApplicants">
-                                            View Applicants
-                                        </button>
-                                    </div>
+                                    
+                                    
                                     <!-- Modal table to view Applicants -->
                                     <div class="modal fade modal-lg" id="viewApplicants" tabindex="-1" role="dialog"
                                         aria-labelledby="applicantModalLabel" aria-hidden="true">
