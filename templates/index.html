@@ -158,19 +158,18 @@
                                         <p class="card-text m-2">
                                             <p class="card-text m-2">Alignment Percentage: <span class="text-success">{{ skill_match_dict[job.JobList_ID].alignment_percentage }}% </span></p>
                                         </p>
-                                        <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p>
+                                        <!-- <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p> --> <!-- Can remove alr ? since alr print-->
 
                                         <!-- Matched Skills -->
                                         <p class="card-text m-2">
-                                            <p class="card-text m-2">Skills you have:</p>
-                                            <!-- {{ skill_match_dict[job.JobList_ID].user_skills}}  -->
-                                            <span v-for="userSkill in skill_match_dict[job.JobList_ID].user_skills">
+                                            <p class="card-text m-2">Skills needed:</p>
+                                            <span v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
                                                 <span
-                                                  :class="{ 'badge rounded-pill bg-success user-skill-label': roleSkills[job.Role_Name].includes(userSkill), 'badge rounded-pill bg-secondary user-skill-label': !roleSkills[job.Role_Name].includes(userSkill) }"
+                                                  :class="{ 'badge rounded-pill bg-success user-skill-label': skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill), 'badge rounded-pill bg-secondary user-skill-label': !skill_match_dict[job.JobList_ID].user_skills.includes(roleSkill) }"
                                                 >
-                                                  {{ userSkill }}
+                                                  {{ roleSkill }}
                                                 </span>
-                                            </span>
+                                            </span>  
                                         </p>
                                     </div>
 
