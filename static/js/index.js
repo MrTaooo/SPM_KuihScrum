@@ -11,7 +11,7 @@ const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 const jobsPage = Vue.createApp({
   data() {
     return {
-      staffID: "1387909", 
+      staffID: "1385970", 
       jobListings: [],
       roles: {},
       userType: 0,
@@ -57,15 +57,13 @@ const jobsPage = Vue.createApp({
       axios
         .get(get_joblistings_URL)
         .then((response) => {
-          // console.log("job listings loaded");
-          // console.log(response);
           this.jobListings = response.data.data.joblistings;
           var current = new Date();
           const year = current.getFullYear();
           const month = (current.getMonth() + 1).toString().padStart(2, "0"); // Add leading zero if needed
           const day = current.getDate().toString().padStart(2, "0"); // Add leading zero if needed
           const date = `${year}-${month}-${day}`;
-          // console.log(date);
+    
           
           // if the user is Staff, then the job listings will be filtered to only show the job listings that are not closed
           if (this.accessRight == 0) {
@@ -91,13 +89,13 @@ const jobsPage = Vue.createApp({
               role_skill_arr = []
               // create a user skill arr
               user_skill_arr = []
-              // get the role skills and stringify them
+              // get the role skills and append them 
               for (r_skill of data.skills_by_role)
               {
                 role_skill_arr.push(r_skill)
               }
               
-              // get the user skills and stringify them
+              // get the user skills and append them
               for (u_skill of data.user_skills_dict.user_skills)
               {
                 user_skill_arr.push(u_skill)
@@ -175,7 +173,7 @@ const jobsPage = Vue.createApp({
       // Create the data object with parameters
       const postData = {
         joblist_ID: joblist_ID,
-        user_ID: this.staffID, //Staff ID is currently hardcoded since no login 
+        user_ID: this.staffID, // Staff ID is currently hardcoded since no login 
       };
 
       try {

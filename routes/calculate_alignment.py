@@ -13,10 +13,6 @@ def calculate_alignment():
  
     # retrieve the job_listing from the database based on jobList_ID
     job_listing = JobListing.query.filter_by(JobList_ID=joblist_ID).first() 
-
-    # print(userID)
-    # print("joblist_ID:", joblist_ID)
-    # print("job_listing:", job_listing)
     
     if job_listing is None:
         return jsonify({"code": 404, "message": "Job listing not found"})
@@ -34,13 +30,6 @@ def calculate_alignment():
     for skill_record in role_skills:
         # role = skill_record.Role_Name
         skill = skill_record.Skill_Name
-        
-        # creates a new key-value pair in the dictionary if the role does not exist in the skills_by_role dict
-        # if role not in skills_by_role:
-        #     skills_by_role[role] = []
-
-        # if key exist, add the skill to the list of skills for the role
-        # skills_by_role[role].append(skill)
 
         skills_by_role.append(skill)
 
