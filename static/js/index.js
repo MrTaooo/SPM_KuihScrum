@@ -1,5 +1,6 @@
 const get_roles_URL = "http://127.0.0.1:5100/roles";
 const get_roles_skills_URL = "http://127.0.0.1:5100/rolesSkills";
+const get_user_skills_URL = "http://127.0.0.1:5100/userSkills";
 const get_joblistings_URL = "http://127.0.0.1:5100/joblistings";
 const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
 const get_calculatealignment_URL = "http://127.0.0.1:5100/calculateAlignment";
@@ -35,6 +36,8 @@ const jobsPage = Vue.createApp({
     // console.log("-------In user mounted------");
     // retrieve all job listings
     this.getAllJobListings();
+    // hardcoded faux login userID
+    this.getUserSkills(this.staffID); 
   },
   
   methods: {
@@ -85,28 +88,10 @@ const jobsPage = Vue.createApp({
 
             this.getCalculateAlignment(this.jobListings[i].JobList_ID)
             .then((data) => {
-              // create a role skill arr
-              role_skill_arr = []
-              // create a user skill arr
-              user_skill_arr = []
-              // get the role skills and append them 
-              for (r_skill of data.skills_by_role)
-              {
-                role_skill_arr.push(r_skill)
-              }
-              
-              // get the user skills and append them
-              for (u_skill of data.user_skills_dict.user_skills)
-              {
-                user_skill_arr.push(u_skill)
-              }
-              // populate skill_match_dict
-              console.log(role_skill_arr)
-              console.log(user_skill_arr)
               this.skill_match_dict[this.jobListings[i].JobList_ID] = {
                 "alignment_percentage": data.alignment_percentage, 
-                "role_skills": role_skill_arr,
-                "user_skills": user_skill_arr
+                "role_skills": data.skills_by_role,
+                "user_skills": data.user_skills_dict.user_skills
               };
             })            
           }
@@ -161,7 +146,21 @@ const jobsPage = Vue.createApp({
       axios
         .get(get_roles_skills_URL)
         .then((response) => {
-          this.roleSkills = response.data.data.roles_skills[0]
+          this.roleSkills = response.data.data.roles_skills[0];
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    // this function will get all the logged in user's skills
+    getUserSkills(userID) {
+      axios
+        .get(get_user_skills_URL, {
+          params: { userID: userID }
+        })
+        .then((response) => {
+          this.user_skills_dict = response.data.data.user_skills[0];
+          // console.log('Lookie pookie',this.user_skills_dict);
         })
         .catch((error) => {
           console.log(error);
