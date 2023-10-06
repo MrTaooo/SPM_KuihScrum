@@ -27,7 +27,8 @@ const jobsPage = Vue.createApp({
       // ---------------- FOR APPLY/WITHDRAW (END) ----------------
       // apply or withdraw errorMsg (for error modal)
       errorMsg: "",
-      applicants: []
+      applicants: [],
+      tempJobID: ""
     };
   },
 
@@ -284,6 +285,7 @@ const jobsPage = Vue.createApp({
 
     // this function will get all the applicants for the all the job listings
     getAllApplicants(joblist_ID) {
+      this.tempJobID = joblist_ID
       axios
         .get(get_all_applicants_URL+ "/" + joblist_ID)
         .then((response) => {

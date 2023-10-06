@@ -144,7 +144,6 @@
                     </div>
 
                     <!-- Add job listings here -->
-                    <!-- Replace dummy card with these variables -->
                     <div v-for="job in jobListings">
                         <div id="{{job.JobList_ID}}" class="card mb-4">
                             <div v-if="skill_match_dict[job.JobList_ID] && skill_match_dict[job.JobList_ID] !== undefined"
@@ -233,12 +232,12 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <h1>{{job.JobList_ID}}</h1>
-                                                            <tr v-for="applicant in applicants[job.JobList_ID]">
-                                                                <td>{{ applicant["staff_name"] }}</td>
-                                                                <td>{{ applicant.dept }}</td>
-                                                                <td>{{ applicant.email }}</td>
-                                                                <td>{{ applicant.country }}</td>
+                                                            <h1>{{tempJobID}}</h1>
+                                                            <tr v-for="applicant in applicants">
+                                                                <td>{{ applicant["Staff_FName"] }} {{ applicant["Staff_LName"] }}</td>
+                                                                <td>{{ applicant.Dept }}</td>
+                                                                <td>{{ applicant.Email }}</td>
+                                                                <td>{{ applicant.Country }}</td>
                                                                 <!--<td>{{ applicant.skills }}</td> -->
                                                             </tr>
                                                         </tbody>
