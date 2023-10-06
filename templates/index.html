@@ -156,8 +156,8 @@
 
                                         <!-- Alignment Percentage -->
                                         <p class="card-text m-2">
-                                            <p class="card-text m-2">Alignment Percentage: <span class="text-success">{{ skill_match_dict[job.JobList_ID].alignment_percentage }}% </span></p>
                                             <p class="card-text m-2">Alignment Percentage: 
+                                                <!-- Fix condition if needed -->
                                                 <span :class="{
                                                     'text-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
                                                     'text-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
