@@ -253,12 +253,14 @@
                                                         </thead>
                                                         <tbody>
                                                             <h1>{{tempJobID}}</h1>
-                                                            <tr v-for="applicant in applicants">
+                                                            <tr v-for="applicant in applicants" :key="applicant.Staff_ID">
                                                                 <td>{{ applicant["Staff_FName"] }} {{ applicant["Staff_LName"] }}</td>
                                                                 <td>{{ applicant.Dept }}</td>
                                                                 <td>{{ applicant.Email }}</td>
                                                                 <td>{{ applicant.Country }}</td>
-                                                                <!--<td>{{ applicant.skills }}</td> -->
+                                                                <!-- <td>{{ getApplicantSkillForApplicant }}</td> -->
+                                                                <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}</td> -->
+                                                                <td>{{ applicantAlignment }}</td> 
                                                             </tr>
                                                         </tbody>
                                                     </table>
