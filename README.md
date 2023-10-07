@@ -27,6 +27,7 @@ Backend
 ## Library Used
 - Date range picker library 
 - Popper library for dropdown menu
+- Axios library to make HTTP requests
 
 ## Folders Explanation
 **database:** Stores the SQL scripts to create the database and tables. Dummy data are also provided. 

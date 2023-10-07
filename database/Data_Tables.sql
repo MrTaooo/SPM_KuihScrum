@@ -1,5 +1,9 @@
+DROP SCHEMA IF EXISTS SPM_KUIH;
+
 CREATE SCHEMA SPM_KUIH;
 USE SPM_KUIH;
+
+
 CREATE TABLE AccessRights (
     Access_ID int PRIMARY KEY,
     Access_type varchar(50) NOT NULL
@@ -23,7 +27,7 @@ CREATE TABLE Role (
 
 CREATE TABLE Role_Skill (
     Role_Name Varchar(20),
-    Skill_Name Varchar(100),
+    Skill_Name Varchar(50),
     PRIMARY KEY (Role_Name, Skill_Name),
     FOREIGN KEY (Role_Name) REFERENCES Role(Role_Name),
     UNIQUE (Skill_Name)
@@ -31,7 +35,7 @@ CREATE TABLE Role_Skill (
 
 CREATE TABLE Staff_Skill (
     Staff_ID int,
-    Skill_Name Varchar(100),
+    Skill_Name Varchar(50),
     FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID),
     FOREIGN KEY (Skill_Name) REFERENCES Role_Skill(Skill_Name)
 );

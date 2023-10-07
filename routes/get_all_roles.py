@@ -2,6 +2,7 @@ from flask import jsonify
 from models.role import Role  # Import the Role model if needed
 
 def get_all_roles():
+    # retrieve all the roles from the database
     rolelist = Role.query.all()
     if len(rolelist):
         return jsonify(

@@ -34,14 +34,14 @@
         <div class="container mt-4">
             <div class="row">
                 <!-- Left Sidebar - Filter Menu -->
-                <div class="col-md-3">
+                <div class="col-md-3" id="filter_menu">
 
                     <!--Select user type here for current sprint-->
-                    <input type="radio" id="hr" name="user_type" value=1 v-model="userType" @change="updateUserType">
+                    <input type="radio" id="hr" name="user_type" value=1 v-model="accessRight" @change="getAllJobListings">
                     &nbsp;
                     <label for="hr"> HR </label>
                     &nbsp;&nbsp;
-                    <input type="radio" id="staff" name="user_type" value=0 v-model="userType" @change="updateUserType">
+                    <input type="radio" id="staff" name="user_type" value=0 v-model="accessRight" @change="getAllJobListings">
                     &nbsp;
                     <label for="staff"> Staff </label>
                     <!----------------------------END OF USER-TYPE SELECTION CODES---------------------------------->
@@ -63,7 +63,7 @@
                             <h2>Job Listings</h2>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <button v-if="accessRight === 1" type="button" class="btn btn-dark" data-bs-toggle="modal"
+                            <button v-if="accessRight == 1" type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#createJob">
                                 Create a Job Listing
                             </button>
@@ -144,59 +144,91 @@
                     </div>
 
                     <!-- Add job listings here -->
-                    <!-- Replace dummy card with these variables -->
                     <div v-for="job in jobListings">
                         <div id="{{job.JobList_ID}}" class="card mb-4">
-                            <div class="card-body">
+                            <div v-if="skill_match_dict[job.JobList_ID] && skill_match_dict[job.JobList_ID] !== undefined"
+                                class="card-body">
                                 <div class="row">
-                                    <!-- Created dummy cards with dummy text, replace with text from db -->
                                     <div class="col-md-6 p-0">
                                         <h5 class="card-title m-2">{{job.Role_Name}}</h5>
+                                        <!--role description where role name is the key in the roles dictionary-->
                                         <p class="card-text m-2">{{roles[job.Role_Name]}}</p>
-                                        <p class="card-text m-2">Skills : {{roleSkills[job.Role_Name]}}</p>
-                                        <!-- Alignment Percentage -->
-                                        <p class="card-text m-2">
-                                            <strong>Alignment Percentage:</strong>
-                                        </p>
+
+                                        <!-- Alignment Percentage (remove color coding if necessary)-->
+                                        <div class="card-text m-2">
+                                            <span class="mr-2">Alignment Percentage:</span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1">
+                                                    <div
+                                                        class="progress-bar"
+                                                        role="progressbar"
+                                                        :class="{
+                                                            
+                                                            'bg-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
+                                                            'bg-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
+                                                            'bg-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
+                                                        }"
+
+                                                        :style="{ width: skill_match_dict[job.JobList_ID].alignment_percentage + '%' }">
+                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                        <!-- <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p> --> <!-- Can remove alr ? since alr print-->
 
                                         <!-- Matched Skills -->
                                         <p class="card-text m-2">
-                                            <strong>Matched Skills:</strong>
-                                            <!-- {{ getMatchedSkills(job).join(', ') }} -->
+                                            <span class="mr-2">Skills:</span>
+                                            <!-- Loop through the role skills -->
+                                            <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
+                                                <!-- Check if the role skill is in the user's skills -->
+                                                <template v-if="userSkills.includes(roleSkill)">
+                                                    <!-- Display the skill with a green background -->
+                                                    <span class="badge rounded-pill bg-success user-skill-label" style="white-space: nowrap;">
+                                                        {{ roleSkill }}
+                                                    </span>
+                                                </template>
+                                            </template>
+                                            <!-- Loop through the role skills again -->
+                                            <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
+                                                <!-- Check if the role skill is not in the user's skills -->
+                                                <template v-if="!userSkills.includes(roleSkill)">
+                                                    <!-- Display the skill with an outlined green border -->
+                                                    <span class="badge rounded-pill border border-success user-skill-label text-success m-" style="white-space: nowrap;">
+                                                        {{ roleSkill }}
+                                                    </span>
+                                                </template>
+                                            </template>
                                         </p>
-
-                                        <!-- Missing Skills -->
-                                        <p class="card-text m-2">
-                                            <strong>Missing Skills:</strong>
-                                            <!-- {{ getMissingSkills(job).join(', ') }} -->
-                                        </p>
+                                        
                                     </div>
 
-                                    <div class="col-md-3 p-0 text-center">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted:
-                                            {{job.publish_Date}}</h5> <!-- Adjust the font size as needed -->
+                                    <div class="col-md-3 p-0 m-md-0 m-2 ">
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Date Posted: {{job.publish_Date}}</h5>
                                     </div>
-
-                                    <div class="col-md-3 text-center">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date:
-                                            {{job.Closing_date}}</h5> <!-- Adjust the font size as needed -->
+                    
+                                    <div class="col-md-3 p-0 m-md-0 m-2">
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date: {{job.Closing_date}}</h5>
                                     </div>
-
-                                    <div class="col-md-3"> <!-- Adjust the width as needed -->
-                                        <button :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
-                                            @click="applyOrWithdraw($event, job.JobList_ID)" apply-staff-id="1385970" >
-                                            {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw' : 'Apply Now' }}
-                                        </button>
-                                        <!-- Replace # with your link -->
+                                        
+                                    <div class="col d-flex">
+                                        <div class="me-2"> <!-- Add margin-right (me) spacing -->
+                                            <button :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
+                                                @click="applyOrWithdraw($event, job.JobList_ID)" :apply-staff-id="staffID">
+                                                {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now' }}
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button v-if="accessRight == 1" type="button" class="btn btn-secondary btn-xs mt-2"
+                                                @click="getAllApplicants(job.JobList_ID)"
+                                                data-bs-toggle="modal" data-bs-target="#viewApplicants">
+                                                View Applicants
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <!-- Modal button to view Applicants -->
-                                    <div class="col text-center">
-                                        <button v-if="accessRight === 1" type="button" class="btn btn-secondary btn-xs"
-                                            data-bs-toggle="modal" data-bs-target="#viewApplicants">
-                                            View Applicants
-                                        </button>
-                                    </div>
+                                    
+                                    
                                     <!-- Modal table to view Applicants -->
                                     <div class="modal fade modal-lg" id="viewApplicants" tabindex="-1" role="dialog"
                                         aria-labelledby="applicantModalLabel" aria-hidden="true">
@@ -220,14 +252,15 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <!-- v-for loop through applicants for JobList_ID and display them in the table -->
-                                                            <!-- Demo -->
-                                                            <tr>
-                                                                <td>Lin Tao</td>
-                                                                <td>Engineering</td>
-                                                                <td>lintao@gmail.com</td>
-                                                                <td>United States</td>
-                                                                <td>Communication, Recruitment</td>
+                                                            <h1>{{tempJobID}}</h1>
+                                                            <tr v-for="applicant in applicants" :key="applicant.Staff_ID">
+                                                                <td>{{ applicant["Staff_FName"] }} {{ applicant["Staff_LName"] }}</td>
+                                                                <td>{{ applicant.Dept }}</td>
+                                                                <td>{{ applicant.Email }}</td>
+                                                                <td>{{ applicant.Country }}</td>
+                                                                <!-- <td>{{ getApplicantSkillForApplicant }}</td> -->
+                                                                <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}</td> -->
+                                                                <td>{{ applicantAlignment }}</td> 
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -240,9 +273,31 @@
                                         </div>
                                     </div>
 
+                                    <!-- Modal to show apply/withdraw error message-->
+                                    <!-- The modal structure with a dynamic error message and close button -->
+                                    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Error</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            <div class="modal-body">
+                                            <!-- Bind the error message to the Vue data property errorMsg -->
+                                                <p id="errorMessage">{{ errorMsg }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <!--edit button which is only visible by the HR-->
                                     <div class="col-md text-md-end p-0 text-center">
-                                        <button v-if="accessRight === 1" class="btn btn-link">Edit</button>
+                                        <button v-if="accessRight == 1" class="btn btn-link">Edit</button>
                                     </div>
                                 </div>
 
@@ -254,7 +309,7 @@
         </div>
     </div>
 
-    </div>
+
     <!-- jQuery code to update the selected role dynamically -->
     <script>
         $(document).ready(function () {

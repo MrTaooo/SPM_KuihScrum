@@ -1,36 +1,34 @@
 from flask import request, jsonify
 from sqlalchemy import *
 from flask import jsonify
-from models.job_listing import JobListing  # Import the Role model if needed
+from models.job_listing import JobListing  
 from sqlalchemy_define import db
 from datetime import datetime
 
 # Process job listing creation
 def create_listing():
+    # using Flask's request object to extract JSON data from the HTTP request sent by a client.
     data = request.get_json()
     roleTitle = data["roleTitle"]
     closingDate = data["closingDate"]
     date = datetime.now()
-    print(closingDate)
+    # print(closingDate)
+
+    # check if the closing date is empty
     if (closingDate == ''):
         return jsonify({
             "code": 409,
             "message": "Please select a date"
         })
 
-    if (closingDate < str(date)):
-        return jsonify({
-            "code": 409,
-            "message": "Error, closing date cannot be in the past"
-        })
-
-    # Check if the role listing for the role exists in the database
+    # retrieve duplicate role listing (exact role name, publish date is before closing date, closing date is after today)
     overlapping_listings = db.session.query(JobListing).filter(
         JobListing.Role_Name == roleTitle,
         JobListing.publish_Date <= closingDate,
         JobListing.Closing_date >= date
     ).all()
 
+    # Check if the role listing for the role exists in the database
     if overlapping_listings:
         return jsonify({
             "code": 409,

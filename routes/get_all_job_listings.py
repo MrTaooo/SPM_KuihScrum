@@ -1,10 +1,10 @@
 from flask import jsonify
 from sqlalchemy import *
 from models.job_listing import JobListing  # Import the Role model if needed
-from sqlalchemy_define import db
 
 # Get all Job Listings
 def get_all_joblistings():
+    # retrieve all the job listings from the database in descending order based on publish date
     joblistings = JobListing.query.order_by(
         desc(JobListing.publish_Date)).all()
     if len(joblistings):
