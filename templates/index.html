@@ -154,19 +154,27 @@
                                         <!--role description where role name is the key in the roles dictionary-->
                                         <p class="card-text m-2">{{roles[job.Role_Name]}}</p>
 
-                                        <!-- Alignment Percentage -->
-                                        <p class="card-text m-2">
-                                            <p class="card-text m-2">Alignment Percentage: 
-                                                <!-- Fix condition if needed -->
-                                                <span 
-                                                    :class="{
-                                                    'text-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
-                                                    'text-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
-                                                    'text-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
-                                                }">
-                                                    {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
-                                                </span>
-                                        </p>
+                                        <!-- Alignment Percentage (remove color coding if necessary)-->
+                                        <div class="card-text m-2">
+                                            <span class="mr-2">Alignment Percentage:</span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1">
+                                                    <div
+                                                        class="progress-bar"
+                                                        role="progressbar"
+                                                        :class="{
+                                                            
+                                                            'bg-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
+                                                            'bg-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
+                                                            'bg-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
+                                                        }"
+
+                                                        :style="{ width: skill_match_dict[job.JobList_ID].alignment_percentage + '%' }">
+                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                        
                                         <!-- <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p> --> <!-- Can remove alr ? since alr print-->
 
                                         <!-- Matched Skills -->
@@ -187,7 +195,7 @@
                                                 <!-- Check if the role skill is not in the user's skills -->
                                                 <template v-if="!userSkills.includes(roleSkill)">
                                                     <!-- Display the skill with an outlined green border -->
-                                                    <span class="badge rounded-pill border border-success user-skill-label text-success" style="white-space: nowrap;">
+                                                    <span class="badge rounded-pill border border-success user-skill-label text-success m-1" style="white-space: nowrap;">
                                                         {{ roleSkill }}
                                                     </span>
                                                 </template>
