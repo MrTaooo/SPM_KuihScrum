@@ -172,16 +172,28 @@
                                         <!-- Matched Skills -->
                                         <p class="card-text m-2">
                                             <span class="mr-2">Skills:</span>
-                                            <span v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
-                                              <span
-                                                :class="{ 'badge rounded-pill bg-success user-skill-label': userSkills.includes(roleSkill), 
-                                                        'badge rounded-pill border border-success user-skill-label text-success': !userSkills.includes(roleSkill) }"
-                                                style="white-space: nowrap;">
-                                                {{ roleSkill }}
-                                              </span>
-                                            </span>
+                                            <!-- Loop through the role skills -->
+                                            <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
+                                                <!-- Check if the role skill is in the user's skills -->
+                                                <template v-if="userSkills.includes(roleSkill)">
+                                                    <!-- Display the skill with a green background -->
+                                                    <span class="badge rounded-pill bg-success user-skill-label" style="white-space: nowrap;">
+                                                        {{ roleSkill }}
+                                                    </span>
+                                                </template>
+                                            </template>
+                                            <!-- Loop through the role skills again -->
+                                            <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
+                                                <!-- Check if the role skill is not in the user's skills -->
+                                                <template v-if="!userSkills.includes(roleSkill)">
+                                                    <!-- Display the skill with an outlined green border -->
+                                                    <span class="badge rounded-pill border border-success user-skill-label text-success" style="white-space: nowrap;">
+                                                        {{ roleSkill }}
+                                                    </span>
+                                                </template>
+                                            </template>
                                         </p>
-                                          
+                                        
                                     </div>
 
                                     <div class="col-md-3 p-0 m-md-0 m-2 ">
