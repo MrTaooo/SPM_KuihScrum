@@ -85,7 +85,7 @@
                                                 <div class="col-md-6">
                                                     <!-- Role -->
                                                     <div class="form-group row">
-                                                        <label for="role"
+                                                        <label for="roleTitle"
                                                             class="col-4 col-form-label text-end">Role:</label>
                                                         <div class="col-8">
                                                             <!-- Role dropdown box -->
@@ -101,7 +101,7 @@
                                                 <div class="col-md-6">
                                                     <!-- Closing Date -->
                                                     <div class="form-group row form-inline">
-                                                        <label for="date" class="col-4 col-form-label text-end">Closing
+                                                        <label for="closingDate" class="col-4 col-form-label text-end">Closing
                                                             Date:</label>
                                                         <div class="col-8 mt-2">
                                                             <input type="date" name="closingDate" id="closingDate">
@@ -248,7 +248,7 @@
                                                                 <th>Department</th>
                                                                 <th>Email</th>
                                                                 <th>Country</th>
-                                                                <th>Skills</th>
+                                                                <th>Match</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -258,9 +258,11 @@
                                                                 <td>{{ applicant.Dept }}</td>
                                                                 <td>{{ applicant.Email }}</td>
                                                                 <td>{{ applicant.Country }}</td>
-                                                                <!-- <td>{{ getApplicantSkillForApplicant }}</td> -->
-                                                                <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}</td> -->
-                                                                <td>{{ applicantAlignment }}</td> 
+                                                                <td v-if="applicantsDict[applicant.Staff_ID] && applicantsDict[applicant.Staff_ID] !== undefined">
+                                                                    {{ applicantsDict[applicant.Staff_ID].alignment_percentage }}%
+                                                                </td>
+                                                                <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}{{ applicantAlignment }}</td>  -->
+
                                                             </tr>
                                                         </tbody>
                                                     </table>

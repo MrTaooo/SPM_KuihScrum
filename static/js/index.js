@@ -27,7 +27,8 @@ const jobsPage = Vue.createApp({
       // apply or withdraw errorMsg (for error modal)
       errorMsg: "",
       applicants: [],
-      tempJobID: ""
+      tempJobID: "",
+      applicantsDict: {}
     };
   },
 
@@ -132,25 +133,44 @@ const jobsPage = Vue.createApp({
           console.log(error);
         });
     },
-    // this function will get all the logged in user's skills
+
+    // this function will get all the user's/applicant's skills
     getUserSkills(userID) {
-      axios
+      return axios
         .get(get_user_skills_URL, {
           params: { userID: userID }
         })
         .then((response) => {
-          this.userSkills = response.data.data.user_skills;
-          this.getAllJobListings();
+          if (this.userSkills.length === 0) {
+            this.userSkills = response.data.data.user_skills;
+            this.getAllJobListings();
+          } 
+          return response.data.data.user_skills; // Return the skills array
         })
         .catch((error) => {
           console.log(error);
         });
     },
 
-    getCalculateAlignment(joblist_ID) {
-      let params = {
+    async getApplicantSkills(jobID, applicantID) {
+      try {
+        const applicantSkills = await this.getUserSkills(applicantID);
+        const applicantAlignment = await this.getCalculateAlignment(jobID, applicantSkills);
+        return applicantAlignment.alignment_percentage; 
+      } 
+      catch (error) {
+        console.error('Error in getApplicantSkills:', error);
+      }
+    },    
+    
+    // Get the alignment percentage for the job listing and the user/applicant
+    getCalculateAlignment(joblist_ID, user_Skills = null) {
+      if (user_Skills === null) {
+        user_Skills = this.userSkills;
+      }
+      const params = {
         joblist_ID: joblist_ID,
-        user_Skills: this.userSkills.join(',')
+        user_Skills: user_Skills.join(',')
       };
       return axios
         .get(get_calculatealignment_URL, {
@@ -162,24 +182,7 @@ const jobsPage = Vue.createApp({
         .catch((error) => {
           console.log('error:', error);
         });
-    },
-    // this function will calculate the skill alignment percentage
-    // async getCalculateAlignment(joblist_ID) {
-    //   // Create the data object with parameters
-    //   const postData = {
-    //     joblist_ID: joblist_ID,
-    //     user_ID: this.staffID, // Staff ID is currently hardcoded since no login 
-    //   };
-
-    //   try {
-    //     const response = await axios.post(get_calculatealignment_URL, postData);
-    //     return response.data.data;
-    //   }
-    //   catch (error) {
-    //     console.log('error:', error);
-    //   }
-    // },
-    
+    },    
 
     // When the user click on close for the success modal, this method will run to close the createjob modal
     closeModals() {
@@ -271,22 +274,44 @@ const jobsPage = Vue.createApp({
       }
     },
 
-    // this function will get all the applicants for the all the job listings
+    // this function will get all the applicants for the job listing and their respective skills and alignment percentage
     getAllApplicants(joblist_ID) {
-      this.tempJobID = joblist_ID
+      this.tempJobID = joblist_ID;
       axios
-        .get(get_all_applicants_URL+ "/" + joblist_ID)
+        .get(get_all_applicants_URL + "/" + joblist_ID)
         .then((response) => {
-          this.applicants = response.data["data"]["applicants"]
-          console.log(response.data["data"]["applicants"])
+          this.applicants = response.data["data"]["applicants"];
+
+          // Create an array of promises for each applicant's skills
+          const promises = this.applicants.map(async (applicant) => {
+            const data = await this.getApplicantSkills(joblist_ID, applicant.Staff_ID);
+            return {
+              Staff_ID: applicant.Staff_ID,
+              alignment_percentage: data,
+            };
+          });
+    
+          // Wait for all promises to resolve; I wrote 1001 awaits for nothing
+          return Promise.all(promises);
+        })
+        .then((applicantDataArray) => {
+          // Initialize applicantsDict again for the current job applicants
+          this.applicantsDict = {};
+    
+          // Update this.applicantsDict with the results
+          applicantDataArray.forEach((applicantData) => {
+            this.applicantsDict[applicantData.Staff_ID] = {
+              "alignment_percentage": applicantData.alignment_percentage,
+            };
+          });
         })
         .catch((error) => {
-          // Errors when calling the service; such as network error,
-          // service offline, etc
+          // Handle errors
           console.log(error);
         });
     }
-  
+    
+
   },
 });
 
