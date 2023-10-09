@@ -25,13 +25,13 @@ element = driver.find_element(By.XPATH, "//button[@class='btn btn-dark']")
 element.click()
 time.sleep(1)
 dropdown = Select(driver.find_element(By.ID, "roleTitle")) 
-roleTitle = "Software Developer"
+roleTitle = "Data Analyst"
 dropdown.select_by_visible_text(roleTitle)
 
 # enter date
 year = "2023"
-month = "09"
-day = "27"
+month = "10"
+day = "11"
 date = f"{year}-{month}-{day}"
 date_input = driver.find_element(By.ID, "closingDate")
 date_input.click()
