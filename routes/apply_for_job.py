@@ -16,7 +16,7 @@ def apply_for_job():
     except Exception as e:
         return jsonify({
             "code": 404,
-            "message": f"An error occurred while applying for the job. Error: {str(e)}"
+            "message": "Job application has been applied previously."
         })
 
     return jsonify({
