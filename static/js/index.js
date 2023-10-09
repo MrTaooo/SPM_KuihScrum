@@ -156,7 +156,12 @@ const jobsPage = Vue.createApp({
       try {
         const applicantSkills = await this.getUserSkills(applicantID);
         const applicantAlignment = await this.getCalculateAlignment(jobID, applicantSkills);
-        return applicantAlignment.alignment_percentage; 
+        let applicantSkillsInfo = {
+          "applicant_skills": applicantSkills,
+          "alignment_percentage": applicantAlignment.alignment_percentage,
+          "role_skills": applicantAlignment.skills_by_role
+        };
+        return applicantSkillsInfo;
       } 
       catch (error) {
         console.error('Error in getApplicantSkills:', error);
@@ -286,8 +291,10 @@ const jobsPage = Vue.createApp({
           const promises = this.applicants.map(async (applicant) => {
             const data = await this.getApplicantSkills(joblist_ID, applicant.Staff_ID);
             return {
-              Staff_ID: applicant.Staff_ID,
-              alignment_percentage: data,
+              "staff_id": applicant.Staff_ID,
+              "alignment_percentage": data.alignment_percentage,
+              "applicant_skills": data.applicant_skills,
+              "role_skills": data.role_skills
             };
           });
     
@@ -300,8 +307,11 @@ const jobsPage = Vue.createApp({
     
           // Update this.applicantsDict with the results
           applicantDataArray.forEach((applicantData) => {
-            this.applicantsDict[applicantData.Staff_ID] = {
+            this.applicantsDict[applicantData.staff_id] = {
+              "staff_id": applicantData.staff_id,
               "alignment_percentage": applicantData.alignment_percentage,
+              "applicant_skills": applicantData.applicant_skills,
+              "role_skills": applicantData.role_skills
             };
           });
         })
