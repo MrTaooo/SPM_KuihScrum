@@ -37,21 +37,7 @@ const jobsPage = Vue.createApp({
   },
   
   methods: {
-    // this function is to get the user type, by default it will be 0, which is a normal user
-    // 1 will be HR
-    updateUserType() {
-      if(this.accessRight == 0)
-      {
-        this.accessRight = 1;
-        this.getAllJobListings();
-      }
-      else
-      {
-        this.accessRight = 0;
-        this.getAllJobListings();
-      }
-    },
-
+    
     // this function will get all job listings for the staff and hr. Staff will only see job listings that are not closed. 
     // within this function, it also calls 2 methods to populate the roles and populate the role descriptions (vue data properties)
     // the 2 functions were not placed at mounted as the page would refresh after the hr creates a new listings wihch will activate the getAllJobListings() function
