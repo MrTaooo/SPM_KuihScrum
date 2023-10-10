@@ -37,11 +37,11 @@
                 <div class="col-md-3" id="filter_menu">
 
                     <!--Select user type here for current sprint-->
-                    <input type="radio" id="hr" name="user_type" value=1 v-model="accessRight" @change="getAllJobListings">
+                    <input type="radio" id="hr" name="user_type" value=1 @change="updateUserType">
                     &nbsp;
                     <label for="hr"> HR </label>
                     &nbsp;&nbsp;
-                    <input type="radio" id="staff" name="user_type" value=0 v-model="accessRight" @change="getAllJobListings">
+                    <input type="radio" id="staff" name="user_type" value=0 @change="updateUserType" checked>
                     &nbsp;
                     <label for="staff"> Staff </label>
                     <!----------------------------END OF USER-TYPE SELECTION CODES---------------------------------->

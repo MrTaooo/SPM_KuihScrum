@@ -15,7 +15,7 @@ const jobsPage = Vue.createApp({
       staffID: "1", 
       jobListings: [],
       roles: {},
-      accessRight: 1,
+      accessRight: 0,
       roleSkills: {},
       skill_match_dict: {},
       userSkills: [],
@@ -37,6 +37,20 @@ const jobsPage = Vue.createApp({
   },
   
   methods: {
+    // this function is to get the user type, by default it will be 0, which is a normal user
+    // 1 will be HR
+    updateUserType() {
+      if(this.accessRight == 0)
+      {
+        this.accessRight = 1;
+        this.getAllJobListings();
+      }
+      else
+      {
+        this.accessRight = 0;
+        this.getAllJobListings();
+      }
+    },
 
     // this function will get all job listings for the staff and hr. Staff will only see job listings that are not closed. 
     // within this function, it also calls 2 methods to populate the roles and populate the role descriptions (vue data properties)
@@ -52,7 +66,6 @@ const jobsPage = Vue.createApp({
           const day = current.getDate().toString().padStart(2, "0"); // Add leading zero if needed
           const date = `${year}-${month}-${day}`;
     
-          
           // if the user is Staff, then the job listings will be filtered to only show the job listings that are not closed
           if (this.accessRight == 0) {
             for (let i = this.jobListings.length - 1; i >= 0; i--) {

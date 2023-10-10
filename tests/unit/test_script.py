@@ -1,10 +1,10 @@
 # import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 from datetime import datetime
 
@@ -12,7 +12,7 @@ from datetime import datetime
 # Define ChromeOptions to run headless
 chrome_options = webdriver.ChromeOptions()
 # headless means that the browser will not open up
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 
 # Use ChromeDriverManager to download and manage ChromeDriver
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
@@ -29,6 +29,7 @@ def BrowseRoleListings():
     staff.click()
     time.sleep(1)
 
+    print("===============================================================================")
     # check for job listings
     try:
         # Find multiple elements by class name
@@ -37,11 +38,13 @@ def BrowseRoleListings():
         number_of_elements = len(elements)
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
         if (number_of_elements == 2):
-            print("Test Case Passed: Job Listings Found and number of Job Listings matches expected number")
+            print("Results: Passed")
+            print("Remarks: Job Listings Found and number of Job Listings matches expected number")
     except NoSuchElementException:
-        print("Test Case Failed")
+        print("Results: Failed")
 
     print("End of Test Case 1")
+    print("===============================================================================")
 
 # test case 2: test if the hr can see all job listings (opened and closed) and can see the create and edit button on the UI
 def RofRoleListings():
@@ -54,6 +57,7 @@ def RofRoleListings():
     actual_create_name = element.text
     expected_create_name = "Create a Job Listing"
 
+    print("===============================================================================")
     # check for job listings
     try:
         # Find multiple elements by class name
@@ -70,11 +74,13 @@ def RofRoleListings():
 
     # check conditions
     if (actual_create_name == expected_create_name) and (number_of_elements == 5) and (actual_edit_name == expected_edit_name):
-        print("Test case passed!")
+        print("Result: Passed!")
+        print("Remarks: HR can see buttons and open/close listings")
     else:
-        print("Test case failed.")
+        print("Result: Failed.")
 
     print("End of Test Case 2")
+    print("===============================================================================")
 
 # test case 3: test if the hr can create a new job listing 
 def CofRoleListings():
@@ -158,3 +164,8 @@ def CofRoleListings():
         else:
             print("Test case failed: Job listing not created successfully.")
         print("End of test case 3")
+
+# Uncomment function to run automated test on local machine 
+BrowseRoleListings()
+RofRoleListings()
+# CofRoleListings()
