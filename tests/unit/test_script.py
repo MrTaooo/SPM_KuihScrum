@@ -38,7 +38,7 @@ def BrowseRoleListings():
         number_of_elements = len(elements)
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
         if (number_of_elements == 2):
-            print("Results: Passed")
+            print("Results: Passed!")
             print("Remarks: Job Listings Found and number of Job Listings matches expected number")
     except NoSuchElementException:
         print("Results: Failed")
@@ -103,6 +103,15 @@ def CofRoleListings():
     # Format the date in "mm/dd/yyyy" format
     formatted_date = f"{month}/{day}/{year}"
 
+    # get today's date
+    today = time.strftime("%Y-%m-%d")
+
+    # format date used above for "formatted_date" variable
+    # Convert the input string to a datetime object
+    input_date = datetime.strptime(formatted_date, "%m/%d/%Y")
+    # Format the datetime object as "%y-%m-%d"
+    formatted_date_string = input_date.strftime("%Y-%m-%d")
+
     # Locate the date input field and enter the formatted date
     date_input = driver.find_element(By.ID, "closingDate")
     # Clear the existing value in the input field
@@ -110,6 +119,16 @@ def CofRoleListings():
     # Send the formatted date string
     date_input.send_keys(formatted_date)  
     time.sleep(1)
+
+    print("===============================================================================")
+    # if we have alr ran the test script once, the next few codes will print out the message
+    role_name, publish_date, closing_date = retreive_Latest_Job_List()
+    if role_name == roleTitle and publish_date == today and closing_date == formatted_date_string:
+        print("Result: Passed!")
+        print("Remarks: Test script has been ran at least once today.")
+        print("===============================================================================")
+        return
+
 
     # save job listing
     submit = driver.find_element(By.ID, "jobCreationButton")
@@ -121,8 +140,10 @@ def CofRoleListings():
     # subsequent runs of the day should be unsuccessful entry (duplicate entry)
     create_err_msg = driver.find_element(By.ID, "errorMessage").text
     if create_err_msg:
-        print("Test case failed: Duplicate entry")
+        print("Result: Failed.")
+        print("Remarks: Duplicate entry")
         print("End of test case 3")
+        print("===============================================================================")
     else:
         # Wait for the top modal to be visible
         top_modal = driver.find_element(By.ID, "successModal")
@@ -133,39 +154,38 @@ def CofRoleListings():
         # Click the close button to close the top modal
         close_button.click()
 
-        # get the parent element of the job listing
-        job_list_parent_element = driver.find_element_by_id('joblist_parent')
-
-        # get the first child element of the job listing (aka first listing)
-        first_job_listing = job_list_parent_element.find_element_by_css_selector('*:first-child')
-
-        # Find the elements for role name, publish date, and closing date within the div
-        role_name_element = first_job_listing.find_element_by_css_selector('.card-title')
-        publish_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Date Posted:')]")
-        closing_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Closing Date:')]")
-
-        # Extract text from the elements
-        role_name = role_name_element.text
-        publish_date = publish_date_element.text.replace('Date Posted:', '').strip()
-        closing_date = closing_date_element.text.replace('Closing Date:', '').strip()
-
-        # get today's date
-        today = time.strftime("%Y-%m-%d")
-
-        # format date used above for "formatted_date" variable
-        # Convert the input string to a datetime object
-        input_date = datetime.strptime(formatted_date, "%m/%d/%Y")
-        # Format the datetime object as "%y-%m-%d"
-        formatted_date_string = input_date.strftime("%Y-%m-%d")
-
+        role_name, publish_date, closing_date = retreive_Latest_Job_List()
         # Check if first job list is the same as the one created (role name, publish date and closing date must match)
         if role_name == roleTitle and publish_date == today and closing_date == formatted_date_string:
-            print("Test case passed: Job listing created successfully")
+            print("Result: Passed!")
+            print("Remarks: Job listing created successfully")
         else:
-            print("Test case failed: Job listing not created successfully.")
+            print("Result: Failed.")
+            print("Remarks: Job listing not created successfully.")
         print("End of test case 3")
+        print("===============================================================================")
+
+# created this so we can reuse this function in our test scripts. 
+def retreive_Latest_Job_List():
+    # get the parent element of the job listing
+    job_list_parent_element = driver.find_element_by_id('joblist_parent')
+
+    # get the first child element of the job listing (aka first listing)
+    first_job_listing = job_list_parent_element.find_element_by_css_selector('*:first-child')
+
+    # Find the elements for role name, publish date, and closing date within the div
+    role_name_element = first_job_listing.find_element_by_css_selector('.card-title')
+    publish_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Date Posted:')]")
+    closing_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Closing Date:')]")
+
+    # Extract text from the elements
+    role_name = role_name_element.text
+    publish_date = publish_date_element.text.replace('Date Posted:', '').strip()
+    closing_date = closing_date_element.text.replace('Closing Date:', '').strip()
+
+    return (role_name, publish_date, closing_date)
 
 # Uncomment function to run automated test on local machine 
 BrowseRoleListings()
 RofRoleListings()
-# CofRoleListings()
+CofRoleListings()
