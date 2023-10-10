@@ -12,7 +12,7 @@ from datetime import datetime
 # Define ChromeOptions to run headless
 chrome_options = webdriver.ChromeOptions()
 # headless means that the browser will not open up
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 
 # Use ChromeDriverManager to download and manage ChromeDriver
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
@@ -22,7 +22,27 @@ time.sleep(5)
 
 ########################### Start of Test Case Functions ####################################################
 
-# test case 1: test if the staff can see only opened job listings
+# created this so we can reuse this function in our test scripts. 
+def retreive_Latest_Job_List():
+    # get the parent element of the job listing
+    job_list_parent_element = driver.find_element_by_id('joblist_parent')
+
+    # get the first child element of the job listing (aka first listing)
+    first_job_listing = job_list_parent_element.find_element_by_css_selector('*:first-child')
+
+    # Find the elements for role name, publish date, and closing date within the div
+    role_name_element = first_job_listing.find_element_by_css_selector('.card-title')
+    publish_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Date Posted:')]")
+    closing_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Closing Date:')]")
+
+    # Extract text from the elements
+    role_name = role_name_element.text
+    publish_date = publish_date_element.text.replace('Date Posted:', '').strip()
+    closing_date = closing_date_element.text.replace('Closing Date:', '').strip()
+
+    return (role_name, publish_date, closing_date)
+
+# automated test case 1: test if the staff can see only opened job listings
 def BrowseRoleListings():
     # ensure that 'staff' is clicked
     staff = driver.find_element(By.ID, "staff")
@@ -37,16 +57,16 @@ def BrowseRoleListings():
         # Get the number of elements
         number_of_elements = len(elements)
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
-        if (number_of_elements == 2):
+        if (number_of_elements == 3):
             print("Results: Passed!")
             print("Remarks: Job Listings Found and number of Job Listings matches expected number")
     except NoSuchElementException:
         print("Results: Failed")
 
-    print("End of Test Case 1")
+    print("End of Automated Test Case 1")
     print("===============================================================================")
 
-# test case 2: test if the hr can see all job listings (opened and closed) and can see the create and edit button on the UI
+# automated test case 2: test if the hr can see all job listings (opened and closed) and can see the create and edit button on the UI
 def RofRoleListings():
     staff = driver.find_element(By.ID, "hr")
     staff.click()
@@ -73,16 +93,16 @@ def RofRoleListings():
     expected_edit_name = "Edit"
 
     # check conditions
-    if (actual_create_name == expected_create_name) and (number_of_elements == 5) and (actual_edit_name == expected_edit_name):
+    if (actual_create_name == expected_create_name) and (number_of_elements == 6) and (actual_edit_name == expected_edit_name):
         print("Result: Passed!")
         print("Remarks: HR can see buttons and open/close listings")
     else:
         print("Result: Failed.")
 
-    print("End of Test Case 2")
+    print("End of Automated Test Case 2")
     print("===============================================================================")
 
-# test case 3: test if the hr can create a new job listing 
+# automated test case 3: test if the hr can create a new job listing 
 def CofRoleListings():
     staff = driver.find_element(By.ID, "hr")
     staff.click()
@@ -124,8 +144,11 @@ def CofRoleListings():
     # if we have alr ran the test script once, the next few codes will print out the message
     role_name, publish_date, closing_date = retreive_Latest_Job_List()
     if role_name == roleTitle and publish_date == today and closing_date == formatted_date_string:
+        button_element = driver.find_element(By.ID, 'jobCreationCancelButton')
+        button_element.click()
         print("Result: Passed!")
         print("Remarks: Test script has been ran at least once today.")
+        print("End of Automated test case 3")
         print("===============================================================================")
         return
 
@@ -142,7 +165,7 @@ def CofRoleListings():
     if create_err_msg:
         print("Result: Failed.")
         print("Remarks: Duplicate entry")
-        print("End of test case 3")
+        print("End of Automated test case 3")
         print("===============================================================================")
     else:
         # Wait for the top modal to be visible
@@ -162,30 +185,98 @@ def CofRoleListings():
         else:
             print("Result: Failed.")
             print("Remarks: Job listing not created successfully.")
-        print("End of test case 3")
+        print("End of Automated test case 3")
         print("===============================================================================")
 
-# created this so we can reuse this function in our test scripts. 
-def retreive_Latest_Job_List():
-    # get the parent element of the job listing
-    job_list_parent_element = driver.find_element_by_id('joblist_parent')
+# automated test case 4: test if withdraw button works
+def withdraw_btn_test():
+    time.sleep(5)
+    try:
+        applyJL = 'Software Developer' # job title
 
-    # get the first child element of the job listing (aka first listing)
-    first_job_listing = job_list_parent_element.find_element_by_css_selector('*:first-child')
+        # Find all job listing
+        job_cards = driver.find_elements_by_css_selector(".job_listing")
 
-    # Find the elements for role name, publish date, and closing date within the div
-    role_name_element = first_job_listing.find_element_by_css_selector('.card-title')
-    publish_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Date Posted:')]")
-    closing_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Closing Date:')]")
+        for card in job_cards:
+            job_title = card.find_element(By.CLASS_NAME, 'card-title').text
 
-    # Extract text from the elements
-    role_name = role_name_element.text
-    publish_date = publish_date_element.text.replace('Date Posted:', '').strip()
-    closing_date = closing_date_element.text.replace('Closing Date:', '').strip()
+            # check if the job title matches what we are applying for 
+            if job_title == applyJL:
+                withdraw_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
+                driver.execute_script('arguments[0].scrollIntoView();', withdraw_button)
+                withdraw_button_text = withdraw_button.text
+                time.sleep(0.5)
+                
+                # if button text is "Apply Now", click button to change to "Withdraw Now"
+                if withdraw_button_text == "Apply Now":
+                    withdraw_button.click()
+                
+                withdraw_button.click()
+                time.sleep(0.5)
+                # check if button changed to withdraw
+                updated_withdraw_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
+                updated_button_text = updated_withdraw_button.text
+                print("===============================================================================")
+                print("Result: Passed!")
+                print('Remarks: Button text after clicking:', updated_button_text)
+                break
 
-    return (role_name, publish_date, closing_date)
+    except Exception as e:
+        print("Result: Failed")
+        print(f"Remarks: {e}")
+    print("End of Automated Test Case 4")
+    print("===============================================================================")
+
+# automated test case 5: test if apply button works
+def apply_btn_test():
+    time.sleep(5)
+    try:
+        applyJL = 'Software Developer' # job title
+
+        # Find all job listing
+        job_cards = driver.find_elements_by_css_selector(".job_listing")
+
+        for card in job_cards:
+            job_title = card.find_element(By.CLASS_NAME, 'card-title').text
+            
+
+            # check if the job title matches what we are applying for 
+            if job_title == applyJL:
+                apply_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
+                # scroll to the element so that Selenium can detect the button on the screen
+                driver.execute_script('arguments[0].scrollIntoView();', apply_button)
+                apply_button_text = apply_button.text
+                time.sleep(0.5)
+
+                # if button text is "Withdraw Now", click button to change to "Apply Now"
+                if apply_button_text == "Withdraw Now":
+                    apply_button.click()
+                    time.sleep(0.5)
+
+                apply_button.click()
+                time.sleep(0.5)
+                # check if button changed to withdraw
+                updated_apply_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
+                updated_button_text = updated_apply_button.text
+                print("===============================================================================")
+                print("Result: Passed!")
+                print('Remarks: Button text after clicking=', updated_button_text)
+                break 
+
+    except Exception as e:
+        print("Result: Failed")
+        print(f"Remarks: {e}")
+    print("End of Automated Test Case 5")
+    print("===============================================================================")
+
+# test case 6: test view applicant buttons and see if automated test case result is reflected here
+
+
+    
 
 # Uncomment function to run automated test on local machine 
 BrowseRoleListings()
 RofRoleListings()
 CofRoleListings()
+withdraw_btn_test()
+apply_btn_test()
