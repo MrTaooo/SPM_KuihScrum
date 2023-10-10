@@ -63,8 +63,9 @@
                             <h2>Job Listings</h2>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <button v-if="accessRight == 1" type="button" class="btn btn-dark" data-bs-toggle="modal"
-                                data-bs-target="#createJob">
+                            <button v-if="accessRight === 1" type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                data-bs-target="#createJob"
+                                id="create_listing_btn">
                                 Create a Job Listing
                             </button>
                         </div>
@@ -144,8 +145,8 @@
                     </div>
 
                     <!-- Add job listings here -->
-                    <div v-for="job in jobListings">
-                        <div id="{{job.JobList_ID}}" class="card mb-4">
+                    <div v-for="job in jobListings" id="joblist_parent">
+                        <div id="{{job.JobList_ID}}" class="card mb-4 job_listing">
                             <div v-if="skill_match_dict[job.JobList_ID] && skill_match_dict[job.JobList_ID] !== undefined"
                                 class="card-body">
                                 <div class="row">
@@ -322,7 +323,7 @@
 
                                     <!--edit button which is only visible by the HR-->
                                     <div class="col-md text-md-end p-0 text-center">
-                                        <button v-if="accessRight == 1" class="btn btn-link">Edit</button>
+                                        <button v-if="accessRight === 1" class="btn btn-link edit_btn">Edit</button>
                                     </div>
                                 </div>
 
