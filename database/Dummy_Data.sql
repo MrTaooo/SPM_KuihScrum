@@ -42,35 +42,35 @@ VALUES
 -- Insert data into Staff table 
 INSERT INTO Staff (Staff_ID, Staff_FName, Staff_LName, Dept, Country, Email, Access_Rights)
 VALUES
-    ('01385970', 'Lin', 'Tao', 'Engineering', 'United States', 'lintao@gmail.com', '1'),
-    ('01387909', 'Chery', 'Lim', 'Business', 'Korea', 'limcheryl@gmail.com', '1'),
-    ('01439201', 'John', 'Lee', 'Accounting', 'Malaysia', 'johnlee99@gmail.com', '1'),
-    ('01523071', 'Ignatious', 'Goh', 'IT Support', 'China', 'ignatiousgoh@gmail.com', '1');
+    ('1', 'Lin', 'Tao', 'Engineering', 'United States', 'lintao@gmail.com', '1'),
+    ('2', 'Chery', 'Lim', 'Business', 'Korea', 'limcheryl@gmail.com', '1'),
+    ('3', 'John', 'Lee', 'Accounting', 'Malaysia', 'johnlee99@gmail.com', '1'),
+    ('4', 'Ignatious', 'Goh', 'IT Support', 'China', 'ignatiousgoh@gmail.com', '1');
 
 -- Insert data into Staff_Skill table 
 INSERT INTO Staff_Skill (Staff_ID, Skill_Name)
 VALUES
-    ('01385970', 'Data mining'),
-    ('01385970', 'API integration'),
-    ('01385970', 'Debugging'),
-    ('01387909', 'Data analysis'),
-    ('01387909', 'Product knowledge'),
-    ('01387909', 'Data mining'),
-    ('01439201', 'Content marketing'),
-    ('01439201', 'Branding'),
-    ('01439201', 'API integration'),
-    ('01523071', 'Relationship building'),
-    ('01523071', 'SQL'),
-    ('01523071', 'Communication skills');
+    ('1', 'Data mining'),
+    ('1', 'API integration'),
+    ('1', 'Debugging'),
+    ('2', 'Data analysis'),
+    ('2', 'Product knowledge'),
+    ('2', 'Data mining'),
+    ('3', 'Content marketing'),
+    ('3', 'Branding'),
+    ('3', 'API integration'),
+    ('4', 'Relationship building'),
+    ('4', 'SQL'),
+    ('4', 'Communication skills');
 
 INSERT INTO Job_Application (JobList_ID, Staff_ID)
 VALUES
-    ('1','01385970'),
-    ('1','01387909'),
-    ('1','01439201'),
-    ('1','01523071'),
-    ('2','01385970'),
-    ('2','01387909'),
-    ('2','01439201'),
-    ('3','01385970'),
-    ('3','01387909')
+    ('1','1'),
+    ('1','2'),
+    ('1','3'),
+    ('1','4'),
+    ('2','1'),
+    ('2','2'),
+    ('2','3'),
+    ('3','1'),
+    ('3','2')
