@@ -18,12 +18,12 @@ chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 # get url
 driver.get("http://127.0.0.1:5500/templates/index.html")
+driver.set_window_size(1920, 1080)
 time.sleep(5)
 
-########################### Start of Test Case Functions ####################################################
+########################### Start of Helper Functions #######################################################
 
-# created this so we can reuse this function in our test scripts. 
-def retreive_Latest_Job_List():
+def retrieve_Latest_Job_List():
     # get the parent element of the job listing
     job_list_parent_element = driver.find_element_by_id('joblist_parent')
 
@@ -42,8 +42,58 @@ def retreive_Latest_Job_List():
 
     return (role_name, publish_date, closing_date)
 
+def get_all_applicants_name():
+    try: 
+        # comparison data for staff with ID 1 who applied for Data Analyst job listing in automated test case 5 
+
+        job_list_name = 'Data Analyst'
+
+        job_listings = driver.find_elements_by_css_selector(".job_listing")
+        for listing in job_listings:
+            job_title = listing.find_element(By.CLASS_NAME, 'card-title').text
+            if job_list_name == job_title: 
+                view_applicant_btn = listing.find_element(By.ID, "view_applicant_btn")
+                
+                # scroll to see the button on the screen
+                driver.execute_script('arguments[0].scrollIntoView();', view_applicant_btn)
+                # Scroll down by a specified number of pixels (e.g., 500 pixels)
+                scroll_distance = 800
+                driver.execute_script(f"window.scrollBy(0, {scroll_distance});")
+                time.sleep(5)
+                view_applicant_btn.click()
+                time.sleep(1)
+                
+                # Find the parent element whose child elements you want to count
+                parent_element = driver.find_element_by_id("applicant_table")  
+                # Find the child elements using a locator strategy (e.g., find all child div elements)
+                child_elements = parent_element.find_elements_by_tag_name("tr")
+                # Get the count of child elements
+                number_of_children = len(child_elements)
+
+                applicant_list = []
+                if number_of_children > 0:
+                # Get the text content of the first child element (first <tr>)
+                    for child in child_elements:
+                        applicant_name = child.find_element(By.ID, "applicant_name")
+                        applicant_list.append(applicant_name.text)
+                # for applicant in applicant_list:
+                #     print(applicant)
+
+                close_button = driver.find_element(By.ID, "close_view_applicant_btn")
+                close_button.click()
+                time.sleep(1)
+                return applicant_list
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+########################### End of Helper Functions #########################################################
+
+
+########################### Start of Test Case Functions ####################################################
+
 # automated test case 1: test if the staff can see only opened job listings
-def BrowseRoleListings():
+def test_BrowseRoleListings():
     # ensure that 'staff' is clicked
     staff = driver.find_element(By.ID, "staff")
     staff.click()
@@ -57,9 +107,12 @@ def BrowseRoleListings():
         # Get the number of elements
         number_of_elements = len(elements)
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
-        if (number_of_elements == 3):
+        if (number_of_elements == 2):
             print("Results: Passed!")
             print("Remarks: Job Listings Found and number of Job Listings matches expected number")
+        else:
+            print("Result: Failed.")
+            print("Remarks: Number of listings displayed and should be seen do not match")
     except NoSuchElementException:
         print("Results: Failed")
 
@@ -67,9 +120,9 @@ def BrowseRoleListings():
     print("===============================================================================")
 
 # automated test case 2: test if the hr can see all job listings (opened and closed) and can see the create and edit button on the UI
-def RofRoleListings():
-    staff = driver.find_element(By.ID, "hr")
-    staff.click()
+def test_RofRoleListings():
+    hr = driver.find_element(By.ID, "hr")
+    hr.click()
     time.sleep(1)
 
     # find create new role listing button
@@ -93,19 +146,20 @@ def RofRoleListings():
     expected_edit_name = "Edit"
 
     # check conditions
-    if (actual_create_name == expected_create_name) and (number_of_elements == 6) and (actual_edit_name == expected_edit_name):
+    if (actual_create_name == expected_create_name) and (number_of_elements == 5) and (actual_edit_name == expected_edit_name):
         print("Result: Passed!")
         print("Remarks: HR can see buttons and open/close listings")
     else:
         print("Result: Failed.")
+        print("Remarks: Number of listings displayed and should be seen do not match")
 
     print("End of Automated Test Case 2")
     print("===============================================================================")
 
 # automated test case 3: test if the hr can create a new job listing 
-def CofRoleListings():
-    staff = driver.find_element(By.ID, "hr")
-    staff.click()
+def test_CofRoleListings():
+    hr = driver.find_element(By.ID, "hr")
+    hr.click()
     time.sleep(1)
 
     # find create new role listing button and create a new role listing
@@ -142,7 +196,7 @@ def CofRoleListings():
 
     print("===============================================================================")
     # if we have alr ran the test script once, the next few codes will print out the message
-    role_name, publish_date, closing_date = retreive_Latest_Job_List()
+    role_name, publish_date, closing_date = retrieve_Latest_Job_List()
     if role_name == roleTitle and publish_date == today and closing_date == formatted_date_string:
         button_element = driver.find_element(By.ID, 'jobCreationCancelButton')
         button_element.click()
@@ -177,7 +231,7 @@ def CofRoleListings():
         # Click the close button to close the top modal
         close_button.click()
 
-        role_name, publish_date, closing_date = retreive_Latest_Job_List()
+        role_name, publish_date, closing_date = retrieve_Latest_Job_List()
         # Check if first job list is the same as the one created (role name, publish date and closing date must match)
         if role_name == roleTitle and publish_date == today and closing_date == formatted_date_string:
             print("Result: Passed!")
@@ -188,11 +242,14 @@ def CofRoleListings():
         print("End of Automated test case 3")
         print("===============================================================================")
 
-# automated test case 4: test if withdraw button works
-def withdraw_btn_test():
-    time.sleep(5)
+# automated test case 4: test if withdraw button works (only testing frontend here)
+def test_withdraw_btn_test():
+    staff = driver.find_element(By.ID, "staff")
+    staff.click()
+    time.sleep(1)
+
     try:
-        applyJL = 'Software Developer' # job title
+        applyJL = 'Data Analyst' # job title
 
         # Find all job listing
         job_cards = driver.find_elements_by_css_selector(".job_listing")
@@ -203,6 +260,8 @@ def withdraw_btn_test():
             # check if the job title matches what we are applying for 
             if job_title == applyJL:
                 withdraw_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
+                
+                # scroll to see the button on the screen
                 driver.execute_script('arguments[0].scrollIntoView();', withdraw_button)
                 withdraw_button_text = withdraw_button.text
                 time.sleep(0.5)
@@ -227,11 +286,41 @@ def withdraw_btn_test():
     print("End of Automated Test Case 4")
     print("===============================================================================")
 
-# automated test case 5: test if apply button works
-def apply_btn_test():
-    time.sleep(5)
+# automated test case 5: test view applicant buttons and see if withdraw button backend function works
+def test_withdraw_backend():
+    # Scroll to the top of the page
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+    hr = driver.find_element(By.ID, "hr")
+    hr.click()
+    time.sleep(1)
+
+    applicant_list = get_all_applicants_name()
+
+    print("===============================================================================")
+    if "Lin Tao" in applicant_list:
+        print("Result: Failed")
+        print("Remarks: Lin Tao is in the applicant list")
+        print(f"Remarks: Applicant List: {applicant_list}")
+    else:
+        print("Result: Passed!")
+        print("Remarks: Lin Tao is not in the applicant list")   
+        print(f"Remarks: Applicant List: {applicant_list}") 
+    print("End of Automated Test Case 5")
+    print("===============================================================================")
+
+# automated test case 6: test if apply button works (only testing frontend here)
+def test_apply_btn_test():
+    # Scroll to the top of the page
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+
+    staff = driver.find_element(By.ID, "staff")
+    staff.click()
+    time.sleep(1)
+
     try:
-        applyJL = 'Software Developer' # job title
+        applyJL = 'Data Analyst' # job title
 
         # Find all job listing
         job_cards = driver.find_elements_by_css_selector(".job_listing")
@@ -266,19 +355,72 @@ def apply_btn_test():
     except Exception as e:
         print("Result: Failed")
         print(f"Remarks: {e}")
-    print("End of Automated Test Case 5")
+    print("End of Automated Test Case 6")
     print("===============================================================================")
 
-# automated test case 6: check if the alignment percentage is accurate 
+# automated test case 7: test view applicant buttons and see if apply button backend function works
+def test_apply_backend():
+    hr = driver.find_element(By.ID, "hr")
+    hr.click()
+    time.sleep(1)
 
-# automated test case 7: test view applicant buttons and see if automated test case result is reflected here
-
-
+    applicants = get_all_applicants_name()
     
+    print("===============================================================================")
+    if "Lin Tao" in applicants:
+        print("Result: Passed!")
+        print("Remarks: Lin Tao is in the applicant list")
+        print(f"Remarks: Applicant List: {applicants}")
+    else:
+        print("Result: Failed")
+        print("Lin Tao is not in the applicant list")    
+    print("End of Automated Test Case 7")
+    print("===============================================================================")
+
+# automated test case 8: check if the alignment percentage is accurate 
+def test_alignment_perc_accuracy():
+    # Scroll to the top of the page
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+    staff = driver.find_element(By.ID, "staff")
+    staff.click()
+    time.sleep(1)
+
+    try: 
+        # comparison data for staff with ID 1 
+        num_skill_matched = 1
+        num_role_skill = 3
+        job_list_name = 'Data Analyst'
+
+
+        job_listings = driver.find_elements_by_css_selector(".job_listing")
+        for listing in job_listings:
+            job_title = listing.find_element(By.CLASS_NAME, 'card-title').text
+            if job_list_name == job_title: 
+                progress_bar = listing.find_element(By.CLASS_NAME, 'progress-bar')
+                progress_bar_text = progress_bar.text.replace('%', '')
+                calculated_percentage = str(round(num_skill_matched/num_role_skill*100))
+
+                print("===============================================================================")
+                if calculated_percentage == progress_bar_text:
+                    print("Result: Passed!")
+                    print(f"Remarks: Alignment Percentage for StaffID 1 for Data Analyst Role is {calculated_percentage}%")
+
+    except Exception as e:
+        print("Result: Failed")
+        print(f"Remarks: {e.message}")
+    print("End of Automated Test Case 8")
+    print("===============================================================================")
+
+########################### End of Test Case Functions ######################################################
+
 
 # Uncomment function to run automated test on local machine 
-BrowseRoleListings()
-RofRoleListings()
-CofRoleListings()
-withdraw_btn_test()
-apply_btn_test()
+test_BrowseRoleListings()
+test_RofRoleListings()
+# test_CofRoleListings()
+test_withdraw_btn_test()
+test_withdraw_backend()
+test_apply_btn_test()
+test_apply_backend()
+test_alignment_perc_accuracy()

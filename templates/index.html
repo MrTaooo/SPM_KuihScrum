@@ -221,7 +221,7 @@
                                             </button>
                                         </div>
                                         <div>
-                                            <button v-if="accessRight == '1'" type="button" class="btn btn-secondary btn-xs mt-2"
+                                            <button id="view_applicant_btn" v-if="accessRight == '1'" type="button" class="btn btn-secondary btn-xs mt-2"
                                                 @click="getAllApplicants(job.JobList_ID)"
                                                 data-bs-toggle="modal" data-bs-target="#viewApplicants">
                                                 View Applicants
@@ -253,9 +253,9 @@
                                                                 <th>Skills</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody id="applicant_table">
                                                             <tr v-for="applicant in applicants" :key="applicant.Staff_ID">
-                                                                <td>{{ applicant["Staff_FName"] }} {{ applicant["Staff_LName"] }}</td>
+                                                                <td id="applicant_name">{{ applicant["Staff_FName"] }} {{ applicant["Staff_LName"] }}</td>
                                                                 <td>{{ applicant.Dept }}</td>
                                                                 <td>{{ applicant.Email }}</td>
                                                                 <td>{{ applicant.Country }}</td>
@@ -291,7 +291,7 @@
                                                     </table>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
+                                                    <button type="button" class="btn btn-secondary" id="close_view_applicant_btn"
                                                         data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
