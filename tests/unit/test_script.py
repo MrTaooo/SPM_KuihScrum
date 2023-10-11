@@ -269,7 +269,9 @@ def apply_btn_test():
     print("End of Automated Test Case 5")
     print("===============================================================================")
 
-# test case 6: test view applicant buttons and see if automated test case result is reflected here
+# automated test case 6: check if the alignment percentage is accurate 
+
+# automated test case 7: test view applicant buttons and see if automated test case result is reflected here
 
 
     
