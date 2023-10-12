@@ -418,7 +418,7 @@ def test_alignment_perc_accuracy():
 # Uncomment function to run automated test on local machine 
 test_BrowseRoleListings()
 test_RofRoleListings()
-# test_CofRoleListings()
+test_CofRoleListings()
 test_withdraw_btn_test()
 test_withdraw_backend()
 test_apply_btn_test()
