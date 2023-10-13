@@ -17,7 +17,8 @@ chrome_options.add_argument("--headless")
 # Use ChromeDriverManager to download and manage ChromeDriver
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 # get url
-driver.get("http://127.0.0.1:5500/templates/index.html")
+# driver.get("http://127.0.0.1:5500/template/index.html")
+driver.get("https://actions-test-v2.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
@@ -26,6 +27,7 @@ time.sleep(5)
 def retrieve_Latest_Job_List():
     # get the parent element of the job listing
     job_list_parent_element = driver.find_element_by_id('joblist_parent')
+    driver.execute_script('arguments[0].scrollIntoView();', job_list_parent_element)
 
     # get the first child element of the job listing (aka first listing)
     first_job_listing = job_list_parent_element.find_element_by_css_selector('*:first-child')
@@ -50,6 +52,7 @@ def get_all_applicants_name():
 
         job_listings = driver.find_elements_by_css_selector(".job_listing")
         for listing in job_listings:
+            driver.execute_script('arguments[0].scrollIntoView();', listing)
             job_title = listing.find_element(By.CLASS_NAME, 'card-title').text
             if job_list_name == job_title: 
                 view_applicant_btn = listing.find_element(By.ID, "view_applicant_btn")
@@ -200,6 +203,7 @@ def test_CofRoleListings():
     if role_name == roleTitle and publish_date == today and closing_date == formatted_date_string:
         button_element = driver.find_element(By.ID, 'jobCreationCancelButton')
         button_element.click()
+        time.sleep(5)
         print("Result: Passed!")
         print("Remarks: Test script has been ran at least once today.")
         print("End of Automated test case 3")
@@ -230,6 +234,7 @@ def test_CofRoleListings():
 
         # Click the close button to close the top modal
         close_button.click()
+        time.sleep(5)
 
         role_name, publish_date, closing_date = retrieve_Latest_Job_List()
         # Check if first job list is the same as the one created (role name, publish date and closing date must match)
@@ -244,6 +249,9 @@ def test_CofRoleListings():
 
 # automated test case 4: test if withdraw button works (only testing frontend here)
 def test_withdraw_btn_test():
+    # Scroll to the top of the page
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
     staff = driver.find_element(By.ID, "staff")
     staff.click()
     time.sleep(1)
@@ -253,10 +261,10 @@ def test_withdraw_btn_test():
 
         # Find all job listing
         job_cards = driver.find_elements_by_css_selector(".job_listing")
-
+        time.sleep(1)
         for card in job_cards:
             job_title = card.find_element(By.CLASS_NAME, 'card-title').text
-
+            driver.execute_script('arguments[0].scrollIntoView();', card)
             # check if the job title matches what we are applying for 
             if job_title == applyJL:
                 withdraw_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
@@ -264,7 +272,7 @@ def test_withdraw_btn_test():
                 # scroll to see the button on the screen
                 driver.execute_script('arguments[0].scrollIntoView();', withdraw_button)
                 withdraw_button_text = withdraw_button.text
-                time.sleep(0.5)
+                time.sleep(1)
                 
                 # if button text is "Apply Now", click button to change to "Withdraw Now"
                 if withdraw_button_text == "Apply Now":
@@ -360,6 +368,9 @@ def test_apply_btn_test():
 
 # automated test case 7: test view applicant buttons and see if apply button backend function works
 def test_apply_backend():
+    # Scroll to the top of the page
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
     hr = driver.find_element(By.ID, "hr")
     hr.click()
     time.sleep(1)
