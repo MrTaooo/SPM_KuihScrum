@@ -161,21 +161,20 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="progress flex-grow-1">
                                                     <div
-                                                        class="progress-bar"
+                                                        class="progress-bar custom-progress-bar"
                                                         role="progressbar"
                                                         :class="{
-                                                            
                                                             'bg-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
                                                             'bg-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
                                                             'bg-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
                                                         }"
-
-                                                        :style="{ width: skill_match_dict[job.JobList_ID].alignment_percentage + '%' }">
+                                                        :style="{ width: skill_match_dict[job.JobList_ID].alignment_percentage + '%', 'min-width': '30px' }">
+                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage === 0 ? '' : '' }}
                                                         {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>                                                                     
                                         <!-- <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p> --> <!-- Can remove alr ? since alr print-->
 
                                         <!-- Matched Skills -->
@@ -336,14 +335,14 @@
 
 
     <!-- jQuery code to update the selected role dynamically -->
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             $('.dropdown-item').click(function () {
                 var selectedRole = $(this).data('role');
                 $('#selectedRole').text(selectedRole);
             });
         });
-    </script>
+    </script> -->
     <!-- Datepicker function -->
     <script>
         $(function () {
