@@ -11,7 +11,9 @@ def create_listing():
     data = request.get_json()
     roleTitle = data["roleTitle"]
     closingDate = data["closingDate"]
+    print(closingDate)
     date = datetime.now()
+    strdate = date.strftime("%Y-%m-%d")
     # print(closingDate)
 
     # check if the closing date is empty
@@ -19,6 +21,12 @@ def create_listing():
         return jsonify({
             "code": 409,
             "message": "Please select a date"
+        })
+    
+    if (closingDate <= strdate):
+        return jsonify({
+            "code": 409,
+            "message": "Error, cannot select closing date that is before today"
         })
 
     # retrieve duplicate role listing (exact role name, publish date is before closing date, closing date is after today)
