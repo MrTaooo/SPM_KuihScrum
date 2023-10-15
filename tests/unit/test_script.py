@@ -12,10 +12,13 @@ from datetime import datetime
 # Define ChromeOptions to run headless
 chrome_options = webdriver.ChromeOptions()
 # headless means that the browser will not open up
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
+options = webdriver.ChromeOptions()
+options.add_argument("--headless=new")
+driver = webdriver.Chrome(options=options)
 
 # Use ChromeDriverManager to download and manage ChromeDriver
-driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+# driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 # get url
 # driver.get("http://127.0.0.1:5500/template/index.html")
 driver.get("https://actions-test-v2.vercel.app/")
@@ -26,16 +29,16 @@ time.sleep(5)
 
 def retrieve_Latest_Job_List():
     # get the parent element of the job listing
-    job_list_parent_element = driver.find_element_by_id('joblist_parent')
+    job_list_parent_element = driver.find_element(By.ID,'joblist_parent')
     driver.execute_script('arguments[0].scrollIntoView();', job_list_parent_element)
 
     # get the first child element of the job listing (aka first listing)
-    first_job_listing = job_list_parent_element.find_element_by_css_selector('*:first-child')
+    first_job_listing = job_list_parent_element.find_element(By.CSS_SELECTOR,'*:first-child')
 
     # Find the elements for role name, publish date, and closing date within the div
-    role_name_element = first_job_listing.find_element_by_css_selector('.card-title')
-    publish_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Date Posted:')]")
-    closing_date_element = first_job_listing.find_element_by_xpath(".//h5[contains(text(), 'Closing Date:')]")
+    role_name_element = first_job_listing.find_element(By.CSS_SELECTOR,'.card-title')
+    publish_date_element = first_job_listing.find_element(By.XPATH,".//h5[contains(text(), 'Date Posted:')]")
+    closing_date_element = first_job_listing.find_element(By.XPATH,".//h5[contains(text(), 'Closing Date:')]")
 
     # Extract text from the elements
     role_name = role_name_element.text
@@ -50,7 +53,7 @@ def get_all_applicants_name():
 
         job_list_name = 'Data Analyst'
 
-        job_listings = driver.find_elements_by_css_selector(".job_listing")
+        job_listings = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         for listing in job_listings:
             driver.execute_script('arguments[0].scrollIntoView();', listing)
             job_title = listing.find_element(By.CLASS_NAME, 'card-title').text
@@ -67,9 +70,9 @@ def get_all_applicants_name():
                 time.sleep(1)
                 
                 # Find the parent element whose child elements you want to count
-                parent_element = driver.find_element_by_id("applicant_table")  
+                parent_element = driver.find_element(By.ID,"applicant_table")  
                 # Find the child elements using a locator strategy (e.g., find all child div elements)
-                child_elements = parent_element.find_elements_by_tag_name("tr")
+                child_elements = parent_element.find_elements(By.TAG_NAME,"tr")
                 # Get the count of child elements
                 number_of_children = len(child_elements)
 
@@ -106,7 +109,7 @@ def test_BrowseRoleListings():
     # check for job listings
     try:
         # Find multiple elements by class name
-        elements = driver.find_elements_by_css_selector(".job_listing")
+        elements = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         # Get the number of elements
         number_of_elements = len(elements)
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
@@ -137,14 +140,14 @@ def test_RofRoleListings():
     # check for job listings
     try:
         # Find multiple elements by class name
-        elements = driver.find_elements_by_css_selector(".job_listing")
+        elements = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         # Get the number of elements
         number_of_elements = len(elements)
     except NoSuchElementException:
         print("Test Case Failed")
 
     # search for edit button
-    edit = driver.find_element_by_css_selector(".edit_btn")
+    edit = driver.find_element(By.CSS_SELECTOR,".edit_btn")
     actual_edit_name = edit.text
     expected_edit_name = "Edit"
 
@@ -221,6 +224,10 @@ def test_CofRoleListings():
     # subsequent runs of the day should be unsuccessful entry (duplicate entry)
     create_err_msg = driver.find_element(By.ID, "errorMessage").text
     if create_err_msg:
+        create_modal = driver.find_element(By.ID, "createJob")
+        close_button = create_modal.find_element(By.ID, "jobCreationCancelButton")
+        close_button.click()
+        time.sleep(1)
         print("Result: Failed.")
         print("Remarks: Duplicate entry")
         print("End of Automated test case 3")
@@ -260,7 +267,7 @@ def test_withdraw_btn_test():
         applyJL = 'Data Analyst' # job title
 
         # Find all job listing
-        job_cards = driver.find_elements_by_css_selector(".job_listing")
+        job_cards = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         time.sleep(1)
         for card in job_cards:
             job_title = card.find_element(By.CLASS_NAME, 'card-title').text
@@ -331,7 +338,7 @@ def test_apply_btn_test():
         applyJL = 'Data Analyst' # job title
 
         # Find all job listing
-        job_cards = driver.find_elements_by_css_selector(".job_listing")
+        job_cards = driver.find_elements(By.CSS_SELECTOR,".job_listing")
 
         for card in job_cards:
             job_title = card.find_element(By.CLASS_NAME, 'card-title').text
@@ -402,9 +409,7 @@ def test_alignment_perc_accuracy():
         num_skill_matched = 1
         num_role_skill = 3
         job_list_name = 'Data Analyst'
-
-
-        job_listings = driver.find_elements_by_css_selector(".job_listing")
+        job_listings = driver.find_elements(By.CSS_SELECTOR, ".job_listing")
         for listing in job_listings:
             job_title = listing.find_element(By.CLASS_NAME, 'card-title').text
             if job_list_name == job_title: 

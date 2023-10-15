@@ -20,7 +20,8 @@ def create_app():
         elif system == 'Darwin':
             return 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'  # For macOS
         else:
-            raise ValueError("Unsupported operating system")
+            # to run in GitHub actions after creating the db in GitHub actions 
+            return 'mysql+mysqlconnector://root:root@localhost:3306/SPM_KUIH'
     # Set the URI based on the OS
     app.config['SQLALCHEMY_DATABASE_URI'] = check_os()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
