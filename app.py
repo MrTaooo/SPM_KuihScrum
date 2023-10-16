@@ -11,6 +11,7 @@ app = create_app()
 from routes.apply_for_job import apply_for_job
 from routes.calculate_alignment import calculate_alignment
 from routes.create_job_listing import create_listing
+from routes.edit_job_listing import edit_listing
 from routes.get_all_job_listings import get_all_joblistings
 from routes.get_all_roles import get_all_roles
 from routes.get_roles_skills import get_roles_skills
@@ -23,6 +24,7 @@ from routes.get_all_applicants import get_applicants
 app.route("/apply_for_job", methods=['POST'])(apply_for_job)
 app.route('/calculateAlignment', methods=['GET'])(calculate_alignment)
 app.route('/createListing', methods=['POST'])(create_listing)
+app.route('/editListing', methods=['POST'])(edit_listing)
 app.route("/joblistings")(get_all_joblistings)
 app.route("/roles")(get_all_roles)
 app.route("/rolesSkills")(get_roles_skills)

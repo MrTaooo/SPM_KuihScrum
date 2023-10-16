@@ -12,7 +12,7 @@ const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 const jobsPage = Vue.createApp({
   data() {
     return {
-      staffID: "1", 
+      staffID: "1",
       jobListings: [],
       roles: {},
       accessRight: 0,
@@ -28,17 +28,16 @@ const jobsPage = Vue.createApp({
       errorMsg: "",
       applicants: [],
       tempJobID: "",
-      applicantsDict: {}
+      applicantsDict: {},
     };
   },
 
   mounted() {
     this.getUserSkills(this.staffID);
   },
-  
+
   methods: {
-    
-    // this function will get all job listings for the staff and hr. Staff will only see job listings that are not closed. 
+    // this function will get all job listings for the staff and hr. Staff will only see job listings that are not closed.
     // within this function, it also calls 2 methods to populate the roles and populate the role descriptions (vue data properties)
     // the 2 functions were not placed at mounted as the page would refresh after the hr creates a new listings wihch will activate the getAllJobListings() function
     getAllJobListings() {
@@ -51,7 +50,7 @@ const jobsPage = Vue.createApp({
           const month = (current.getMonth() + 1).toString().padStart(2, "0"); // Add leading zero if needed
           const day = current.getDate().toString().padStart(2, "0"); // Add leading zero if needed
           const date = `${year}-${month}-${day}`;
-    
+
           // if the user is Staff, then the job listings will be filtered to only show the job listings that are not closed
           if (this.accessRight == 0) {
             for (let i = this.jobListings.length - 1; i >= 0; i--) {
@@ -63,31 +62,29 @@ const jobsPage = Vue.createApp({
             }
           }
 
-          // In JavaScript, you use the .then() method to work with Promises and handle the 
-          // asynchronous result of an operation. Promises represent the eventual completion (either success or failure) 
+          // In JavaScript, you use the .then() method to work with Promises and handle the
+          // asynchronous result of an operation. Promises represent the eventual completion (either success or failure)
           // of an asynchronous operation, and .then() is used to specify what should happen when the Promise is resolved (successfully completed).
           this.jobListings.forEach((jobListing) => {
-            this.getCalculateAlignment(jobListing.JobList_ID)
-              .then((data) => {
-                this.skill_match_dict[jobListing.JobList_ID] = {
-                  "alignment_percentage": data.alignment_percentage,
-                  "role_skills": data.skills_by_role,
-                  "user_skills": this.userSkills
-                };
-              });
+            this.getCalculateAlignment(jobListing.JobList_ID).then((data) => {
+              this.skill_match_dict[jobListing.JobList_ID] = {
+                alignment_percentage: data.alignment_percentage,
+                role_skills: data.skills_by_role,
+                user_skills: this.userSkills,
+              };
+            });
           });
-        
 
           // retrieve all the applied roles for the current user
           axios
-            .get(get_appliedJobs_URL+ "/" + this.staffID)
+            .get(get_appliedJobs_URL + "/" + this.staffID)
             .then((response) => {
               this.appliedJobs = response.data.data.appliedJobs;
             })
             .catch((error) => {
               console.error("Error fetching applied jobs:", error);
             });
-            
+
           // these 2 methods are called to populate the roles and roleDescriptions array when the page first loads
           this.getAllRoles();
           this.getRolesSkills();
@@ -97,21 +94,21 @@ const jobsPage = Vue.createApp({
         });
     },
 
-    // this function will get all the roles and role descriptions 
+    // this function will get all the roles and role descriptions
     getAllRoles() {
       // on Vue instance created, load the book list
       axios
         .get(get_roles_URL)
         .then((response) => {
-          roles_list = response.data["data"]["roles"]
+          roles_list = response.data["data"]["roles"];
           const roleObject = {};
 
-          roles_list.forEach(role => {
+          roles_list.forEach((role) => {
             const role_name = role.Role_Name;
             const role_desc = role.Role_Desc;
             roleObject[role_name] = role_desc;
           });
-          
+
           this.roles = roleObject;
         })
         .catch((error) => {
@@ -120,7 +117,7 @@ const jobsPage = Vue.createApp({
           console.log(error);
         });
     },
-    
+
     // this function will get all the role and it's respective skills
     getRolesSkills() {
       axios
@@ -137,13 +134,13 @@ const jobsPage = Vue.createApp({
     getUserSkills(userID) {
       return axios
         .get(get_user_skills_URL, {
-          params: { userID: userID }
+          params: { userID: userID },
         })
         .then((response) => {
           if (this.userSkills.length === 0) {
             this.userSkills = response.data.data.user_skills;
             this.getAllJobListings();
-          } 
+          }
           return response.data.data.user_skills; // Return the skills array
         })
         .catch((error) => {
@@ -154,19 +151,21 @@ const jobsPage = Vue.createApp({
     async getApplicantSkills(jobID, applicantID) {
       try {
         const applicantSkills = await this.getUserSkills(applicantID);
-        const applicantAlignment = await this.getCalculateAlignment(jobID, applicantSkills);
+        const applicantAlignment = await this.getCalculateAlignment(
+          jobID,
+          applicantSkills
+        );
         let applicantSkillsInfo = {
-          "applicant_skills": applicantSkills,
-          "alignment_percentage": applicantAlignment.alignment_percentage,
-          "role_skills": applicantAlignment.skills_by_role
+          applicant_skills: applicantSkills,
+          alignment_percentage: applicantAlignment.alignment_percentage,
+          role_skills: applicantAlignment.skills_by_role,
         };
         return applicantSkillsInfo;
-      } 
-      catch (error) {
-        console.error('Error in getApplicantSkills:', error);
+      } catch (error) {
+        console.error("Error in getApplicantSkills:", error);
       }
-    },    
-    
+    },
+
     // Get the alignment percentage for the job listing and the user/applicant
     getCalculateAlignment(joblist_ID, user_Skills = null) {
       if (user_Skills === null) {
@@ -174,19 +173,19 @@ const jobsPage = Vue.createApp({
       }
       const params = {
         joblist_ID: joblist_ID,
-        user_Skills: user_Skills.join(',')
+        user_Skills: user_Skills.join(","),
       };
       return axios
         .get(get_calculatealignment_URL, {
-          params: params
+          params: params,
         })
         .then((response) => {
           return response.data.data;
         })
         .catch((error) => {
-          console.log('error:', error);
+          console.log("error:", error);
         });
-    },    
+    },
 
     // When the user click on close for the success modal, this method will run to close the createjob modal
     closeModals() {
@@ -196,14 +195,19 @@ const jobsPage = Vue.createApp({
       createjobModal.hide();
       this.getAllJobListings();
     },
+    editCloseModals() {
+      var editjobModal = bootstrap.Modal.getOrCreateInstance(
+        document.getElementById("editJob")
+      );
+      editjobModal.hide();
+      this.getAllJobListings();
+    },
 
-    // this function will apply or withdraw the job listing for the user 
+    // this function will apply or withdraw the job listing for the user
     applyOrWithdraw(event, jobID) {
-
       // checks if the user has applied for the job listing (appliedJobs array contains the jobListID which the user has already applied for)
       if (!this.appliedJobs.includes(jobID)) {
-
-        // retrieves the staffID from the button attribute 
+        // retrieves the staffID from the button attribute
         staffID = parseInt(event.target.getAttribute("apply-staff-id"));
 
         // stores the data to send to the apply_job URL
@@ -217,28 +221,29 @@ const jobsPage = Vue.createApp({
           .post(apply_job_URL, dataToSend)
           .then((response) => {
             // console.log("Data sent successfully:", response.data);
-            if (response.data.code == "200")
-            {
+            if (response.data.code == "200") {
               // only update the button and appliedJobs list if the application is submitted successfully
               this.appliedJobs.push(jobID);
-            }
-            else
-            {
-              const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+            } else {
+              const errorModal = new bootstrap.Modal(
+                document.getElementById("errorModal")
+              );
               this.errorMsg = "Unable to apply now. Please try again later";
               errorModal.show();
             }
           })
           .catch((error) => {
             // Show the error modal for 404 errors
-            const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+            const errorModal = new bootstrap.Modal(
+              document.getElementById("errorModal")
+            );
             this.errorMsg = "Unable to apply now. Please try again later";
             errorModal.show();
             // console.error("Error sending data:", error);
           });
 
         // console.log("Applied");
-      } 
+      }
       // withdraw function
       else {
         const index = this.appliedJobs.indexOf(jobID);
@@ -253,22 +258,23 @@ const jobsPage = Vue.createApp({
         axios
           .post(withdraw_application_URL, dataToSend)
           .then((response) => {
-            if (response.data.code == "200")
-            {
+            if (response.data.code == "200") {
               if (index > -1) {
                 this.appliedJobs.splice(index, 1);
               }
               // console.log("Data sent successfully:", response.data);
-            }
-            else
-            {
-              const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+            } else {
+              const errorModal = new bootstrap.Modal(
+                document.getElementById("errorModal")
+              );
               this.errorMsg = "Unable to withdraw now. Please try again later";
               errorModal.show();
             }
           })
           .catch((error) => {
-            const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+            const errorModal = new bootstrap.Modal(
+              document.getElementById("errorModal")
+            );
             this.errorMsg = "Unable to withdraw now. Please try again later";
             errorModal.show();
             // console.error("Error sending data:", error);
@@ -288,29 +294,32 @@ const jobsPage = Vue.createApp({
 
           // Create an array of promises for each applicant's skills
           const promises = this.applicants.map(async (applicant) => {
-            const data = await this.getApplicantSkills(joblist_ID, applicant.Staff_ID);
+            const data = await this.getApplicantSkills(
+              joblist_ID,
+              applicant.Staff_ID
+            );
             return {
-              "staff_id": applicant.Staff_ID,
-              "alignment_percentage": data.alignment_percentage,
-              "applicant_skills": data.applicant_skills,
-              "role_skills": data.role_skills
+              staff_id: applicant.Staff_ID,
+              alignment_percentage: data.alignment_percentage,
+              applicant_skills: data.applicant_skills,
+              role_skills: data.role_skills,
             };
           });
-    
+
           // Wait for all promises to resolve; I wrote 1001 awaits for nothing
           return Promise.all(promises);
         })
         .then((applicantDataArray) => {
           // Initialize applicantsDict again for the current job applicants
           this.applicantsDict = {};
-    
+
           // Update this.applicantsDict with the results
           applicantDataArray.forEach((applicantData) => {
             this.applicantsDict[applicantData.staff_id] = {
-              "staff_id": applicantData.staff_id,
-              "alignment_percentage": applicantData.alignment_percentage,
-              "applicant_skills": applicantData.applicant_skills,
-              "role_skills": applicantData.role_skills
+              staff_id: applicantData.staff_id,
+              alignment_percentage: applicantData.alignment_percentage,
+              applicant_skills: applicantData.applicant_skills,
+              role_skills: applicantData.role_skills,
             };
           });
         })
@@ -318,9 +327,108 @@ const jobsPage = Vue.createApp({
           // Handle errors
           console.log(error);
         });
-    }
-    
+    },
+    createRestriction() {
+      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
+      var today = new Date();
+      var tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      var dd = String(tomorrow.getDate()).padStart(2, "0");
+      var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
+      var yyyy = tomorrow.getFullYear();
 
+      tomorrow = yyyy + "-" + mm + "-" + dd;
+      document.getElementById("closingDate").setAttribute("min", tomorrow);
+      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
+    },
+    createJob() {
+      // Get the value of the date input field
+      const closingDate = document.getElementById("closingDate").value;
+
+      // Check if a date has been selected
+      if (closingDate) {
+        const roleTitle = document.getElementById("roleTitle").value;
+
+        // Send the data to the Flask backend using Axios
+        axios
+          .post("http://127.0.0.1:5100/createListing", {
+            roleTitle: roleTitle,
+            closingDate: closingDate,
+          })
+          .then((response) => {
+            // console.log("Data sent successfully:", response.data);
+
+            var responseCode = response.data.code;
+            if (responseCode === 409) {
+              var errorMessage = response.data.message;
+              // console.log(errorMessage);
+              var errorMessageNode = document.getElementById("errorMessage");
+              errorMessageNode.innerHTML = errorMessage;
+            } else {
+              var successModal = new bootstrap.Modal(
+                document.getElementById("successModal")
+              );
+              successModal.show();
+
+              // do we need the 2 lines below? what is the purpose?
+              var errorMessageNode = document.getElementById("errorMessage");
+              errorMessageNode.innerHTML = "";
+            }
+          })
+          .catch((error) => {
+            console.error("Error sending data:", error);
+          });
+      } else {
+        var errorMessageNode = document.getElementById("errorMessage");
+        errorMessageNode.innerHTML = "Please select a date";
+      }
+    },
+    editRestriction() {
+      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
+      var today = new Date();
+      var tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      var dd = String(tomorrow.getDate()).padStart(2, "0");
+      var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
+      var yyyy = tomorrow.getFullYear();
+
+      tomorrow = yyyy + "-" + mm + "-" + dd;
+      document.getElementById("editClosingDate").setAttribute("min", tomorrow);
+      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
+    },
+    editJob(jobListID) {
+      const listingId = jobListID;
+      const newClosingDate = document.getElementById("editClosingDate").value;
+
+      if (newClosingDate) {
+        axios
+          .post("http://127.0.0.1:5100/editListing", {
+            id: listingId,
+            closingDate: newClosingDate,
+          })
+          .then((response) => {
+            var responseCode = response.data.code;
+            if (responseCode === 409 || responseCode === 404) {
+              var errorMessage = response.data.message;
+              var errorMessageNode = document.getElementById("errorMessage");
+              errorMessageNode.innerHTML = errorMessage;
+            } else {
+              var successModal = new bootstrap.Modal(
+                document.getElementById("successModal")
+              );
+              successModal.show();
+              var errorMessageNode = document.getElementById("errorMessage");
+              errorMessageNode.innerHTML = "";
+            }
+          })
+          .catch((error) => {
+            console.error("Error sending data:", error);
+          });
+      } else {
+        var errorMessageNode = document.getElementById("errorMessage");
+        errorMessageNode.innerHTML = "Please select a new date";
+      }
+    },
   },
 });
 
