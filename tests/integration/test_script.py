@@ -11,7 +11,7 @@ from datetime import datetime
 options = webdriver.ChromeOptions()
 # Define ChromeOptions to run headless
 # headless means that the browser will not open up
-options.add_argument("--headless=new")
+# options.add_argument("--headless=new")
 # create webdriver object
 driver = webdriver.Chrome(options=options)
 
@@ -58,10 +58,11 @@ def get_all_applicants_name():
                 
                 # scroll to see the button on the screen
                 driver.execute_script('arguments[0].scrollIntoView();', view_applicant_btn)
+                time.sleep(1)
                 # Scroll down by a specified number of pixels (e.g., 500 pixels)
-                scroll_distance = 800
+                scroll_distance = 1000
                 driver.execute_script(f"window.scrollBy(0, {scroll_distance});")
-                time.sleep(5)
+                time.sleep(1)
                 view_applicant_btn.click()
                 time.sleep(1)
                 
@@ -429,7 +430,7 @@ def test_alignment_perc_accuracy():
 # Uncomment function to run automated test on local machine 
 test_BrowseRoleListings()
 test_RofRoleListings()
-# test_CofRoleListings()
+test_CofRoleListings()
 test_withdraw_btn_test()
 test_withdraw_backend()
 test_apply_btn_test()
