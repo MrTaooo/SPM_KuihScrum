@@ -404,10 +404,15 @@ const jobsPage = Vue.createApp({
       console.log(this.searchInput)
       const query = this.searchInput ? this.searchInput.toLowerCase() : '';
       console.log(query)
-      this.jobListings = this.jobListings.filter((job) => {
-        const jobTitle = job.Role_Name.toLowerCase();
-        return jobTitle.includes(query);
-      });
+      if (query == '') {
+        this.getAllJobListings();
+      }
+      else {
+        this.jobListings = this.jobListings.filter((job) => {
+          const jobTitle = job.Role_Name.toLowerCase();
+          return jobTitle.includes(query);
+        });
+      }
     },
     editJob() {
       const listingId = this.activeEditJobListingID;
