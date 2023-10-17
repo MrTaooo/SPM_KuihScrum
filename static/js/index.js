@@ -12,7 +12,7 @@ const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 const jobsPage = Vue.createApp({
   data() {
     return {
-      staffID: "130001",
+      staffID: "140001",
       jobListings: [],
       roles: {},
       accessRight: 0,
