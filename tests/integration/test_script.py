@@ -108,6 +108,9 @@ def test_BrowseRoleListings():
         elements = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         # Get the number of elements
         number_of_elements = len(elements)
+
+        assert number_of_elements == 1, "Number of elements is not equal to 1"
+
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
         if (number_of_elements == 1):
             print("Results: Passed!")
@@ -146,6 +149,10 @@ def test_RofRoleListings():
     edit = driver.find_element(By.CSS_SELECTOR,".edit_btn")
     actual_edit_name = edit.text
     expected_edit_name = "Edit"
+
+    assert actual_create_name == expected_create_name, "Actual create name doesn't match the expected value"
+    assert number_of_elements == 2, "Number of elements is not equal to 2"
+    assert actual_edit_name == expected_edit_name, "Actual edit name doesn't match the expected value"
 
     # check conditions
     if (actual_create_name == expected_create_name) and (number_of_elements == 2) and (actual_edit_name == expected_edit_name):
