@@ -4,29 +4,24 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 from datetime import datetime
 
-# create webdriver object
-# Define ChromeOptions to run headless
-chrome_options = webdriver.ChromeOptions()
-# headless means that the browser will not open up
-# chrome_options.add_argument("--headless")
+# create chrome options
 options = webdriver.ChromeOptions()
-options.add_argument("--headless=new")
+# Define ChromeOptions to run headless
+# headless means that the browser will not open up
+# options.add_argument("--headless=new")
+# create webdriver object
 driver = webdriver.Chrome(options=options)
 
-# Use ChromeDriverManager to download and manage ChromeDriver
-# driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 # get url
-# driver.get("http://127.0.0.1:5500/template/index.html")
-driver.get("https://actions-test-v2.vercel.app/")
+driver.get("http://127.0.0.1:5500/template/index.html")
+# driver.get("https://actions-test-v2.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
-########################### Start of Helper Functions #######################################################
-
+########################### Start of Helper Functions #########################################################
 def retrieve_Latest_Job_List():
     # get the parent element of the job listing
     job_list_parent_element = driver.find_element(By.ID,'joblist_parent')
@@ -432,11 +427,11 @@ def test_alignment_perc_accuracy():
 
 
 # Uncomment function to run automated test on local machine 
-test_BrowseRoleListings()
-test_RofRoleListings()
+# test_BrowseRoleListings()
+# test_RofRoleListings()
 test_CofRoleListings()
-test_withdraw_btn_test()
-test_withdraw_backend()
-test_apply_btn_test()
-test_apply_backend()
-test_alignment_perc_accuracy()
+# test_withdraw_btn_test()
+# test_withdraw_backend()
+# test_apply_btn_test()
+# test_apply_backend()
+# test_alignment_perc_accuracy()
