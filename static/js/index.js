@@ -429,7 +429,7 @@ const jobsPage = Vue.createApp({
               errorMessageNode.innerHTML = errorMessage;
             } else {
               var successModal = new bootstrap.Modal(
-                document.getElementById("successModal")
+                document.getElementById("editSuccessModal")
               );
               successModal.show();
               var errorMessageNode = document.getElementById("errorMessage");
