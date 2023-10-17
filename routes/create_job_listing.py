@@ -20,13 +20,18 @@ def create_listing():
     if (closingDate == ''):
         return jsonify({
             "code": 409,
-            "message": "Please select a date"
+            "message": "Please select a date!"
         })
     
-    if (closingDate <= strdate):
+    if (closingDate < strdate):
         return jsonify({
             "code": 409,
-            "message": "Error, cannot select closing date that is before today"
+            "message": "Error, cannot select closing date that is before today!"
+        })
+    if (closingDate == strdate):
+        return jsonify({
+            "code": 409,
+            "message": "Error, cannot select closing date that is on the same day!"
         })
 
     # retrieve duplicate role listing (exact role name, publish date is before closing date, closing date is after today)
@@ -40,7 +45,7 @@ def create_listing():
     if overlapping_listings:
         return jsonify({
             "code": 409,
-            "message": "Error, cannot have duplicate listings"
+            "message": "Error, cannot have duplicate listings!"
         })
 
     # If no duplicate listing found, save the new listing to the database
@@ -52,5 +57,5 @@ def create_listing():
     # Return a response, for example, a confirmation message
     return jsonify({
         "code": 201,
-        "message": "Data received and processed successfully"
+        "message": "Data received and processed successfully!"
     })

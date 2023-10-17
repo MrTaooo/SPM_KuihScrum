@@ -3618,4 +3618,5 @@ VALUES
 -- Insert data into the Job_Listing table
 INSERT INTO Job_Listing (Role_Name, publish_Date, Closing_date)
 VALUES
-    ('Account Manager', '2023-09-01', '2023-12-15');
+    ('Account Manager', '2023-09-01', '2023-10-20'),
+    ('Account Manager', '2023-09-01', '2023-10-08');

@@ -15,20 +15,25 @@ def edit_listing():
     if not new_closingDate:
         return jsonify({
             "code": 409,
-            "message": "Please select a date"
+            "message": "Please select a date!"
         })
     
-    if new_closingDate <= current_date:
+    if new_closingDate < current_date:
         return jsonify({
             "code": 409,
-            "message": "Error, cannot select closing date that is before today"
+            "message": "Error, cannot select closing date that is before today!"
+        })
+    if new_closingDate == current_date:
+        return jsonify({
+            "code": 409,
+            "message": "Error, cannot select closing date that is on the same day!"
         })
 
     listing = db.session.query(JobListing).filter(JobListing.JobList_ID == listing_id).first()
     if not listing:
         return jsonify({
             "code": 404,
-            "message": "Error, listing not found"
+            "message": "Error, listing not found!"
         })
     
      # retrieve duplicate role listing (exact role name, publish date is before closing date, closing date is after today)
@@ -43,7 +48,7 @@ def edit_listing():
     if overlapping_listings:
         return jsonify({
             "code": 409,
-            "message": "Error, cannot have duplicate listings"
+            "message": "Error, cannot have duplicate listings!"
         })
    
     listing.Closing_date = new_closingDate
@@ -51,7 +56,7 @@ def edit_listing():
 
     return jsonify({
         "code": 200,
-        "message": "Listing updated successfully"
+        "message": "Listing updated successfully!"
     })
 
     
