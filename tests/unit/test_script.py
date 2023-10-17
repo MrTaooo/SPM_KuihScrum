@@ -21,7 +21,9 @@ driver.get("https://actions-test-v2.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
+
 ########################### Start of Helper Functions #########################################################
+
 def retrieve_Latest_Job_List():
     # get the parent element of the job listing
     job_list_parent_element = driver.find_element(By.ID,'joblist_parent')
@@ -429,7 +431,7 @@ def test_alignment_perc_accuracy():
 # Uncomment function to run automated test on local machine 
 # test_BrowseRoleListings()
 # test_RofRoleListings()
-test_CofRoleListings()
+# test_CofRoleListings()
 # test_withdraw_btn_test()
 # test_withdraw_backend()
 # test_apply_btn_test()
