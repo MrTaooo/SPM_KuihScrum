@@ -60,23 +60,20 @@
                 </div>
                 <!-- Job Listings -->
                 <div id="listing_list" class="col-md-9">
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-4">
                             <h2>Job Listings</h2>
                         </div>
-                        <div class="col-md-8 d-flex">
-                            <input v-model="searchInput" type="text" class="form-control me-2" placeholder="Search by Job Title">
-                            <button type="button" class="btn btn-dark" 
-                                @click="filterJobListings()">
-                                Search
-                            </button>
-                        </div>                        
-                        <div class="col-md-6 text-md-end">
+                        <div class="col-md-8 text-md-end">
                             <button v-if="accessRight === '1'" type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#createJob" id="create_listing_btn" @click="createRestriction()">
                                 Create a Job Listing
                             </button>
                         </div>
+                    </div>
+                    
+                    <div class="col mb-2 d-flex">
+                        <input v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" placeholder="Search by Job Title">
                     </div>
 
                     <!-- Modal form to create job listing -->
