@@ -16,8 +16,8 @@ options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
 # get url
-driver.get("http://127.0.0.1:5500/templates/index.html")
-# driver.get("https://actions-test-v2.vercel.app/")
+# driver.get("http://127.0.0.1:5500/templates/index.html")
+driver.get("https://spm-kuih-scrum.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
