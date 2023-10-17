@@ -16,6 +16,7 @@ const jobsPage = Vue.createApp({
       jobListings: [],
       roles: {},
       accessRight: 0,
+      searchInput: '',
       roleSkills: {},
       skill_match_dict: {},
       userSkills: [],
@@ -396,6 +397,15 @@ const jobsPage = Vue.createApp({
       document.getElementById("editClosingDate").setAttribute("min", tomorrow);
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
     },
+    filterJobListings() {
+      console.log(this.searchInput)
+      const query = this.searchInput ? this.searchInput.toLowerCase() : '';
+      console.log(query)
+      this.jobListings = this.jobListings.filter((job) => {
+        const jobTitle = job.Role_Name.toLowerCase();
+        return jobTitle.includes(query);
+      });
+    },
     editJob(jobListID) {
       const listingId = jobListID;
       const newClosingDate = document.getElementById("editClosingDate").value;
@@ -430,6 +440,9 @@ const jobsPage = Vue.createApp({
       }
     },
   },
-});
+    
+  }
+);
+
 
 const vm = jobsPage.mount("#jobsPage");
