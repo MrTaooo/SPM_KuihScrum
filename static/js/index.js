@@ -12,7 +12,7 @@ const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 const jobsPage = Vue.createApp({
   data() {
     return {
-      staffID: "1",
+      staffID: "130001",
       jobListings: [],
       roles: {},
       accessRight: 0,
@@ -280,7 +280,7 @@ const jobsPage = Vue.createApp({
             // console.error("Error sending data:", error);
           });
 
-        console.log("Withdrawed");
+        // console.log("Withdrawed");
       }
     },
 
