@@ -3678,5 +3678,17 @@ VALUES
 -- Insert data into the Job_Listing table
 INSERT INTO Job_Listing (Role_Name, publish_Date, Closing_date)
 VALUES
-    ('Account Manager', '2023-09-01', '2023-12-15'),
-    ('Consultant', '2023-10-01', '2023-10-10');
+('Account Manager', '2023-09-01', '2023-12-15'),
+('Consultant', '2023-10-01', '2023-10-10');
+
+-- Insert data into the Job_Applications table 
+INSERT INTO Job_Application (JobList_ID, Staff_ID)
+VALUES
+(1,130001),
+(1,140001),
+(1,150008),
+(1,151578),
+(1,180001),
+(1,190010),
+(1,210024),
+(1,210044);
