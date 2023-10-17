@@ -11,13 +11,13 @@ from datetime import datetime
 options = webdriver.ChromeOptions()
 # Define ChromeOptions to run headless
 # headless means that the browser will not open up
-# options.add_argument("--headless=new")
+options.add_argument("--headless=new")
 # create webdriver object
 driver = webdriver.Chrome(options=options)
 
 # get url
-driver.get("http://127.0.0.1:5500/template/index.html")
-# driver.get("https://actions-test-v2.vercel.app/")
+# driver.get("http://127.0.0.1:5500/template/index.html")
+driver.get("https://actions-test-v2.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
