@@ -18,6 +18,22 @@ def edit_listing():
             "message": "Please select a date!"
         })
     
+     # retrieve duplicate role listing (exact role name, publish date is before closing date, closing date is after today)
+    overlapping_listings = db.session.query(JobListing).filter(
+        JobListing.Role_Name == roleName,
+        JobListing.publish_Date <= new_closingDate,
+        JobListing.Closing_date >= current_date,
+        JobListing.JobList_ID != listing_id
+    ).all()
+    print(overlapping_listings)
+    
+    # Check if the role listing for the role exists in the database
+    if overlapping_listings:
+        return jsonify({
+            "code": 409,
+            "message": "Error, cannot have duplicate listings!"
+        })
+    
     if new_closingDate < current_date:
         return jsonify({
             "code": 409,
@@ -36,20 +52,9 @@ def edit_listing():
             "message": "Error, listing not found!"
         })
     
-     # retrieve duplicate role listing (exact role name, publish date is before closing date, closing date is after today)
-    overlapping_listings = db.session.query(JobListing).filter(
-        JobListing.Role_Name == roleName,
-        JobListing.publish_Date <= new_closingDate,
-        JobListing.Closing_date >= current_date,
-        JobListing.JobList_ID != listing_id
-    ).all()
-    print(overlapping_listings)
-    # Check if the role listing for the role exists in the database
-    if overlapping_listings:
-        return jsonify({
-            "code": 409,
-            "message": "Error, cannot have duplicate listings!"
-        })
+    
+    
+    
    
     listing.Closing_date = new_closingDate
     db.session.commit()
