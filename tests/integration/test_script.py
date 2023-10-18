@@ -503,7 +503,7 @@ def test_alignment_perc_accuracy():
     print("===============================================================================")
 
 # automated test case 9.1: test update of role listing closing date (positive)
-def test_update_job_listing(job_list_index, input_closing_date="12/05/2023"):
+def test_update_job_listing(job_list_index=0, input_closing_date="12/05/2023"):
     # Scroll to the top of the page
     driver.execute_script("window.scrollTo(0, 0);")
     time.sleep(1)
