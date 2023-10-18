@@ -444,6 +444,9 @@ const jobsPage = Vue.createApp({
         errorMessageNode.innerHTML = "Please select a new date";
       }
     },
+    toggleDesc(job) {
+      job.showDescription = !job.showDescription;
+  },
   },
     
   }

@@ -71,8 +71,8 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <div class="col mb-2 d-flex">
+
+                    <div class="col d-flex mb-2">
                         <input v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" placeholder="Search by Job Title">
                     </div>
 
@@ -161,7 +161,12 @@
                                     <div class="col-md-6 p-0">
                                         <h5 class="card-title m-2">{{job.Role_Name}}</h5>
                                         <!--role description where role name is the key in the roles dictionary-->
-                                        <p class="card-text m-2">{{roles[job.Role_Name]}}</p>
+                                        <p class="card-text m-2 mb-0" :class="{ 'collapsed': !job.showDescription }">
+                                            {{roles[job.Role_Name]}}
+                                        </p>
+                                        <span class="btn btn-link ml-0" @click="toggleDesc(job)">
+                                            {{ job.showDescription ? 'Read Less' : 'Show More' }}
+                                        </span>
 
                                         <!-- Alignment Percentage (remove color coding if necessary)-->
                                         <div class="card-text m-2">
@@ -221,7 +226,7 @@
                                     </div>
 
                                     <div class="col-md-3 p-0 m-md-0 m-2">
-                                        <h5 id="jobListClosingDate" class="card-title" style="font-size: 15px; color: grey;">Closing Date:
+                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date:
                                             {{job.Closing_date}}</h5>
                                     </div>
 
