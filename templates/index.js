@@ -331,6 +331,7 @@ const jobsPage = Vue.createApp({
           console.log(error);
         });
     },
+
     createRestriction() {
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
       var today = new Date();
@@ -344,6 +345,7 @@ const jobsPage = Vue.createApp({
       document.getElementById("closingDate").setAttribute("min", tomorrow);
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
     },
+
     createJob() {
       // Get the value of the date input field
       const closingDate = document.getElementById("closingDate").value;
@@ -386,6 +388,7 @@ const jobsPage = Vue.createApp({
         errorMessageNode.innerHTML = "Please select a date";
       }
     },
+    
     editRestriction(jobListID, jobRoleName) {
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
       this.activeEditJobListingID = jobListID 
@@ -400,6 +403,7 @@ const jobsPage = Vue.createApp({
       document.getElementById("editClosingDate").setAttribute("min", tomorrow);
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
     },
+
     filterJobListings() {
       console.log(this.searchInput)
       const query = this.searchInput ? this.searchInput.toLowerCase() : '';
@@ -414,6 +418,7 @@ const jobsPage = Vue.createApp({
         });
       }
     },
+    
     editJob() {
       const listingId = this.activeEditJobListingID;
       console.log(listingId)

@@ -33,6 +33,7 @@
     <div id="jobsPage">
         <div class="container mt-4">
             <div class="row">
+
                 <!-- Left Sidebar - Filter Menu -->
                 <div class="col-md-3" id="filter_menu">
 
@@ -58,6 +59,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Job Listings -->
                 <div id="listing_list" class="col-md-9">
                     <div class="row mb-1">
@@ -71,8 +73,9 @@
                             </button>
                         </div>
                     </div>
-
-                    <div class="col d-flex mb-2">
+                    
+                    <!--Search bar-->
+                    <div class="col mb-2 d-flex">
                         <input id="searchInput" v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" placeholder="Search by Job Title">
                     </div>
 
@@ -131,7 +134,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Success Modal -->
+
+                    <!-- Success modal for job listing creation-->
                     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
@@ -152,7 +156,7 @@
                         </div>
                     </div>
 
-                    <!-- Add job listings here -->
+                    <!-- Job listing cards -->
                     <div v-for="job in jobListings" id="joblist_parent">
                         <div id="{{job.JobList_ID}}" class="card mb-4 job_listing">
                             <div v-if="skill_match_dict[job.JobList_ID] && skill_match_dict[job.JobList_ID] !== undefined"
@@ -226,7 +230,7 @@
                                     </div>
 
                                     <div class="col-md-3 p-0 m-md-0 m-2">
-                                        <h5 class="card-title" style="font-size: 15px; color: grey;">Closing Date:
+                                        <h5 class="card-title closingDate" style="font-size: 15px; color: grey;">Closing Date:
                                             {{job.Closing_date}}</h5>
                                     </div>
 
