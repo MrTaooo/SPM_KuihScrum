@@ -16,6 +16,8 @@ const jobsPage = Vue.createApp({
       jobListings: [],
       roles: {},
       accessRight: 0,
+      activeEditJobListingID: "", 
+      activeEditRoleName: "", 
       searchInput: '',
       roleSkills: {},
       skill_match_dict: {},
@@ -384,15 +386,16 @@ const jobsPage = Vue.createApp({
         errorMessageNode.innerHTML = "Please select a date";
       }
     },
-    editRestriction() {
+    editRestriction(jobListID, jobRoleName) {
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
+      this.activeEditJobListingID = jobListID 
+      this.activeEditRoleName = jobRoleName 
       var today = new Date();
       var tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
       var dd = String(tomorrow.getDate()).padStart(2, "0");
       var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
       var yyyy = tomorrow.getFullYear();
-
       tomorrow = yyyy + "-" + mm + "-" + dd;
       document.getElementById("editClosingDate").setAttribute("min", tomorrow);
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
@@ -411,21 +414,25 @@ const jobsPage = Vue.createApp({
         });
       }
     },
-    editJob(jobListID) {
-      const listingId = jobListID;
+    editJob() {
+      const listingId = this.activeEditJobListingID;
+      console.log(listingId)
       const newClosingDate = document.getElementById("editClosingDate").value;
-
+      const roleName = this.activeEditRoleName;
       if (newClosingDate) {
         axios
           .post("http://127.0.0.1:5100/editListing", {
             id: listingId,
             closingDate: newClosingDate,
+            roleName: roleName 
           })
           .then((response) => {
+            
             var responseCode = response.data.code;
             if (responseCode === 409 || responseCode === 404) {
               var errorMessage = response.data.message;
-              var errorMessageNode = document.getElementById("errorMessage");
+              var errorMessageNode = document.getElementById("editErrorMessage");
+              console.log(errorMessage)
               errorMessageNode.innerHTML = errorMessage;
             } else {
               var successModal = new bootstrap.Modal(

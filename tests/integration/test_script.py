@@ -16,11 +16,10 @@ options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
 # get url
-# driver.get("http://127.0.0.1:5500/template/index.html")
-driver.get("https://actions-test-v2.vercel.app/")
+# driver.get("http://127.0.0.1:5500/templates/index.html")
+driver.get("https://spm-kuih-scrum.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
-
 
 ########################### Start of Helper Functions #########################################################
 
@@ -48,7 +47,7 @@ def get_all_applicants_name():
     try: 
         # comparison data for staff with ID 1 who applied for Data Analyst job listing in automated test case 5 
 
-        job_list_name = 'Data Analyst'
+        job_list_name = 'Account Manager'
 
         job_listings = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         for listing in job_listings:
@@ -59,10 +58,11 @@ def get_all_applicants_name():
                 
                 # scroll to see the button on the screen
                 driver.execute_script('arguments[0].scrollIntoView();', view_applicant_btn)
+                time.sleep(1)
                 # Scroll down by a specified number of pixels (e.g., 500 pixels)
-                scroll_distance = 800
+                scroll_distance = 1000
                 driver.execute_script(f"window.scrollBy(0, {scroll_distance});")
-                time.sleep(5)
+                time.sleep(1)
                 view_applicant_btn.click()
                 time.sleep(1)
                 
@@ -72,7 +72,6 @@ def get_all_applicants_name():
                 child_elements = parent_element.find_elements(By.TAG_NAME,"tr")
                 # Get the count of child elements
                 number_of_children = len(child_elements)
-
                 applicant_list = []
                 if number_of_children > 0:
                 # Get the text content of the first child element (first <tr>)
@@ -109,8 +108,11 @@ def test_BrowseRoleListings():
         elements = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         # Get the number of elements
         number_of_elements = len(elements)
+
+        assert number_of_elements == 1, "Number of elements is not equal to 1"
+
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
-        if (number_of_elements == 2):
+        if (number_of_elements == 1):
             print("Results: Passed!")
             print("Remarks: Job Listings Found and number of Job Listings matches expected number")
         else:
@@ -148,8 +150,12 @@ def test_RofRoleListings():
     actual_edit_name = edit.text
     expected_edit_name = "Edit"
 
+    assert actual_create_name == expected_create_name, "Actual create name doesn't match the expected value"
+    assert number_of_elements == 2, "Number of elements is not equal to 2"
+    assert actual_edit_name == expected_edit_name, "Actual edit name doesn't match the expected value"
+
     # check conditions
-    if (actual_create_name == expected_create_name) and (number_of_elements == 5) and (actual_edit_name == expected_edit_name):
+    if (actual_create_name == expected_create_name) and (number_of_elements == 2) and (actual_edit_name == expected_edit_name):
         print("Result: Passed!")
         print("Remarks: HR can see buttons and open/close listings")
     else:
@@ -170,7 +176,7 @@ def test_CofRoleListings():
     element.click()
     time.sleep(5)
     dropdown = Select(driver.find_element(By.ID, "roleTitle")) 
-    roleTitle = "Sales Representative"
+    roleTitle = "IT Analyst"
     dropdown.select_by_visible_text(roleTitle)
 
     # enter date
@@ -261,7 +267,7 @@ def test_withdraw_btn_test():
     time.sleep(1)
 
     try:
-        applyJL = 'Data Analyst' # job title
+        applyJL = 'Account Manager' # job title
 
         # Find all job listing
         job_cards = driver.find_elements(By.CSS_SELECTOR,".job_listing")
@@ -310,13 +316,13 @@ def test_withdraw_backend():
     applicant_list = get_all_applicants_name()
 
     print("===============================================================================")
-    if "Lin Tao" in applicant_list:
+    if "Derek Tan" in applicant_list:
         print("Result: Failed")
-        print("Remarks: Lin Tao is in the applicant list")
+        print("Remarks: Derek Tan is in the applicant list")
         print(f"Remarks: Applicant List: {applicant_list}")
     else:
         print("Result: Passed!")
-        print("Remarks: Lin Tao is not in the applicant list")   
+        print("Remarks: Derek Tan is not in the applicant list")   
         print(f"Remarks: Applicant List: {applicant_list}") 
     print("End of Automated Test Case 5")
     print("===============================================================================")
@@ -332,7 +338,7 @@ def test_apply_btn_test():
     time.sleep(1)
 
     try:
-        applyJL = 'Data Analyst' # job title
+        applyJL = 'Account Manager' # job title
 
         # Find all job listing
         job_cards = driver.find_elements(By.CSS_SELECTOR,".job_listing")
@@ -382,13 +388,13 @@ def test_apply_backend():
     applicants = get_all_applicants_name()
     
     print("===============================================================================")
-    if "Lin Tao" in applicants:
+    if "Derek Tan" in applicants:
         print("Result: Passed!")
-        print("Remarks: Lin Tao is in the applicant list")
+        print("Remarks: Derek Tan is in the applicant list")
         print(f"Remarks: Applicant List: {applicants}")
     else:
         print("Result: Failed")
-        print("Lin Tao is not in the applicant list")    
+        print("Derek Tan is not in the applicant list")    
     print("End of Automated Test Case 7")
     print("===============================================================================")
 
@@ -403,9 +409,9 @@ def test_alignment_perc_accuracy():
 
     try: 
         # comparison data for staff with ID 1 
-        num_skill_matched = 1
-        num_role_skill = 3
-        job_list_name = 'Data Analyst'
+        num_skill_matched = 4
+        num_role_skill = 13
+        job_list_name = 'Account Manager'
         job_listings = driver.find_elements(By.CSS_SELECTOR, ".job_listing")
         for listing in job_listings:
             job_title = listing.find_element(By.CLASS_NAME, 'card-title').text
@@ -417,7 +423,7 @@ def test_alignment_perc_accuracy():
                 print("===============================================================================")
                 if calculated_percentage == progress_bar_text:
                     print("Result: Passed!")
-                    print(f"Remarks: Alignment Percentage for StaffID 1 for Data Analyst Role is {calculated_percentage}%")
+                    print(f"Remarks: Alignment Percentage for StaffID 140001 for Account Manager Role is {calculated_percentage}%")
 
     except Exception as e:
         print("Result: Failed")
