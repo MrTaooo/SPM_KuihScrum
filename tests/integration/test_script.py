@@ -198,6 +198,7 @@ def test_CofRoleListings(roleTitle='IT Analyst', today=time.strftime("%Y-%m-%d")
     role_name, publish_date, closing_date = retrieve_Latest_Job_List()
 
     if role_name == roleTitle and publish_date == today and closing_date == new_closing_date:
+        
         duplicate_create_err_msg = driver.find_element(By.ID, "errorMessage").text
         button_element = driver.find_element(By.ID, 'jobCreationCancelButton')
         button_element.click()
@@ -251,6 +252,7 @@ def test_CofRoleListings(roleTitle='IT Analyst', today=time.strftime("%Y-%m-%d")
 # automated test case 3.2: test if HR can create the exact same job listing with all the same details (negative)
 def test_CofRoleListings_duplicate_exact():
     message = test_CofRoleListings()
+    
     # Assertion
     assert message[0] == "Duplicate", "Duplicated entry created successfully"
 
