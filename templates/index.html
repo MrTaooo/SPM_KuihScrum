@@ -80,12 +80,12 @@
                         <div class="col-md-4">
                             <h2>Job Listings</h2>
                         </div>
-                        <div class="col-md-8 text-md-end">
+                        <!-- <div class="col-md-8 text-md-end">
                             <button v-if="accessRight === '1'" type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#createJob" id="create_listing_btn" @click="createRestriction()">
                                 Create a Job Listing
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                     <!--Search bar-->
                     <div class="">
@@ -100,7 +100,7 @@
                     </div>
 
                     <!-- Modal form to create job listing -->
-                    <div class="modal fade modal-lg" id="createJob" tabindex="-1" role="dialog"
+                    <!-- <div class="modal fade modal-lg" id="createJob" tabindex="-1" role="dialog"
                         aria-labelledby="applicantModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -112,12 +112,12 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <!-- Role -->
+                                                    Role --/>
                                                     <div class="form-group row">
                                                         <label for="roleTitle"
                                                             class="col-4 col-form-label text-end">Role:</label>
                                                         <div class="col-8">
-                                                            <!-- Role dropdown box -->
+                                                            </!-- Role dropdown box --/>
                                                             <div class="btn-group">
                                                                 <select class="form-control" id="roleTitle">
                                                                     <option v-for="roleName in Object.keys(roles)"
@@ -129,7 +129,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <!-- Closing Date -->
+                                                    </!-- Closing Date --/>
                                                     <div class="form-group row form-inline">
                                                         <label for="closingDate"
                                                             class="col-4 col-form-label text-end">Closing
@@ -153,10 +153,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <!-- Success modal for job listing creation-->
-                    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
+                    <!-- <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -174,7 +174,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Job listing cards -->
                     <div v-for="job in jobListings" id="joblist_parent">
@@ -264,19 +264,19 @@
                                                 }}
                                             </button>
                                         </div>
-                                        <div>
+                                        <!-- <div>
                                             <button id="view_applicant_btn" v-if="accessRight == '1'" type="button"
                                                 class="btn btn-secondary btn-xs mt-2"
                                                 @click="getAllApplicants(job.JobList_ID)" data-bs-toggle="modal"
                                                 data-bs-target="#viewApplicants">
                                                 View Applicants
                                             </button>
-                                        </div>
+                                        </div> -->
                                     </div>
 
 
                                     <!-- Modal table to view Applicants -->
-                                    <div class="modal fade modal-lg" id="viewApplicants" tabindex="-1" role="dialog"
+                                    <!-- <div class="modal fade modal-lg" id="viewApplicants" tabindex="-1" role="dialog"
                                         aria-labelledby="applicantModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-xl" role="document">
                                             <div class="modal-content">
@@ -316,10 +316,10 @@
                                                                     v-if="applicantsDict[applicant.Staff_ID] && applicantsDict[applicant.Staff_ID] !== undefined">
                                                                     <template
                                                                         v-for="roleSkill in applicantsDict[applicant.Staff_ID].role_skills">
-                                                                        <!-- Check if the role skill is in the user's skills -->
+                                                                        </!-- Check if the role skill is in the user's skills --/>
                                                                         <template
                                                                             v-if="applicantsDict[applicant.Staff_ID].applicant_skills.includes(roleSkill)">
-                                                                            <!-- Display the skill with a green background -->
+                                                                            </!-- Display the skill with a green background --/>
                                                                             <span
                                                                                 class="badge rounded-pill bg-success user-skill-label"
                                                                                 style="white-space: nowrap;">
@@ -329,10 +329,10 @@
                                                                     </template>
                                                                     <template
                                                                         v-for="roleSkill in applicantsDict[applicant.Staff_ID].role_skills">
-                                                                        <!-- Check if the role skill is not in the user's skills -->
+                                                                        </!-- Check if the role skill is not in the user's skills --/>
                                                                         <template
                                                                             v-if="!applicantsDict[applicant.Staff_ID].applicant_skills.includes(roleSkill)">
-                                                                            <!-- Display the skill with an outlined green border -->
+                                                                            </!-- Display the skill with an outlined green border --/>
                                                                             <span
                                                                                 class="badge rounded-pill border border-success user-skill-label text-success m-"
                                                                                 style="white-space: nowrap;">
@@ -343,7 +343,7 @@
                                                                 </td>
 
 
-                                                                <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}{{ applicantAlignment }}</td>  -->
+                                                                </!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}{{ applicantAlignment }}</td>  --/>
 
                                                             </tr>
                                                         </tbody>
@@ -356,11 +356,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Modal to show apply/withdraw error message-->
                                     <!-- The modal structure with a dynamic error message and close button -->
-                                    <div class="modal fade" id="errorModal" tabindex="-1"
+                                    <!-- <div class="modal fade" id="errorModal" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -372,7 +372,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <!-- Bind the error message to the Vue data property errorMsg -->
+                                                    </!-- Bind the error message to the Vue data property errorMsg --/>
                                                     <p id="errorMessage">{{ errorMsg }}</p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -381,17 +381,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!--edit button which is only visible by the HR-->
-                                    <div class="col-md text-md-end p-0 text-center">
+                                    <!-- <div class="col-md text-md-end p-0 text-center">
                                         <button v-if="accessRight === '1'" class="btn btn-link edit_btn"
                                             data-bs-toggle="modal" data-bs-target="#editJob"  
                                             @click="editRestriction(job.JobList_ID, job.Role_Name)">Edit</button>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Modal edit form to Update job listing -->
-                                    <div class="modal fade modal-lg" id="editJob" tabindex="0" role="dialog"
+                                    <!-- <div class="modal fade modal-lg" id="editJob" tabindex="0" role="dialog"
                                         aria-labelledby="editModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -405,12 +405,12 @@
                                                         <div class="container">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <!-- Role -->
+                                                                    </!-- Role --/>
                                                                     <div class="form-group row">
                                                                         <label for="roleTitle"
                                                                             class="col-4 col-form-label text-end">Role:</label>
                                                                         <div class="col-8">
-                                                                            <!-- Role dropdown box -->
+                                                                            </!-- Role dropdown box --/>
                                                                             <div class="btn-group">
                                                                                 <select class="form-control" id="role_Name">
                                                                                     <option> {{ activeEditRoleName }}
@@ -421,7 +421,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <!-- Closing Date -->
+                                                                    </!-- Closing Date --/>
                                                                     <div class="form-group row form-inline">
                                                                         <label for="closingDate"
                                                                             class="col-4 col-form-label text-end">Closing
@@ -446,9 +446,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- Success Update Modal -->
-                                    <div class="modal fade" id="editSuccessModal" tabindex="-1"
+                                    <!-- <div class="modal fade" id="editSuccessModal" tabindex="-1"
                                         aria-labelledby="editSuccessModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -467,7 +467,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Modal to show apply/withdraw error message-->
                                     <!-- The modal structure with a dynamic error message and close button -->
@@ -497,7 +497,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
