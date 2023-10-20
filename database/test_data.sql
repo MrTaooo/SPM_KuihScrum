@@ -97,7 +97,7 @@ HR Team Executive enjoys working in a team environment and interacts proactively
 ('Junior Engineer', 'The Junior Engineerapplies engineering principles and techniques to optimise the equipment and systems within the manufacturing facility. He/She provides technical guidance and direction for the installation of equipment and systems. He develops plans for the maintenance of equipment and systems, and recommends engineering solutions to troubleshoot faults. The Junior Engineerinnovates equipment and systems, and contributes to manufacturing equipment and systems improvement projects by conducting feasibility assessments and tests on new technologies. He is also expected to manage energy resources and utilities by developing solutions to optimise machine availability and energy efficiency. The Junior Engineermust ensure compliance with Standard Operating Procedures (SOPs), Health, Safety and Environment (HSE) regulations and Current Good Manufacturing Practices (CGMPs) within his purview. He develops guidelines and conducts equipment qualification and validation in line with biopharmaceuticals manufacturing regulatory requirements. 
 
 The Junior Engineershould possess an enquiring and analytical mind and have a knack for investigating issues, analysing multifaceted engineering problems and developing solutions. He must also be a strong team player who can guide and mentor others, and communicate technical advices and solutions to colleagues beyond the team.'),
-('L&D Executuve', 'The L&D Executive assists in procuring training programmes and documenting learning needs in the 
+('L&D Executive', 'The L&D Executive assists in procuring training programmes and documenting learning needs in the 
 organisation, maintaining organisations'' learning systems and provides administrative support in conducting learning programmes. He/She manages resources and logistics for delivering learning programmes and collects data from learning evaluation surveys to measure learning programmes effectiveness. He supports the conduct of assessments to identify high-potential talent in the organisation, and documents assessment records and succession plans for critical roles identified. He also responds to employee queries that are related to assessments and learning programmes. He is responsible for maintaining exit and retirement records.
 
 TheL&D Executive enjoys working in a team environment and interacts proactively with various stakeholders. He is eager to explore and analyse problems, and is able to communicate information in a clear and concise manner to meet others'' needs at the workplace.'),
@@ -258,7 +258,7 @@ VALUES
 ('HR Executive', 'Collaboration'),
 ('IT Analyst', 'Collaboration'),
 ('Junior Engineer', 'Collaboration'),
-('L&D Executuve', 'Collaboration'),
+('L&D Executive', 'Collaboration'),
 ('Ops Planning Exec', 'Collaboration'),
 ('Sales Director', 'Collaboration'),
 ('Sales Manager', 'Collaboration'),
@@ -279,7 +279,7 @@ VALUES
 ('IT Analyst', 'Communication'),
 ('IT Director', 'Communication'),
 ('Junior Engineer', 'Communication'),
-('L&D Executuve', 'Communication'),
+('L&D Executive', 'Communication'),
 ('Ops Planning Exec', 'Communication'),
 ('Sales Director', 'Communication'),
 ('Sales Manager', 'Communication'),
@@ -306,7 +306,7 @@ VALUES
 ('HR Executive', 'Digital Fluency'),
 ('HR Director', 'Employee Communication Management'),
 ('HR Executive', 'Employee Communication Management'),
-('L&D Executuve', 'Employee Communication Management'),
+('L&D Executive', 'Employee Communication Management'),
 ('HR Executive', 'Employee Engagement Management'),
 ('Finance Director', 'Finance Business Partnering'),
 ('Finance Manager', 'Finance Business Partnering'),
@@ -327,17 +327,17 @@ VALUES
 ('IT Director', 'Human Resource Advisory'),
 ('HR Director', 'Human Resource Practices Implementation'),
 ('HR Executive', 'Human Resource Practices Implementation'),
-('L&D Executuve', 'Human Resource Practices Implementation'),
+('L&D Executive', 'Human Resource Practices Implementation'),
 ('HR Director', 'Human Resource Strategy Formulation'),
 ('IT Director', 'Human Resource Strategy Formulation'),
 ('HR Executive', 'Human Resource Systems Management'),
 ('IT Director', 'Human Resource Systems Management'),
-('L&D Executuve', 'Human Resource Systems Management'),
+('L&D Executive', 'Human Resource Systems Management'),
 ('IT Analyst', 'Infrastructure Deployment'),
 ('IT Analyst', 'Infrastructure Support'),
 ('Support Engineer', 'Infrastructure Support'),
-('L&D Executuve', 'Learning and Development Programme Management'),
-('L&D Executuve', 'Learning Needs Analysis'),
+('L&D Executive', 'Learning and Development Programme Management'),
+('L&D Executive', 'Learning Needs Analysis'),
 ('IT Analyst', 'Network Administration and Maintenance'),
 ('Support Engineer', 'Network Administration and Maintenance'),
 ('HR Executive', 'Onboarding'),
@@ -363,7 +363,7 @@ VALUES
 ('Finance  Executive', 'Problem Solving'),
 ('IT Analyst', 'Problem Solving'),
 ('Junior Engineer', 'Problem Solving'),
-('L&D Executuve', 'Problem Solving'),
+('L&D Executive', 'Problem Solving'),
 ('Ops Planning Exec', 'Problem Solving'),
 ('Sales Director', 'Problem Solving'),
 ('Sales Manager', 'Problem Solving'),
@@ -407,7 +407,7 @@ VALUES
 ('HR Director', 'Skills Framework Adoption'),
 ('HR Executive', 'Skills Framework Adoption'),
 ('IT Director', 'Skills Framework Adoption'),
-('L&D Executuve', 'Skills Framework Adoption'),
+('L&D Executive', 'Skills Framework Adoption'),
 ('Developer', 'Software Configuration'),
 ('Developer', 'Software Design'),
 ('Developer', 'Software Testing'),
@@ -3678,17 +3678,21 @@ VALUES
 -- Insert data into the Job_Listing table
 INSERT INTO Job_Listing (Role_Name, publish_Date, Closing_date)
 VALUES
-('Account Manager', '2023-09-01', '2023-12-15'),
+('Account Manager', '2023-09-01', '2023-10-10'),
+('IT Analyst', '2023-09-01', '2023-10-10'),
+('Ops Planning Exec',  '2023-09-01', '2023-12-10'),
+('Account Manager', '2023-09-02', '2023-12-15'),
 ('Consultant', '2023-10-01', '2023-10-10');
+
 
 -- Insert data into the Job_Applications table 
 INSERT INTO Job_Application (JobList_ID, Staff_ID)
 VALUES
-(1,130001),
-(1,140001),
-(1,150008),
-(1,151578),
-(1,180001),
-(1,190010),
-(1,210024),
-(1,210044);
+(4,130001),
+(4,140001),
+(4,150008),
+(4,151578),
+(4,180001),
+(4,190010),
+(4,210024),
+(4,210044);
