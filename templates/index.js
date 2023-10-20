@@ -97,6 +97,17 @@ const jobsPage = Vue.createApp({
         });
     },
 
+    updateUserType() {
+      console.log(this.accessRight);
+      if (this.accessRight == 0) {
+        this.accessRight = 1;
+        this.getAllJobListings();
+      } else {
+        this.accessRight = 0;
+        this.getAllJobListings();
+      }
+    },
+
     // this function will get all the roles and role descriptions
     getAllRoles() {
       // on Vue instance created, load the book list
@@ -151,23 +162,23 @@ const jobsPage = Vue.createApp({
         });
     },
 
-    async getApplicantSkills(jobID, applicantID) {
-      try {
-        const applicantSkills = await this.getUserSkills(applicantID);
-        const applicantAlignment = await this.getCalculateAlignment(
-          jobID,
-          applicantSkills
-        );
-        let applicantSkillsInfo = {
-          applicant_skills: applicantSkills,
-          alignment_percentage: applicantAlignment.alignment_percentage,
-          role_skills: applicantAlignment.skills_by_role,
-        };
-        return applicantSkillsInfo;
-      } catch (error) {
-        console.error("Error in getApplicantSkills:", error);
-      }
-    },
+    // async getApplicantSkills(jobID, applicantID) {
+    //   try {
+    //     const applicantSkills = await this.getUserSkills(applicantID);
+    //     const applicantAlignment = await this.getCalculateAlignment(
+    //       jobID,
+    //       applicantSkills
+    //     );
+    //     let applicantSkillsInfo = {
+    //       applicant_skills: applicantSkills,
+    //       alignment_percentage: applicantAlignment.alignment_percentage,
+    //       role_skills: applicantAlignment.skills_by_role,
+    //     };
+    //     return applicantSkillsInfo;
+    //   } catch (error) {
+    //     console.error("Error in getApplicantSkills:", error);
+    //   }
+    // },
 
     // Get the alignment percentage for the job listing and the user/applicant
     getCalculateAlignment(joblist_ID, user_Skills = null) {
@@ -288,121 +299,121 @@ const jobsPage = Vue.createApp({
     },
 
     // this function will get all the applicants for the job listing and their respective skills and alignment percentage
-    getAllApplicants(joblist_ID) {
-      this.tempJobID = joblist_ID;
-      axios
-        .get(get_all_applicants_URL + "/" + joblist_ID)
-        .then((response) => {
-          this.applicants = response.data["data"]["applicants"];
+    // getAllApplicants(joblist_ID) {
+    //   this.tempJobID = joblist_ID;
+    //   axios
+    //     .get(get_all_applicants_URL + "/" + joblist_ID)
+    //     .then((response) => {
+    //       this.applicants = response.data["data"]["applicants"];
 
-          // Create an array of promises for each applicant's skills
-          const promises = this.applicants.map(async (applicant) => {
-            const data = await this.getApplicantSkills(
-              joblist_ID,
-              applicant.Staff_ID
-            );
-            return {
-              staff_id: applicant.Staff_ID,
-              alignment_percentage: data.alignment_percentage,
-              applicant_skills: data.applicant_skills,
-              role_skills: data.role_skills,
-            };
-          });
+    //       // Create an array of promises for each applicant's skills
+    //       const promises = this.applicants.map(async (applicant) => {
+    //         const data = await this.getApplicantSkills(
+    //           joblist_ID,
+    //           applicant.Staff_ID
+    //         );
+    //         return {
+    //           staff_id: applicant.Staff_ID,
+    //           alignment_percentage: data.alignment_percentage,
+    //           applicant_skills: data.applicant_skills,
+    //           role_skills: data.role_skills,
+    //         };
+    //       });
 
-          // Wait for all promises to resolve; I wrote 1001 awaits for nothing
-          return Promise.all(promises);
-        })
-        .then((applicantDataArray) => {
-          // Initialize applicantsDict again for the current job applicants
-          this.applicantsDict = {};
+    //       // Wait for all promises to resolve; I wrote 1001 awaits for nothing
+    //       return Promise.all(promises);
+    //     })
+    //     .then((applicantDataArray) => {
+    //       // Initialize applicantsDict again for the current job applicants
+    //       this.applicantsDict = {};
 
-          // Update this.applicantsDict with the results
-          applicantDataArray.forEach((applicantData) => {
-            this.applicantsDict[applicantData.staff_id] = {
-              staff_id: applicantData.staff_id,
-              alignment_percentage: applicantData.alignment_percentage,
-              applicant_skills: applicantData.applicant_skills,
-              role_skills: applicantData.role_skills,
-            };
-          });
-        })
-        .catch((error) => {
-          // Handle errors
-          console.log(error);
-        });
-    },
+    //       // Update this.applicantsDict with the results
+    //       applicantDataArray.forEach((applicantData) => {
+    //         this.applicantsDict[applicantData.staff_id] = {
+    //           staff_id: applicantData.staff_id,
+    //           alignment_percentage: applicantData.alignment_percentage,
+    //           applicant_skills: applicantData.applicant_skills,
+    //           role_skills: applicantData.role_skills,
+    //         };
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       // Handle errors
+    //       console.log(error);
+    //     });
+    // },
 
-    createRestriction() {
-      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
-      var today = new Date();
-      var tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      var dd = String(tomorrow.getDate()).padStart(2, "0");
-      var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = tomorrow.getFullYear();
+    // createRestriction() {
+    //   // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
+    //   var today = new Date();
+    //   var tomorrow = new Date(today);
+    //   tomorrow.setDate(tomorrow.getDate() + 1);
+    //   var dd = String(tomorrow.getDate()).padStart(2, "0");
+    //   var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
+    //   var yyyy = tomorrow.getFullYear();
 
-      tomorrow = yyyy + "-" + mm + "-" + dd;
-      document.getElementById("closingDate").setAttribute("min", tomorrow);
-      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
-    },
+    //   tomorrow = yyyy + "-" + mm + "-" + dd;
+    //   document.getElementById("closingDate").setAttribute("min", tomorrow);
+    //   // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
+    // },
 
-    createJob() {
-      // Get the value of the date input field
-      const closingDate = document.getElementById("closingDate").value;
+    // createJob() {
+    //   // Get the value of the date input field
+    //   const closingDate = document.getElementById("closingDate").value;
 
-      // Check if a date has been selected
-      if (closingDate) {
-        const roleTitle = document.getElementById("roleTitle").value;
+    //   // Check if a date has been selected
+    //   if (closingDate) {
+    //     const roleTitle = document.getElementById("roleTitle").value;
 
-        // Send the data to the Flask backend using Axios
-        axios
-          .post("http://127.0.0.1:5100/createListing", {
-            roleTitle: roleTitle,
-            closingDate: closingDate,
-          })
-          .then((response) => {
-            // console.log("Data sent successfully:", response.data);
+    //     // Send the data to the Flask backend using Axios
+    //     axios
+    //       .post("http://127.0.0.1:5100/createListing", {
+    //         roleTitle: roleTitle,
+    //         closingDate: closingDate,
+    //       })
+    //       .then((response) => {
+    //         // console.log("Data sent successfully:", response.data);
 
-            var responseCode = response.data.code;
-            if (responseCode === 409) {
-              var errorMessage = response.data.message;
-              // console.log(errorMessage);
-              var errorMessageNode = document.getElementById("errorMessage");
-              errorMessageNode.innerHTML = errorMessage;
-            } else {
-              var successModal = new bootstrap.Modal(
-                document.getElementById("successModal")
-              );
-              successModal.show();
+    //         var responseCode = response.data.code;
+    //         if (responseCode === 409) {
+    //           var errorMessage = response.data.message;
+    //           // console.log(errorMessage);
+    //           var errorMessageNode = document.getElementById("errorMessage");
+    //           errorMessageNode.innerHTML = errorMessage;
+    //         } else {
+    //           var successModal = new bootstrap.Modal(
+    //             document.getElementById("successModal")
+    //           );
+    //           successModal.show();
 
-              // do we need the 2 lines below? what is the purpose?
-              var errorMessageNode = document.getElementById("errorMessage");
-              errorMessageNode.innerHTML = "";
-            }
-          })
-          .catch((error) => {
-            console.error("Error sending data:", error);
-          });
-      } else {
-        var errorMessageNode = document.getElementById("errorMessage");
-        errorMessageNode.innerHTML = "Please select a date";
-      }
-    },
+    //           // do we need the 2 lines below? what is the purpose?
+    //           var errorMessageNode = document.getElementById("errorMessage");
+    //           errorMessageNode.innerHTML = "";
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error sending data:", error);
+    //       });
+    //   } else {
+    //     var errorMessageNode = document.getElementById("errorMessage");
+    //     errorMessageNode.innerHTML = "Please select a date";
+    //   }
+    // },
     
-    editRestriction(jobListID, jobRoleName) {
-      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
-      this.activeEditJobListingID = jobListID 
-      this.activeEditRoleName = jobRoleName 
-      var today = new Date();
-      var tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      var dd = String(tomorrow.getDate()).padStart(2, "0");
-      var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = tomorrow.getFullYear();
-      tomorrow = yyyy + "-" + mm + "-" + dd;
-      document.getElementById("editClosingDate").setAttribute("min", tomorrow);
-      // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
-    },
+    // editRestriction(jobListID, jobRoleName) {
+    //   // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (START) ---------------------
+    //   this.activeEditJobListingID = jobListID 
+    //   this.activeEditRoleName = jobRoleName 
+    //   var today = new Date();
+    //   var tomorrow = new Date(today);
+    //   tomorrow.setDate(tomorrow.getDate() + 1);
+    //   var dd = String(tomorrow.getDate()).padStart(2, "0");
+    //   var mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); //January is 0!
+    //   var yyyy = tomorrow.getFullYear();
+    //   tomorrow = yyyy + "-" + mm + "-" + dd;
+    //   document.getElementById("editClosingDate").setAttribute("min", tomorrow);
+    //   // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
+    // },
 
     filterJobListings() {
       console.log(this.searchInput)
@@ -419,43 +430,44 @@ const jobsPage = Vue.createApp({
       }
     },
     
-    editJob() {
-      const listingId = this.activeEditJobListingID;
-      console.log(listingId)
-      const newClosingDate = document.getElementById("editClosingDate").value;
-      const roleName = this.activeEditRoleName;
-      if (newClosingDate) {
-        axios
-          .post("http://127.0.0.1:5100/editListing", {
-            id: listingId,
-            closingDate: newClosingDate,
-            roleName: roleName 
-          })
-          .then((response) => {
+    // editJob() {
+    //   const listingId = this.activeEditJobListingID;
+    //   console.log(listingId)
+    //   const newClosingDate = document.getElementById("editClosingDate").value;
+    //   const roleName = this.activeEditRoleName;
+    //   if (newClosingDate) {
+    //     axios
+    //       .post("http://127.0.0.1:5100/editListing", {
+    //         id: listingId,
+    //         closingDate: newClosingDate,
+    //         roleName: roleName 
+    //       })
+    //       .then((response) => {
             
-            var responseCode = response.data.code;
-            if (responseCode === 409 || responseCode === 404) {
-              var errorMessage = response.data.message;
-              var errorMessageNode = document.getElementById("editErrorMessage");
-              console.log(errorMessage)
-              errorMessageNode.innerHTML = errorMessage;
-            } else {
-              var successModal = new bootstrap.Modal(
-                document.getElementById("editSuccessModal")
-              );
-              successModal.show();
-              var errorMessageNode = document.getElementById("errorMessage");
-              errorMessageNode.innerHTML = "";
-            }
-          })
-          .catch((error) => {
-            console.error("Error sending data:", error);
-          });
-      } else {
-        var errorMessageNode = document.getElementById("errorMessage");
-        errorMessageNode.innerHTML = "Please select a new date";
-      }
-    },
+    //         var responseCode = response.data.code;
+    //         if (responseCode === 409 || responseCode === 404) {
+    //           var errorMessage = response.data.message;
+    //           var errorMessageNode = document.getElementById("editErrorMessage");
+    //           console.log(errorMessage)
+    //           errorMessageNode.innerHTML = errorMessage;
+    //         } else {
+    //           var successModal = new bootstrap.Modal(
+    //             document.getElementById("editSuccessModal")
+    //           );
+    //           successModal.show();
+    //           var errorMessageNode = document.getElementById("errorMessage");
+    //           errorMessageNode.innerHTML = "";
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error sending data:", error);
+    //       });
+    //   } else {
+    //     var errorMessageNode = document.getElementById("errorMessage");
+    //     errorMessageNode.innerHTML = "Please select a new date";
+    //   }
+    // },
+    
     toggleDesc(job) {
       job.showDescription = !job.showDescription;
   },

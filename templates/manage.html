@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <div id="jobsPage">
+    <div id="manageJobs">
 
         <!--navigation bar-->
         <nav class="navbar navbar-expand-md navbar-dark nav-color">
@@ -78,10 +78,10 @@
                 <div id="listing_list" class="col-md-9">
                     <div class="row mb-1">
                         <div class="col-md-4">
-                            <h2>Job Listings</h2>
+                            <h2>Manage Job Listings</h2>
                         </div>
                         <div class="col-md-8 text-md-end">
-                            <button v-if="accessRight === '1'" type="button" class="btn btn-dark" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#createJob" id="create_listing_btn" @click="createRestriction()">
                                 Create a Job Listing
                             </button>
@@ -186,55 +186,7 @@
                                             {{ job.showDescription ? 'Read Less' : 'Show More' }}
                                         </span>
 
-                                        <!-- Alignment Percentage (remove color coding if necessary)-->
-                                        <div class="card-text m-2">
-                                            <span class="mr-2">Alignment Percentage:</span>
-                                            <div class="d-flex align-items-center">
-                                                <div class="progress flex-grow-1">
-                                                    <div class="progress-bar custom-progress-bar" role="progressbar"
-                                                        :class="{
-                                                            'bg-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
-                                                            'bg-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
-                                                            'bg-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
-                                                        }"
-                                                        :style="{ width: skill_match_dict[job.JobList_ID].alignment_percentage + '%', 'min-width': '30px' }">
-                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage === 0 ?
-                                                        '' : '' }}
-                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <p class="card-text m-2">Skills required: {{roleSkills[job.Role_Name]}}</p> -->
-                                        <!-- Can remove alr ? since alr print-->
-
-                                        <!-- Matched Skills -->
-                                        <p class="card-text m-2">
-                                            <span class="mr-2">Skills:</span>
-                                            <!-- Loop through the role skills -->
-                                            <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
-                                                <!-- Check if the role skill is in the user's skills -->
-                                                <template v-if="userSkills.includes(roleSkill)">
-                                                    <!-- Display the skill with a green background -->
-                                                    <span class="badge rounded-pill bg-success user-skill-label"
-                                                        style="white-space: nowrap;">
-                                                        {{ roleSkill }}
-                                                    </span>
-                                                </template>
-                                            </template>
-                                            <!-- Loop through the role skills again -->
-                                            <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
-                                                <!-- Check if the role skill is not in the user's skills -->
-                                                <template v-if="!userSkills.includes(roleSkill)">
-                                                    <!-- Display the skill with an outlined green border -->
-                                                    <span
-                                                        class="badge rounded-pill border border-success user-skill-label text-success m-"
-                                                        style="white-space: nowrap;">
-                                                        {{ roleSkill }}
-                                                    </span>
-                                                </template>
-                                            </template>
-                                        </p>
+                                        
 
                                     </div>
 
@@ -250,16 +202,10 @@
 
                                     <div class="col d-flex">
                                         <div class="me-2"> <!-- Add margin-right (me) spacing -->
-                                            <button id="Apply/Withdraw_Btn"
-                                                :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
-                                                @click="applyOrWithdraw($event, job.JobList_ID)"
-                                                :apply-staff-id="staffID">
-                                                {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now'
-                                                }}
-                                            </button>
+                                            
                                         </div>
                                         <div>
-                                            <button id="view_applicant_btn" v-if="accessRight == '1'" type="button"
+                                            <button id="view_applicant_btn" type="button"
                                                 class="btn btn-secondary btn-xs mt-2"
                                                 @click="getAllApplicants(job.JobList_ID)" data-bs-toggle="modal"
                                                 data-bs-target="#viewApplicants">
@@ -379,7 +325,7 @@
 
                                     <!--edit button which is only visible by the HR-->
                                     <div class="col-md text-md-end p-0 text-center">
-                                        <button v-if="accessRight === '1'" class="btn btn-link edit_btn"
+                                        <button class="btn btn-link edit_btn"
                                             data-bs-toggle="modal" data-bs-target="#editJob"  
                                             @click="editRestriction(job.JobList_ID, job.Role_Name)">Edit</button>
                                     </div>
@@ -518,7 +464,7 @@
     <!-- Vue.js 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- External js file -->
-    <script src="index.js"></script>
+    <script src="manage.js"></script>
     <!-- <script src="../static/js/jobCreation.js"></script> -->
 </body>
 
