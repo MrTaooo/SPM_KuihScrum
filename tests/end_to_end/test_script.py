@@ -689,7 +689,7 @@ def test_invalid_search():
 # Comment function when pushing to Git to ensure test functions are not run twice in GitHub actions
 # Keyboard shortcuts --> Windows (Ctrl + /) Mac (Cmd + /) to comment and uncomment selected lines
 
-# test_BrowseRoleListings()
+test_BrowseRoleListings()
 # test_RofRoleListings()
 # test_CofRoleListings()
 # test_CofRoleListings_duplicate_exact()

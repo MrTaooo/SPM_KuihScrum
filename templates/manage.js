@@ -8,6 +8,9 @@ const apply_job_URL = "http://127.0.0.1:5100/apply_for_job";
 const withdraw_application_URL = "http://127.0.0.1:5100/withdraw_application";
 const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 
+const urlParams = new URLSearchParams(window.location.search);
+var rights = urlParams.get("rights");
+
 // Vue
 const jobsPage = Vue.createApp({
   data() {
@@ -15,7 +18,7 @@ const jobsPage = Vue.createApp({
       staffID: "140001",
       jobListings: [],
       roles: {},
-      accessRight: 1,
+      accessRight: rights,
       activeEditJobListingID: "", 
       activeEditRoleName: "", 
       searchInput: '',
@@ -55,15 +58,15 @@ const jobsPage = Vue.createApp({
           const date = `${year}-${month}-${day}`;
 
           // if the user is Staff, then the job listings will be filtered to only show the job listings that are not closed
-          if (this.accessRight == 0) {
-            for (let i = this.jobListings.length - 1; i >= 0; i--) {
-              const listing = this.jobListings[i];
-              // console.log(listing.Closing_date);
-              if (listing.Closing_date < date) {
-                this.jobListings.splice(i, 1); // Remove the item at index i
-              }
-            }
-          }
+          // if (this.accessRight == 0) {
+          //   for (let i = this.jobListings.length - 1; i >= 0; i--) {
+          //     const listing = this.jobListings[i];
+          //     // console.log(listing.Closing_date);
+          //     if (listing.Closing_date < date) {
+          //       this.jobListings.splice(i, 1); // Remove the item at index i
+          //     }
+          //   }
+          // }
 
           // In JavaScript, you use the .then() method to work with Promises and handle the
           // asynchronous result of an operation. Promises represent the eventual completion (either success or failure)

@@ -31,13 +31,13 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div v-if="accessRight === '1'" class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="index.html">Apply</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manage.html">Manage</a>
+                        <a class="nav-link" :href="'manage.html?rights=' + accessRight">Manage</a>
                     </li>
                     </ul>
                 </div>
@@ -52,15 +52,15 @@
                 <div class="col-md-3" id="filter_menu">
 
                     <!--Select user type here for current sprint-->
-                    <!-- <input type="radio" id="hr" name="user_type" value=1 v-model="accessRight"
+                    <input type="radio" id="hr" name="user_type" value=1 v-model="accessRight" :checked="accessRight === '1'"
                         @change="getAllJobListings">
                     &nbsp;
                     <label for="hr"> HR </label>
                     &nbsp;&nbsp;
-                    <input type="radio" id="staff" name="user_type" value=0 v-model="accessRight"
-                        @change="getAllJobListings" checked>
+                    <input type="radio" id="staff" name="user_type" value=0 v-model="accessRight" :checked="accessRight === '0'"
+                        @change="getAllJobListings">
                     &nbsp;
-                    <label for="staff"> Staff </label> -->
+                    <label for="staff"> Staff </label>
                     <!----------------------------END OF USER-TYPE SELECTION CODES---------------------------------->
 
                     <div class="card">

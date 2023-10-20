@@ -76,7 +76,7 @@ jobs:
           flask run --host=0.0.0.0 --port=5100 &
 
       - name: Run Python Tests
-        run: pytest tests/integration/test_script.py
+        run: pytest tests/end_to_end/test_script.py
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v2
