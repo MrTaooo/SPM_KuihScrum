@@ -72,8 +72,15 @@
                         </div>
                     </div>
 
-                    <div class="col d-flex mb-2">
-                        <input v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" placeholder="Search by Job Title">
+                    <div class="">
+                        <input v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" :placeholder="changePlaceholder()">
+                        <div class="d-flex justify-content-end mb-2">
+                            <input type="radio" id="job" name="searchby" value=0 v-model="searchBy" checked>
+                            <label for="job"> Search by Job Title </label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="staff" name="searchby" v-model="searchBy" value=1 > <!--@change="getSearchedJobListings"-->
+                            <label for="skillname"> Search by Skill Name </label>
+                        </div>
                     </div>
 
                     <!-- Modal form to create job listing -->

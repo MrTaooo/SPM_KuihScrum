@@ -19,6 +19,7 @@ const jobsPage = Vue.createApp({
       activeEditJobListingID: "", 
       activeEditRoleName: "", 
       searchInput: '',
+      searchBy: 0,
       roleSkills: {},
       skill_match_dict: {},
       userSkills: [],
@@ -401,18 +402,49 @@ const jobsPage = Vue.createApp({
       // --------------------- TO RESTRICT USE FROM SELECTING DATES BEFORE TODAY (END) ---------------------
     },
     filterJobListings() {
-      console.log(this.searchInput)
+      mode = this.searchBy
       const query = this.searchInput ? this.searchInput.toLowerCase() : '';
-      console.log(query)
-      if (query == '') {
-        this.getAllJobListings();
+      if (query == '') { // empty searchbar
+        this.getAllJobListings(); 
       }
       else {
-        this.jobListings = this.jobListings.filter((job) => {
-          const jobTitle = job.Role_Name.toLowerCase();
-          return jobTitle.includes(query);
-        });
+        if (mode == 0) { // search by job listing
+          console.log(this.searchInput)
+          this.jobListings = this.jobListings.filter((job) => {
+            const jobTitle = job.Role_Name.toLowerCase();
+            return jobTitle.includes(query);
+            });
+        }
+        else { // search by skills
+          console.log(this.searchInput)
+          const roleSkills = this.roleSkills // get all title-skills pairs
+          const matchedJobListing = []
+          for (const [title, skills] of Object.entries(roleSkills)) {
+            for (const skill of skills) {
+              if (skill.toLowerCase().includes(query) && !matchedJobListing.includes(title)) { // skill keyed in + title not already included
+                matchedJobListing.push(title);
+              }
+            }
+          }
+          const matchingJobListings = this.jobListings.filter((job) => {
+            const jobTitle = job.Role_Name.toLowerCase();
+            console.log('jobTitle',jobTitle)
+            this.jobListings = this.jobListings.filter((job) => {
+              const jobTitleLower = job.Role_Name.toLowerCase();
+              return matchedJobListing.some((matchedJob) => {
+                const matchedJobLower = matchedJob.toLowerCase();
+                return jobTitleLower.includes(matchedJobLower) && matchedJobLower.includes(jobTitleLower); 
+                // ensure that job title must be in list of job title and matched jobs
+              });
+            });
+          });
+        } 
       }
+    },
+
+    changePlaceholder() {
+      console.log(this.searchBy)
+      return this.searchBy === '1' ? 'Search by Skill Name' : 'Search by Job Title';
     },
     editJob() {
       const listingId = this.activeEditJobListingID;
