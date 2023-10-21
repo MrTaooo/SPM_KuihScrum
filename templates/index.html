@@ -89,12 +89,12 @@
                     </div>
                     <!--Search bar-->
                     <div class="">
-                        <input v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" :placeholder="changePlaceholder()">
+                        <input id="searchInput" v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" :placeholder="changePlaceholder()">
                         <div class="d-flex justify-content-end mb-2">
                             <input type="radio" id="job" name="searchby" value=0 v-model="searchBy" checked>
                             <label for="job"> Search by Job Title </label>
                             &nbsp;&nbsp;
-                            <input type="radio" id="staff" name="searchby" v-model="searchBy" value=1 > <!--@change="getSearchedJobListings"-->
+                            <input class="searchSkillName" type="radio" id="staff" name="searchby" v-model="searchBy" value=1 > <!--@change="getSearchedJobListings"-->
                             <label for="skillname"> Search by Skill Name </label>
                         </div>
                     </div>
@@ -215,14 +215,14 @@
                                         <!-- Can remove alr ? since alr print-->
 
                                         <!-- Matched Skills -->
-                                        <p class="card-text m-2">
+                                        <p class="matchskills card-text m-2">
                                             <span class="mr-2">Skills:</span>
                                             <!-- Loop through the role skills -->
                                             <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
                                                 <!-- Check if the role skill is in the user's skills -->
                                                 <template v-if="userSkills.includes(roleSkill)">
                                                     <!-- Display the skill with a green background -->
-                                                    <span class="badge rounded-pill bg-success user-skill-label"
+                                                    <span id="roleSkill" class="badge rounded-pill bg-success user-skill-label"
                                                         style="white-space: nowrap;">
                                                         {{ roleSkill }}
                                                     </span>

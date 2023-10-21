@@ -11,7 +11,7 @@ from datetime import datetime
 options = webdriver.ChromeOptions()
 # Define ChromeOptions to run headless
 # headless means that the browser will not open up
-options.add_argument("--headless=new")
+#options.add_argument("--headless=new")
 # create webdriver object
 driver = webdriver.Chrome(options=options)
 
@@ -630,6 +630,7 @@ def test_search_function():
         elements = driver.find_elements(By.CSS_SELECTOR,".job_listing")
         # Check each element's role name
         all_account_managers = True
+        time.sleep(1)
 
         for element in elements:
             rolename = element.find_element(By.CLASS_NAME, "card-title").text.lower()
@@ -683,13 +684,81 @@ def test_invalid_search():
         print("Remarks: Search function with invalid input works as expected")
     print("End of Automated Test Case 10.2")
     print("================================================================")
+
+
+# automated test case 10.3: test search bar function (valid skill name) (postive)
+def test_search_skill_function():
+    # Scroll to the top of the page
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+    # find all job listings 
+    try:
+        # Find search by skill name 
+        search_by_skill = driver.find_element(By.CLASS_NAME, "searchSkillName")
+        time.sleep(1)
+        search_by_skill.click() 
+        time.sleep(1)
+
+        # Find search bar 
+        search_bar = driver.find_element(By.ID, "searchInput")
+        search_bar.clear()
+        time.sleep(1)
+        skill_to_search = "Account Management"
+        search_bar.send_keys(skill_to_search)
+        time.sleep(1)
+        # Find multiple elements by class name
+        elements = driver.find_elements(By.CSS_SELECTOR,".job_listing")
+        # Check each element's role name
+        # Initialize a flag to check if the skill is present in entire skill section
+        skill_found_in_all_listings = True
+
+        for element in elements:
+            skills_section = element.find_element(By.CLASS_NAME, "matchskills")
+            time.sleep(1)
+            skills = skills_section.find_elements(By.ID, "roleSkill")
+            time.sleep(1)
+            # Initialize a flag for the current listing
+            skill_found_in_current_listing = False
+
+            for skill in skills:
+                skill_text = skill.text  # Extract the text of the "roleSkill" element
+                print("SKILLTEXT:", skill_text)
+                time.sleep(1)
+                if skill_to_search == skill_text:
+                    skill_found_in_current_listing = True
+                    break
+
+            if not skill_found_in_current_listing:
+                skill_found_in_all_listings = False
+                break
+        
+        # Check conditions
+        print("================================================================")
+        if skill_found_in_all_listings:
+
+            assert skill_found_in_all_listings , "Search function not working as expected"
+            print("Result: Passed!")
+            print("Remarks: Search Function working as expected")
+        else:
+            print("Result: Failed")
+            print("Remarks: Search Function working not working")
+
+        print("End of Automated Test Case 10.3")
+        print("================================================================")
+    except NoSuchElementException:
+        print("===============================================================================")
+        print("Result: Failed")
+        print("Remarks: Selenium code error")
+        print("End of Automated Test Case 10.3")
+        print("===============================================================================")
+
 ########################### End of Test Case Functions ######################################################
 
 # Uncomment function to run automated test on local machine 
 # Comment function when pushing to Git to ensure test functions are not run twice in GitHub actions
 # Keyboard shortcuts --> Windows (Ctrl + /) Mac (Cmd + /) to comment and uncomment selected lines
 
-test_BrowseRoleListings()
+#test_BrowseRoleListings()
 # test_RofRoleListings()
 # test_CofRoleListings()
 # test_CofRoleListings_duplicate_exact()
@@ -706,3 +775,4 @@ test_BrowseRoleListings()
 # test_update_job_listing_invalid_closing_date()
 # test_search_function()
 # test_invalid_search()
+# test_search_skill_function()
