@@ -11,7 +11,7 @@ from datetime import datetime
 options = webdriver.ChromeOptions()
 # Define ChromeOptions to run headless
 # headless means that the browser will not open up
-#options.add_argument("--headless=new")
+options.add_argument("--headless=new")
 # create webdriver object
 driver = webdriver.Chrome(options=options)
 
