@@ -205,12 +205,11 @@
                                             
                                         </div>
                                         <div>
-                                            <button id="view_applicant_btn" type="button"
-                                                class="btn btn-secondary btn-xs mt-2"
-                                                @click="getAllApplicants(job.JobList_ID)" data-bs-toggle="modal"
-                                                data-bs-target="#viewApplicants">
+                                            <button id="view_applicant_btn" type="button" class="btn btn-secondary btn-xs mt-2"
+                                                @click="getAllApplicants(job.JobList_ID)" data-bs-toggle="modal" data-bs-target="#viewApplicants">
                                                 View Applicants
                                             </button>
+                                           
                                         </div>
                                     </div>
 
@@ -239,54 +238,56 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody id="applicant_table">
-                                                            <tr v-for="applicant in applicants"
-                                                                :key="applicant.Staff_ID">
-                                                                <td id="applicant_name">{{ applicant["Staff_FName"] }}
-                                                                    {{ applicant["Staff_LName"] }}</td>
-                                                                <td>{{ applicant.Dept }}</td>
-                                                                <td>{{ applicant.Email }}</td>
-                                                                <td>{{ applicant.Country }}</td>
-                                                                <td
-                                                                    v-if="applicantsDict[applicant.Staff_ID] && applicantsDict[applicant.Staff_ID] !== undefined">
-                                                                    {{
-                                                                    applicantsDict[applicant.Staff_ID].alignment_percentage
-                                                                    }}%
-                                                                </td>
-                                                                <td
-                                                                    v-if="applicantsDict[applicant.Staff_ID] && applicantsDict[applicant.Staff_ID] !== undefined">
-                                                                    <template
-                                                                        v-for="roleSkill in applicantsDict[applicant.Staff_ID].role_skills">
-                                                                        <!-- Check if the role skill is in the user's skills -->
-                                                                        <template
-                                                                            v-if="applicantsDict[applicant.Staff_ID].applicant_skills.includes(roleSkill)">
-                                                                            <!-- Display the skill with a green background -->
-                                                                            <span
-                                                                                class="badge rounded-pill bg-success user-skill-label"
-                                                                                style="white-space: nowrap;">
-                                                                                {{ roleSkill }}
-                                                                            </span>
-                                                                        </template>
-                                                                    </template>
-                                                                    <template
-                                                                        v-for="roleSkill in applicantsDict[applicant.Staff_ID].role_skills">
-                                                                        <!-- Check if the role skill is not in the user's skills -->
-                                                                        <template
-                                                                            v-if="!applicantsDict[applicant.Staff_ID].applicant_skills.includes(roleSkill)">
-                                                                            <!-- Display the skill with an outlined green border -->
-                                                                            <span
-                                                                                class="badge rounded-pill border border-success user-skill-label text-success m-"
-                                                                                style="white-space: nowrap;">
-                                                                                {{ roleSkill }}
-                                                                            </span>
-                                                                        </template>
-                                                                    </template>
-                                                                </td>
-
-
-                                                                <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}{{ applicantAlignment }}</td>  -->
-
-                                                            </tr>
-                                                        </tbody>
+                                                                <template v-if="applicants.length === 0">
+                                                                    <td colspan="5" class="py-3 text-center">No applicants have applied for this role.</td>
+                                                                </template>
+                                                                <template v-else>
+                                                                    <tr v-for="applicant in applicants"
+                                                                        :key="applicant.Staff_ID">
+                                                                        <td id="applicant_name">{{ applicant["Staff_FName"] }}
+                                                                            {{ applicant["Staff_LName"] }}</td>
+                                                                        <td>{{ applicant.Dept }}</td>
+                                                                        <td>{{ applicant.Email }}</td>
+                                                                        <td>{{ applicant.Country }}</td>
+                                                                        <td
+                                                                            v-if="applicantsDict[applicant.Staff_ID] && applicantsDict[applicant.Staff_ID] !== undefined">
+                                                                            {{
+                                                                            applicantsDict[applicant.Staff_ID].alignment_percentage
+                                                                            }}%
+                                                                        </td>
+                                                                        <td
+                                                                            v-if="applicantsDict[applicant.Staff_ID] && applicantsDict[applicant.Staff_ID] !== undefined">
+                                                                            <template
+                                                                                v-for="roleSkill in applicantsDict[applicant.Staff_ID].role_skills">
+                                                                                <!-- Check if the role skill is in the user's skills -->
+                                                                                <template
+                                                                                    v-if="applicantsDict[applicant.Staff_ID].applicant_skills.includes(roleSkill)">
+                                                                                    <!-- Display the skill with a green background -->
+                                                                                    <span
+                                                                                        class="badge rounded-pill bg-success user-skill-label"
+                                                                                        style="white-space: nowrap;">
+                                                                                        {{ roleSkill }}
+                                                                                    </span>
+                                                                                </template>
+                                                                            </template>
+                                                                            <template
+                                                                                v-for="roleSkill in applicantsDict[applicant.Staff_ID].role_skills">
+                                                                                <!-- Check if the role skill is not in the user's skills -->
+                                                                                <template
+                                                                                    v-if="!applicantsDict[applicant.Staff_ID].applicant_skills.includes(roleSkill)">
+                                                                                    <!-- Display the skill with an outlined green border -->
+                                                                                    <span
+                                                                                        class="badge rounded-pill border border-success user-skill-label text-success m-"
+                                                                                        style="white-space: nowrap;">
+                                                                                        {{ roleSkill }}
+                                                                                    </span>
+                                                                                </template>
+                                                                            </template>
+                                                                        </td>
+                                                                        <!-- <td>{{ getApplicantSkills(tempJobID, applicant.Staff_ID) }}{{ applicantAlignment }}</td>  -->
+                                                                    </tr>
+                                                                </template>
+                                                            </tbody>
                                                     </table>
                                                 </div>
                                                 <div class="modal-footer">

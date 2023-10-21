@@ -62,7 +62,7 @@
                     &nbsp;
                     <label for="staff"> Staff </label>
                     <!----------------------------END OF USER-TYPE SELECTION CODES---------------------------------->
-
+                    
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Filter By</h5>
@@ -80,6 +80,7 @@
                         <div class="col-md-4">
                             <h2>Job Listings</h2>
                         </div>
+                        
                         <!-- <div class="col-md-8 text-md-end">
                             <button v-if="accessRight === '1'" type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#createJob" id="create_listing_btn" @click="createRestriction()">
@@ -97,6 +98,9 @@
                             <input class="searchSkillName" type="radio" id="staff" name="searchby" v-model="searchBy" value=1 > <!--@change="getSearchedJobListings"-->
                             <label for="skillname"> Search by Skill Name </label>
                         </div>
+                    </div>
+                    <div v-if="jobListings.length === 0" class="fs-5">
+                        No open job listings for now.
                     </div>
 
                     <!-- Modal form to create job listing -->
