@@ -51,18 +51,6 @@
                 <!-- Left Sidebar - Filter Menu -->
                 <div class="col-md-3" id="filter_menu">
 
-                    <!--Select user type here for current sprint-->
-                    <!-- <input type="radio" id="hr" name="user_type" value=1 v-model="accessRight"
-                        @change="getAllJobListings">
-                    &nbsp;
-                    <label for="hr"> HR </label>
-                    &nbsp;&nbsp;
-                    <input type="radio" id="staff" name="user_type" value=0 v-model="accessRight"
-                        @change="getAllJobListings" checked>
-                    &nbsp;
-                    <label for="staff"> Staff </label> -->
-                    <!----------------------------END OF USER-TYPE SELECTION CODES---------------------------------->
-
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Filter By</h5>
@@ -185,9 +173,6 @@
                                         <span class="btn btn-link ml-0" @click="toggleDesc(job)">
                                             {{ job.showDescription ? 'Read Less' : 'Show More' }}
                                         </span>
-
-                                        
-
                                     </div>
 
                                     <div class="col-md-3 p-0 m-md-0 m-2 ">
@@ -445,16 +430,6 @@
     </div>
 
 
-    <!-- jQuery code to update the selected role dynamically -->
-    <!-- <script>
-        $(document).ready(function () {
-            $('.dropdown-item').click(function () {
-                var selectedRole = $(this).data('role');
-                $('#selectedRole').text(selectedRole);
-            });
-        });
-    </script> -->
-    <!-- Datepicker function -->
     <script>
         $(function () {
             $('#datepicker').datepicker();
