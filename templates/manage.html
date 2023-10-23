@@ -23,9 +23,10 @@
 
 <body>
     <div id="manageJobs">
-
+        <!-- Navbar component -->
+        <Navbar :access_right="accessRight"></Navbar>
         <!--navigation bar-->
-        <nav class="navbar navbar-expand-md navbar-dark nav-color">
+        <!-- <nav class="navbar navbar-expand-md navbar-dark nav-color">
             <div class="container">
                 <a class="navbar-brand text-white" href="#"><i class="bi bi-person-fill fs-1 profile-icon"></i> All in One </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +43,7 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav> -->
 
     
         <div class="container mt-4">
@@ -440,7 +441,7 @@
     <!-- Vue.js 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- External js file -->
-    <script src="manage.js"></script>
+    <script type="module" src="manage.js"></script>
     <!-- <script src="../static/js/jobCreation.js"></script> -->
 </body>
 

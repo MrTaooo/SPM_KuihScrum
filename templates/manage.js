@@ -8,8 +8,12 @@ const apply_job_URL = "http://127.0.0.1:5100/apply_for_job";
 const withdraw_application_URL = "http://127.0.0.1:5100/withdraw_application";
 const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
 
+// import components 
+import Navbar from "./components/navbar.js";
+
 const urlParams = new URLSearchParams(window.location.search);
 var rights = urlParams.get("rights");
+
 
 // Vue
 const jobsPage = Vue.createApp({
@@ -36,6 +40,10 @@ const jobsPage = Vue.createApp({
       tempJobID: "",
       applicantsDict: {},
     };
+  },
+
+  components: {
+    Navbar,
   },
 
   mounted() {
@@ -96,7 +104,7 @@ const jobsPage = Vue.createApp({
       axios
         .get(get_roles_URL)
         .then((response) => {
-          roles_list = response.data["data"]["roles"];
+          var roles_list = response.data["data"]["roles"];
           const roleObject = {};
 
           roles_list.forEach((role) => {
@@ -191,6 +199,7 @@ const jobsPage = Vue.createApp({
       createjobModal.hide();
       this.getAllJobListings();
     },
+
     editCloseModals() {
       var editjobModal = bootstrap.Modal.getOrCreateInstance(
         document.getElementById("editJob")
@@ -373,8 +382,6 @@ const jobsPage = Vue.createApp({
   },
   },
     
-  }
-);
-
+  });
 
 const vm = jobsPage.mount("#manageJobs");
