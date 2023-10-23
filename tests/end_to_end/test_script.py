@@ -11,13 +11,13 @@ from datetime import datetime
 options = webdriver.ChromeOptions()
 # Define ChromeOptions to run headless
 # headless means that the browser will not open up
-options.add_argument("--headless=new")
+#options.add_argument("--headless=new")
 # create webdriver object
 driver = webdriver.Chrome(options=options)
 
 # get url
-# driver.get("http://127.0.0.1:5500/templates/index.html")
-driver.get("https://spm-kuih-scrum.vercel.app/")
+driver.get("http://127.0.0.1:5500/templates/index.html")
+# driver.get("https://spm-kuih-scrum.vercel.app/")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
@@ -82,6 +82,27 @@ def get_all_applicants_name():
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
+def HR_Manage_Start(): 
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+    hr_button = driver.find_element(By.ID, "hr")
+    hr_button.click()
+    time.sleep(2)
+ 
+    manage_button = driver.find_element(By.ID, 'manageButton')
+    time.sleep(1)
+    manage_button.click()
+    time.sleep(1)
+   
+def HR_Apply_Start(): 
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+    apply_button = driver.find_element(By.ID, 'applyButton')
+    time.sleep(1)
+    apply_button.click()
+    time.sleep(1)
+
 ########################### End of Helper Functions #########################################################
 
 
@@ -120,9 +141,7 @@ def test_BrowseRoleListings():
 
 # automated test case 2: test if the hr can see all job listings (opened and closed) and can see the create and edit button on the UI (positive)
 def test_RofRoleListings():
-    hr = driver.find_element(By.ID, "hr")
-    hr.click()
-    time.sleep(1)
+    HR_Manage_Start() 
 
     # find create new role listing button
     element = driver.find_element(By.ID, "create_listing_btn")
@@ -163,10 +182,7 @@ def test_RofRoleListings():
 # automated test case 3.1: test if the hr can create a new job listing (positive)
 def test_CofRoleListings(roleTitle='IT Analyst', today=time.strftime("%Y-%m-%d"), new_closing_date="2023-12-25"):
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    hr = driver.find_element(By.ID, "hr")
-    hr.click()
-    time.sleep(1)
+    #HR_Manage_Start() 
 
     # find create new role listing button and create a new role listing
     element = driver.find_element(By.ID, "create_listing_btn")
@@ -316,11 +332,13 @@ def test_CofRoleListings_invalid_publish_date():
 # automated test case 4: test if withdraw button works [frontend test] (positive)
 def test_withdraw_btn_test():
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
-    staff = driver.find_element(By.ID, "staff")
-    staff.click()
-    time.sleep(1)
+    # driver.execute_script("window.scrollTo(0, 0);")
+    # time.sleep(1)
+    # staff = driver.find_element(By.ID, "staff")
+    # staff.click()
+    # time.sleep(1)
+
+    HR_Apply_Start()
 
     try:
         applyJL = 'Account Manager' # job title
@@ -338,6 +356,7 @@ def test_withdraw_btn_test():
                 # scroll to see the button on the screen
                 driver.execute_script('arguments[0].scrollIntoView();', withdraw_button)
                 withdraw_button_text = withdraw_button.text
+                print(withdraw_button_text)
                 time.sleep(1)
                 
                 # if button text is "Apply Now", click button to change to "Withdraw Now"
@@ -345,7 +364,7 @@ def test_withdraw_btn_test():
                     withdraw_button.click()
                 
                 withdraw_button.click()
-                time.sleep(0.5)
+                time.sleep(1)
                 # check if button changed to withdraw
                 updated_withdraw_button = card.find_element(By.ID, "Apply/Withdraw_Btn")
                 updated_button_text = updated_withdraw_button.text
@@ -366,12 +385,7 @@ def test_withdraw_btn_test():
 
 # automated test case 5: test view applicant buttons and see if withdraw button backend function works [backend] (postive)
 def test_withdraw_backend():
-    # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
-    hr = driver.find_element(By.ID, "hr")
-    hr.click()
-    time.sleep(1)
+    HR_Manage_Start()
 
     applicant_list = get_all_applicants_name()
 
@@ -393,12 +407,13 @@ def test_withdraw_backend():
 # automated test case 6: test if apply button works [frontend] (positive)
 def test_apply_btn_test():
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
+    # driver.execute_script("window.scrollTo(0, 0);")
+    # time.sleep(1)
 
-    staff = driver.find_element(By.ID, "staff")
-    staff.click()
-    time.sleep(1)
+    # staff = driver.find_element(By.ID, "staff")
+    # staff.click()
+    # time.sleep(1)
+    HR_Apply_Start()
 
     try:
         applyJL = 'Account Manager' # job title
@@ -445,13 +460,7 @@ def test_apply_btn_test():
 
 # automated test case 7: test view applicant buttons and see if apply button backend function works [backend] (positive)
 def test_apply_backend():
-    # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
-    hr = driver.find_element(By.ID, "hr")
-    hr.click()
-    time.sleep(1)
-
+    HR_Manage_Start()
     applicants = get_all_applicants_name()
 
     # Assertion
@@ -471,11 +480,12 @@ def test_apply_backend():
 # automated test case 8: check if the alignment percentage is accurate (positive)
 def test_alignment_perc_accuracy():
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
-    staff = driver.find_element(By.ID, "staff")
-    staff.click()
-    time.sleep(1)
+    # driver.execute_script("window.scrollTo(0, 0);")
+    # time.sleep(1)
+    # staff = driver.find_element(By.ID, "staff")
+    # staff.click()
+    # time.sleep(1)
+    HR_Apply_Start() 
 
     try: 
         # comparison data for staff with ID 1 
@@ -506,12 +516,7 @@ def test_alignment_perc_accuracy():
 
 # automated test case 9.1: test update of role listing closing date (positive)
 def test_update_job_listing(job_list_index=0, input_closing_date="12/05/2023"):
-    # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
-    # ensure that 'hr' is clicked
-    staff = driver.find_element(By.ID, "hr")
-    staff.click()
+    HR_Manage_Start() 
 
     # Find all job listings
     try:
@@ -617,8 +622,9 @@ def test_update_job_listing_invalid_closing_date():
 # automated test case 10.1: test search bar function (valid role name) (postive)
 def test_search_function():
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
+    # driver.execute_script("window.scrollTo(0, 0);")
+    # time.sleep(1)
+    HR_Apply_Start()
     # find all job listings 
     try:
         # Find search bar 
@@ -662,8 +668,10 @@ def test_search_function():
 # automated test case 10.2: test search bar function (invalid role name) (negative)
 def test_invalid_search():
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
+    # driver.execute_script("window.scrollTo(0, 0);")
+    # time.sleep(1)
+    HR_Apply_Start()
+
     # Find search bar 
     search_bar = driver.find_element(By.ID, "searchInput")
     search_bar.clear()
@@ -689,8 +697,9 @@ def test_invalid_search():
 # automated test case 10.3: test search bar function (valid skill name) (postive)
 def test_search_skill_function():
     # Scroll to the top of the page
-    driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(1)
+    # driver.execute_script("window.scrollTo(0, 0);")
+    # time.sleep(1)
+    HR_Apply_Start()
     # find all job listings 
     try:
         # Find search by skill name 
@@ -722,7 +731,7 @@ def test_search_skill_function():
 
             for skill in skills:
                 skill_text = skill.text  # Extract the text of the "roleSkill" element
-                print("SKILLTEXT:", skill_text)
+                #print("SKILLTEXT:", skill_text)
                 time.sleep(1)
                 if skill_to_search == skill_text:
                     skill_found_in_current_listing = True
@@ -758,21 +767,23 @@ def test_search_skill_function():
 # Comment function when pushing to Git to ensure test functions are not run twice in GitHub actions
 # Keyboard shortcuts --> Windows (Ctrl + /) Mac (Cmd + /) to comment and uncomment selected lines
 
-#test_BrowseRoleListings()
-# test_RofRoleListings()
-# test_CofRoleListings()
+test_BrowseRoleListings() #start on apply 
+test_RofRoleListings()  # start on apply 
+#test_RofRoleListings_manage()  #check on manage page 
+# test_CofRoleListings() # start on manage 
 # test_CofRoleListings_duplicate_exact()
-# test_CofRoleListings_overlap()
-# test_CofRoleListings_overlap_2()
+# test_CofRoleListings_overlap() 
+# test_CofRoleListings_overlap_2() 
 # test_CofRoleListings_invalid_publish_date()
-# test_withdraw_btn_test()
-# test_withdraw_backend()
-# test_apply_btn_test()
-# test_apply_backend()
-# test_alignment_perc_accuracy()
-# test_update_job_listing(0)
+# test_withdraw_btn_test() # start on apply 
+# test_withdraw_backend() # start on manage 
+# test_apply_btn_test() # start on apply 
+# test_apply_backend()  # start on manage 
+# test_alignment_perc_accuracy() # start on apply 
+# test_update_job_listing(0) # start on manage 
 # test_update_job_listing_overlap()
 # test_update_job_listing_invalid_closing_date()
-# test_search_function()
-# test_invalid_search()
-# test_search_skill_function()
+# test_search_function() # start on apply 
+# test_search_function_manage() # start on manage 
+# test_invalid_search() # start on apply
+# test_search_skill_function() # start on apply 

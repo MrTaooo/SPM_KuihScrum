@@ -11,13 +11,13 @@ export default {
                         <div v-if="access_right=== '1'" class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link" :href="'index.html?rights=' + access_right">Apply</a>
+                                <a id="applyButton" class="nav-link" :href="'index.html?rights=' + access_right">Apply</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" :href="'manage.html?rights=' + access_right">Manage</a>
+                                <a id="manageButton" class="nav-link" :href="'manage.html?rights=' + access_right">Manage</a>
                             </li>
                             </ul>
                         </div>
-                    </div>
+                    </div> 
                 </nav>`
 }

@@ -205,13 +205,11 @@ const jobsPage = Vue.createApp({
     applyOrWithdraw(event, jobID) {
       // checks if the user has applied for the job listing (appliedJobs array contains the jobListID which the user has already applied for)
       if (!this.appliedJobs.includes(jobID)) {
-        // retrieves the staffID from the button attribute
-        staffID = parseInt(event.target.getAttribute("apply-staff-id"));
-
+       
         // stores the data to send to the apply_job URL
-        dataToSend = {
+        var dataToSend = {
           JobList_ID: jobID,
-          Staff_ID: staffID, // Assuming you have the logged-in staff's ID accessible
+          Staff_ID: this.staffID, // Assuming you have the logged-in staff's ID accessible
         };
 
         // Sending a POST request to apply
@@ -245,11 +243,10 @@ const jobsPage = Vue.createApp({
       // withdraw function
       else {
         const index = this.appliedJobs.indexOf(jobID);
-        staffID = parseInt(event.target.getAttribute("apply-staff-id"));
-
-        dataToSend = {
+        
+        var dataToSend = {
           JobList_ID: jobID,
-          Staff_ID: staffID, // Assuming you have the logged-in staff's ID accessible
+          Staff_ID: this.staffID, // Assuming you have the logged-in staff's ID accessible
         };
 
         // Sending a POST request to withdraw
