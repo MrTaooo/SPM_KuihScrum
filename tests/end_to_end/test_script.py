@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import time
 from datetime import datetime
+import platform
 
 # create chrome options
 options = webdriver.ChromeOptions()
@@ -16,8 +17,12 @@ driver = webdriver.Chrome(options=options)
 
 
 # get url 
-driver.get("http://127.0.0.1:5500/templates/index.html")
-# driver.get("https://spm-kuih-scrum.vercel.app/")
+if platform.system() == "Linux":
+    # This code will run on a Linux-based OS (e.g., Ubuntu)
+    driver.get("https://spm-kuih-scrum.vercel.app/")
+else:
+    # This code will run on a non-Linux-based OS (e.g., Windows or macOS)
+    driver.get("http://127.0.0.1:5500/templates/index.html")
 driver.set_window_size(1920, 1080)
 time.sleep(5)
 
@@ -777,20 +782,22 @@ def test_Search_Skill_Function():
 # Comment function when pushing to Git to ensure test functions are not run twice in GitHub actions
 # Keyboard shortcuts --> Windows (Ctrl + /) Mac (Cmd + /) to comment and uncomment selected lines
 
-test_BrowseJobListings_Staff()
-test_BrowseJobListings_HR()
-test_ManagePageUI()
-test_CofRoleListings()
-test_CofRoleListings_Duplicate_Exact()
-test_CofRoleListings_Overlap()
-test_CofRoleListings_Overlap_2()
-test_CofRoleListings_Invalid_Publish_Date()
-test_Withdraw_Function()
-test_Apply_Function()
-test_Alignment_Perc_Accuracy()
-test_Update_Job_Listing() 
-test_Update_Job_Listing_Overlap()
-test_Update_Job_Listing_Invalid_Closing_Date()
-test_Search_Function()
-test_Invalid_Search()
-test_Search_Skill_Function()
+
+if platform.system() != "Linux":
+    test_BrowseJobListings_Staff()
+    test_BrowseJobListings_HR()
+    test_ManagePageUI()
+    test_CofRoleListings()
+    test_CofRoleListings_Duplicate_Exact()
+    test_CofRoleListings_Overlap()
+    test_CofRoleListings_Overlap_2()
+    test_CofRoleListings_Invalid_Publish_Date()
+    test_Withdraw_Function()
+    test_Apply_Function()
+    test_Alignment_Perc_Accuracy()
+    test_Update_Job_Listing() 
+    test_Update_Job_Listing_Overlap()
+    test_Update_Job_Listing_Invalid_Closing_Date()
+    test_Search_Function()
+    test_Invalid_Search()
+    test_Search_Skill_Function()
