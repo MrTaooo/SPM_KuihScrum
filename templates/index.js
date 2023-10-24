@@ -279,6 +279,12 @@ const jobsPage = Vue.createApp({
       }
     },
 
+    handleBackspace(event) {
+      if (event.keyCode === 8) { // for backspace key
+        this.searchInput = '';
+      }
+    },
+
     filterJobListings() {
       var mode = this.searchBy
       const query = this.searchInput ? this.searchInput.toLowerCase() : '';

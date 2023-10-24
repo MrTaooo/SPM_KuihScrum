@@ -85,7 +85,7 @@
                     </div>
                     <!--Search bar-->
                     <div class="">
-                        <input id="searchInput" v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" :placeholder="changePlaceholder()">
+                        <input id="searchInput" v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" @keydown="handleBackspace($event)" :placeholder="changePlaceholder()">
                         <div class="d-flex justify-content-end mb-2">
                             <input type="radio" id="job" name="searchby" value=0 v-model="searchBy" checked>
                             <label for="job"> Search by Job Title </label>
