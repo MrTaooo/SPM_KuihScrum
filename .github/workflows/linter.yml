@@ -1,28 +1,59 @@
-name: Super Linter
+---
+#################################
+#################################
+## Super Linter GitHub Actions ##
+#################################
+#################################
+name: Lint Code Base
 
+#############################
+# Start the job on all push #
+#############################
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    branches-ignore: [master, main]
+    # Remove the line above to run when pushing to master or main
+  pull_request:
+    branches: [master, main]
 
+###############
+# Set the Job #
+###############
 jobs:
-  super-linter:
+  build:
+    # Name the Job
     name: Lint Code Base
+    # Set the agent to run on
     runs-on: ubuntu-latest
 
+    ############################################
+    # Grant status permission for MULTI_STATUS #
+    ############################################
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+
+    ##################
+    # Load all steps #
+    ##################
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up Super-Linter
-        run: |
-          echo "github_token: ${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-          echo "enabled_linters: ansible,cfn,docker,golang,html,java,javascript,json,markdown,perl,powershell,python,ruby,shell,yaml" >> $GITHUB_ENV
-
-      - name: Run Super-Linter
-        uses: github/super-linter@v3
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          entryPoint: |
-            sh /action/lib/linter.sh
-          args: -c .github/linters.yml
+          # Full git history is needed to get a proper
+          # list of changed files within `super-linter`
+          fetch-depth: 0
+
+      ################################
+      # Run Linter against code base #
+      ################################
+      - name: Lint Code Base
+        uses: super-linter/super-linter@v5
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
