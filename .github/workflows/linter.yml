@@ -1,71 +1,65 @@
 ---
-    #################################
-    #################################
-    ## Super Linter GitHub Actions ##
-    #################################
-    #################################
-    name: Lint Code Base
-    
-    #############################
-    # Start the job on all push #
-    #############################
-    on:
-      push:
-        branches-ignore: [master, main]
-        # Remove the line above to run when pushing to master or main
-      pull_request:
-        branches: [master, main]
-    
-    ###############
-    # Set the Job #
-    ###############
-    jobs:
-      build:
-        # Name the Job
-        name: Lint Code Base
-        # Set the agent to run on
-        runs-on: ubuntu-latest
-    
-        ############################################
-        # Grant status permission for MULTI_STATUS #
-        ############################################
-        permissions:
-          contents: read
-          packages: read
-          statuses: write
-    
-        ##################
-        # Load all steps #
-        ##################
-        steps:
-        
-          ##########################
-          # Checkout the code base #
-          ##########################
-          - name: Checkout Code
-            uses: actions/checkout@v4
-            with:
-              # Full git history is needed to get a proper
-              # list of changed files within `super-linter`
-              fetch-depth: 0
-    
-          ################################
-          # Run Linter against code base #
-          ################################
-          - name: Lint Code Base
-            uses: super-linter/super-linter/slim@v5
-            env:
-              VALIDATE_ALL_CODEBASE: false
-              DEFAULT_BRANCH: main
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#################################
+#################################
+## Super Linter GitHub Actions ##
+#################################
+#################################
+name: Lint Code Base
 
-    lint:
-        runs-on: ubuntu-latest
-        steps: 
-        - uses: actions/checkout@v4
-        - name: Super-Linter
-  # You may pin to the exact commit or the version.
-  # uses: super-linter/super-linter@b0d1acee1f8050d1684a28ddbf8315f81d084fe9
-        - uses: super-linter/super-linter@v5.4.3
-        env: 
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#############################
+# Start the job on all push #
+#############################
+on:
+  push:
+    branches-ignore: [master, main]
+    # Remove the line above to run when pushing to master or main
+  pull_request:
+    branches: [master, main]
+
+###############
+# Set the Job #
+###############
+jobs:
+  build:
+    # Name the Job
+    name: Lint Code Base
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    ############################################
+    # Grant status permission for MULTI_STATUS #
+    ############################################
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+
+    ##################
+    # Load all steps #
+    ##################
+    steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Full git history is needed to get a proper
+          # list of changed files within super-linter
+          fetch-depth: 0
+
+      ################################
+      # Run Linter against code base #
+      ################################
+      - name: Lint Code Base
+        uses: super-linter/super-linter/slim@v5
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      ###############################
+      # Add a run step for linting #
+      ###############################
+      - name: Lint Code
+        run: npm run lint # Replace with the actual linting command for your project
