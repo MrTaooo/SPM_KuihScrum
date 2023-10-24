@@ -1,18 +1,14 @@
 name: Super Linter
 
 on:
+  pull_request:
   push:
     branches:
       - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
 
 jobs:
   super-linter:
-    name: Linting Code
+    name: Lint Code Base
     runs-on: ubuntu-latest
 
     steps:
@@ -20,23 +16,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Super-Linter
+        run: |
+          echo "github_token: ${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+          echo "enabled_linters: ansible,cfn,docker,golang,html,java,javascript,json,markdown,perl,powershell,python,ruby,shell,yaml" >> $GITHUB_ENV
+
+      - name: Run Super-Linter
         uses: github/super-linter@v3
         with:
-          # Set the GitHub token for the linter to push back results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Set the list of languages you want to run the linter on
-          enabled_linters: |
-            html
-            java
-            javascript
-            json
-            markdown
-            perl
-            powershell
-            python
-            ruby
-            shell
-            yaml
-
-      # You can add additional steps here if needed
-
+          entryPoint: |
+            sh /action/lib/linter.sh
+          args: -c .github/linters.yml
