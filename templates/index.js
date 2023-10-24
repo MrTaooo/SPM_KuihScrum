@@ -280,7 +280,7 @@ const jobsPage = Vue.createApp({
     },
 
     filterJobListings() {
-      mode = this.searchBy
+      var mode = this.searchBy
       const query = this.searchInput ? this.searchInput.toLowerCase() : '';
       if (query == '') { // empty searchbar
         this.getAllJobListings(); 
