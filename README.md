@@ -73,26 +73,14 @@ pip install -r requirements.txt
 
 ## Coding Notes:
 - The index.js and manage.js are module types, to run the files successfully, do declare the variables before using them. (E.g. var foo = "Foo")
+- Any changes to the elements positioning, id, class names and html tags in the pre-existing UI in html files will result in a failed GitHub actions workflow due to error in the Selenium test script. 
 
 ## Running of Selenium Test Scripts
 
-
 ### Running Locally
-**Step 1:**: Uncomment this code (line 19 in test_script.py) in the tests/end_to_end folder. --> driver.get("http://127.0.0.1:5500/templates/index.html")
+**Step 1:** Run test_data.sql in the database folder in MySql (this acts as a setup for the testing process)
 
-**Step 2:**: Comment this code (line 20 in test_script.py) in the same folder. --> driver.get("https://spm-kuih-scrum.vercel.app/")
-
-**Step 3:** Uncomment all the function calls at the end of test_script.py
-
-**Step 4:** Run test_data.sql in the database folder in MySql (this acts as a setup for the testing process)
-
-**Step 4:** Run the python script in terminal
+**Step 2:** Run the python script (test_script.py) in terminal
 
 ### Running on GitHub Actions
-**Step 1:**: Comment this code (line 19 in test_script.py) in the tests/end_to_end folder. --> driver.get("http://127.0.0.1:5500/templates/index.html")
-
-**Step 2:**: Uncomment this code (line 20 in test_script.py) in the same folder. --> driver.get("https://spm-kuih-scrum.vercel.app/")
-
-**Step 3:** Comment all the function calls at the end of test_script.py
-
-**Step 4:** Push local repository to GitHub repository
+**Step 1:** Push local repository to GitHub repository

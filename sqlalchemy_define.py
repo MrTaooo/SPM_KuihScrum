@@ -16,7 +16,6 @@ def create_app():
     # -------------- Connection to mySQL DB --------------
     def check_os():
         system = platform.system()  # Get the name of the operating system
-        print(system)
         if system == 'Windows':
             return 'mysql+mysqlconnector://root@localhost:3306/SPM_KUIH'  # For Windows
         elif system == 'Darwin':

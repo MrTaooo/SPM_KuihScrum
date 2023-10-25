@@ -326,12 +326,10 @@ const jobsPage = Vue.createApp({
       }
     },
 
-
     changePlaceholder() {
       // console.log(this.searchBy)
       return this.searchBy === '1' ? 'Search by Skill Name' : 'Search by Job Title';
     },
-    
     
     toggleDesc(job) {
       job.showDescription = !job.showDescription;

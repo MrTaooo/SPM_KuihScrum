@@ -133,7 +133,7 @@ def test_BrowseJobListings_Staff():
         number_of_elements = len(elements)
 
         # Assertion 
-        assert number_of_elements == 2, "Number of elements is not equal to 1"
+        assert number_of_elements == 2, "Number of elements is not equal to 1. Run test_data.sql in Mysql or phpAdmin."
 
         # based on the test.sql, there should only be 2 job listings shown if a staff logs in
         if (number_of_elements == 2):
