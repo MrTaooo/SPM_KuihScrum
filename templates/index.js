@@ -325,6 +325,25 @@ const jobsPage = Vue.createApp({
         } 
       }
     },
+    filterByAlignment() {
+      const alignmentThreshold = this.alignmentPercentage; // Get alignment threshold from user input
+      console.log('Alignment Threshold:', alignmentThreshold); // Check if the alignment threshold is correct
+    
+      const filteredJobListings = this.jobListings.filter(job => {
+        const jobData = this.skill_match_dict[job.JobList_ID];
+        if (jobData && jobData.alignment_percentage) {
+          const alignmentPercentage = jobData.alignment_percentage; // Access the alignment percentage
+          console.log('Job ID:', job.JobList_ID, 'Alignment Percentage:', alignmentPercentage); // Check alignment percentage for each job
+          return alignmentPercentage >= alignmentThreshold; // Compare against the threshold
+        } else {
+          console.error('Alignment percentage not found for job ID:', job.JobList_ID);
+          return false; // Exclude the job if the alignment percentage is not available
+        }
+      });
+    
+      this.jobListings = filteredJobListings;
+      console.log('Filtered Job Listings:', this.jobListings); // Log the filtered job listings
+    },
 
     changePlaceholder() {
       // console.log(this.searchBy)

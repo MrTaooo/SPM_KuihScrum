@@ -49,12 +49,16 @@
                             <h5 class="card-title">Filter By</h5>
                             <form>
                                 <!-- Add additional filter options here -->
+                                <div style="overflow-y: scroll; max-height: 150px;">
+                                    <label for="alignmentPercentage">Alignment Percentage:</label>
+                                    <input type="range" id="alignmentPercentage" name="alignmentPercentage" min="0" max="100" v-model="alignmentPercentage" @input="filterByAlignment">
+                                </div>
+                                <input type="number" v-model="alignmentPercentage" min="0" max="100" class="form-control mb-3">
 
                             </form>
                         </div>
                     </div>
                 </div>
-
                 <!-- Job Listings -->
                 <div id="listing_list" class="col-md-9">
                     <div class="row mb-1">
