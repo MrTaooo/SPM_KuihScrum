@@ -23,6 +23,7 @@ const jobsPage = Vue.createApp({
     return {
       staffID: "140001",
       jobListings: [],
+      originalJobListings: [], 
       roles: {},
       accessRight: rights,
       activeEditJobListingID: "", 
@@ -62,6 +63,7 @@ const jobsPage = Vue.createApp({
         .get(get_joblistings_URL)
         .then((response) => {
           this.jobListings = response.data.data.joblistings;
+          this.originalJobListings = response.data.data.joblistings;
           var current = new Date();
           const year = current.getFullYear();
           const month = (current.getMonth() + 1).toString().padStart(2, "0"); // Add leading zero if needed
@@ -329,7 +331,7 @@ const jobsPage = Vue.createApp({
       const alignmentThreshold = this.alignmentPercentage; // Get alignment threshold from user input
       console.log('Alignment Threshold:', alignmentThreshold); // Check if the alignment threshold is correct
     
-      const filteredJobListings = this.jobListings.filter(job => {
+      const filteredJobListings = this.originalJobListings.filter(job => {
         const jobData = this.skill_match_dict[job.JobList_ID];
         if (jobData && jobData.alignment_percentage) {
           const alignmentPercentage = jobData.alignment_percentage; // Access the alignment percentage
