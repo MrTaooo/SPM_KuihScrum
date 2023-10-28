@@ -54,7 +54,38 @@
                                     <input type="range" id="alignmentPercentage" name="alignmentPercentage" min="0" max="100" v-model="alignmentPercentage" @input="filterByAlignment">
                                 </div>
                                 <input type="number" v-model="alignmentPercentage" min="0" max="100" class="form-control mb-3">
-
+                                <div class="container mt-3">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                      Filter By Skills
+                                    </button>
+                                </div>
+                                <div class="modal" id="myModal">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                  
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                          <h4 class="modal-title">Filter By Skills</h4>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                  
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <form id="skillsForm">
+                                                <div v-for="(skill, index) in allSkills" :key="index" class="form-check">
+                                                    <input type="checkbox" :id="'skillCheckbox' + index" :value="skill" v-model="selectedSkills">
+                                                    <label class="form-check-label" :for="'skillCheckbox' + index">{{ skill }}</label>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                  
+                                      </div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

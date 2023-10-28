@@ -23,6 +23,7 @@ const jobsPage = Vue.createApp({
     return {
       staffID: "140001",
       jobListings: [],
+      allSkills: [],
       originalJobListings: [], 
       roles: {},
       accessRight: rights,
@@ -52,6 +53,13 @@ const jobsPage = Vue.createApp({
 
   mounted() {
     this.getUserSkills(this.staffID);
+    axios.get(get_roles_skills_URL)
+      .then(response => {
+        this.allSkills = response.data.data.roles_skills[0]; // Update the allSkills array with the fetched skills data
+      })
+      .catch(error => {
+        console.error('Error fetching skills:', error);
+      });
   },
 
   methods: {
