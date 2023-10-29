@@ -104,10 +104,10 @@
                     <div class="">
                         <input id="searchInput" v-model="searchInput" type="text" class="form-control me-2" @keyup="filterJobListings()" @keydown="handleBackspace($event)" :placeholder="changePlaceholder()">
                         <div class="d-flex justify-content-end mb-2">
-                            <input type="radio" id="job" name="searchby" value=0 v-model="searchBy" checked>
+                            <input type="radio" id="job" name="searchby" value=0 v-model="searchBy" @click="emptySearchbar()" checked>
                             <label for="job"> Search by Job Title </label>
                             &nbsp;&nbsp;
-                            <input class="searchSkillName" type="radio" id="staff" name="searchby" v-model="searchBy" value=1 > <!--@change="getSearchedJobListings"-->
+                            <input class="searchSkillName" type="radio" id="staff" name="searchby" v-model="searchBy" value=1 @click="emptySearchbar()"> <!--@change="getSearchedJobListings"-->
                             <label for="skillname"> Search by Skill Name </label>
                         </div>
                     </div>

@@ -290,6 +290,11 @@ const jobsPage = Vue.createApp({
       }
     },
 
+    emptySearchbar() {
+      this.searchInput = '';
+      this.filterJobListings()
+    },
+
     handleBackspace(event) {
       if (event.keyCode === 8) { // for backspace key
         this.searchInput = '';
