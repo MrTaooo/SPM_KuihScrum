@@ -24,6 +24,7 @@ const jobsPage = Vue.createApp({
       staffID: "140001",
       jobListings: [],
       allSkills: [],
+      selectedSkills: [], 
       originalJobListings: [], 
       roles: {},
       accessRight: rights,
@@ -353,6 +354,22 @@ const jobsPage = Vue.createApp({
     
       this.jobListings = filteredJobListings;
       console.log('Filtered Job Listings:', this.jobListings); // Log the filtered job listings
+    },
+
+    filterBySkills() {
+      if (this.selectedSkills.length === 0) {
+        // If no skills are selected, return all listings
+        return this.joblistings;
+      } else {
+        // Filter the listings based on selected skills
+        return this.originalJobListings.filter(job => {
+          const jobData = this.skill_match_dict[job.JobList_ID];
+          if (jobData && selectedSkills) { 
+            return jobData.role_skills.some(skill => this.selectedSkills.includes(skill));
+          }
+         
+        });
+      }
     },
 
     changePlaceholder() {

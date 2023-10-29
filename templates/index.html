@@ -72,9 +72,11 @@
                                         <!-- Modal body -->
                                         <div class="modal-body">
                                             <form id="skillsForm">
-                                                <div v-for="(skill, index) in allSkills" :key="index" class="form-check">
-                                                    <input type="checkbox" :id="'skillCheckbox' + index" :value="skill" v-model="selectedSkills">
-                                                    <label class="form-check-label" :for="'skillCheckbox' + index">{{ skill }}</label>
+                                                <div v-for="(skillsGroup, groupIndex) in allSkills" :key="groupIndex">
+                                                    <div v-for="(skill, index) in skillsGroup" :key="index" class="form-check">
+                                                        <input type="checkbox" :id="'skillCheckbox' + groupIndex + index" :value="skill" v-model="selectedSkills" @input="filterBySkills">
+                                                        <label class="form-check-label" :for="'skillCheckbox' + groupIndex + index">{{ skill }}</label>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
