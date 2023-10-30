@@ -2,6 +2,18 @@
     background-color: rgb(1, 1, 39)
 }
 
+.button{
+    background-color: rgb(27, 27, 101);
+    color: rgb(255, 255, 255);
+}
+
+.border-blue {
+    border: 2px solid rgb(27, 27, 101);
+    color: rgb(27, 27, 101);
+    opacity: 0.5; /* Reduce the opacity to 50% */
+}
+
+
 .profile-icon {
     color: rgb(255, 255, 255);
 }

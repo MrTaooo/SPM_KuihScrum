@@ -49,16 +49,22 @@
                             <h5 class="card-title">Filter By</h5>
                             <form>
                                 <!-- Add additional filter options here -->
-                                <div style="overflow-y: scroll; max-height: 150px;">
-                                    <label for="alignmentPercentage">Alignment Percentage:</label>
-                                    <input type="range" id="alignmentPercentage" name="alignmentPercentage" min="0" max="100" v-model="alignmentPercentage" @input="filterByAlignment">
+                                <div style="max-height: 150px; overflow-y: scroll;" class="mb-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <label for="alignmentPercentage">Alignment Percentage:</label>
+                                            <input type="range" id="alignmentPercentage" name="alignmentPercentage" min="0" max="100" v-model="alignmentPercentage" @input="filterByAlignment">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" v-model="alignmentPercentage" min="0" max="100" class="form-control" disabled>
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="number" v-model="alignmentPercentage" min="0" max="100" class="form-control mb-3">
-                                <div class="container mt-3">
+                                <div class="container">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                                      Filter By Skills
+                                        Filter By Skills
                                     </button>
-                                </div>
+                                </div>                                
                                 <div class="modal" id="myModal">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
@@ -164,8 +170,8 @@
                                                 <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
                                                     <!-- Check if the role skill is in the user's skills -->
                                                     <template v-if="userSkills.includes(roleSkill)">
-                                                        <!-- Display the skill with a green background -->
-                                                        <span id="roleSkill" class="badge rounded-pill bg-success user-skill-label"
+                                                        <!-- Display the skill with a blue background -->
+                                                        <span id="roleSkill" class="badge rounded-pill button user-skill-label my-1"
                                                             style="white-space: nowrap;">
                                                             {{ roleSkill }}
                                                         </span>
@@ -175,15 +181,14 @@
                                                 <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
                                                     <!-- Check if the role skill is not in the user's skills -->
                                                     <template v-if="!userSkills.includes(roleSkill)">
-                                                        <!-- Display the skill with an outlined green border -->
-                                                        <span
-                                                            class="badge rounded-pill border border-success user-skill-label text-success m-"
-                                                            style="white-space: nowrap;">
+                                                        <span class="badge rounded-pill border-blue button2 user-skill-label my-1" style="white-space: nowrap;">
                                                             {{ roleSkill }}
                                                         </span>
                                                     </template>
                                                 </template>
                                             </p>
+                                            
+                                            
                                         </div>
                                     </div> 
                                        <div class="d-flex justify-content-end">

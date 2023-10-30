@@ -23,6 +23,7 @@ const jobsPage = Vue.createApp({
     return {
       staffID: "140001",
       jobListings: [],
+      alignmentPercentage: 0, 
       allSkills: [],
       selectedSkills: [], 
       originalJobListings: [], 
