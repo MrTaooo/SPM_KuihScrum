@@ -45,7 +45,7 @@ Stores:
 
 **tests:** Stores the Selenium test scripts. 
 
-## Files Explaination
+## Files Explanation
 
 **sqlalchemy_define:** This python file is used to create a Flask web application and configures it to connect to a MySQL database using SQLAlchemy. 
 

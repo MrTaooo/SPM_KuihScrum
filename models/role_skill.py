@@ -7,9 +7,9 @@ class RoleSkill(db.Model):
         'Role.Role_Name'), primary_key=True)
     Skill_Name = db.Column(db.Text, nullable=False, primary_key=True)
 
-    def __init__(self, Role_Name, Skill_Name):
-        self.Role_Name = Role_Name
-        self.Skill_Name = Skill_Name
+    def __init__(self, role_name, skill_name):
+        self.Role_Name = role_name
+        self.Skill_Name = skill_name
 
     def json(self):
         return {

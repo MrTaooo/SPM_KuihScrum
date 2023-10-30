@@ -6,9 +6,9 @@ class JobApplication(db.Model):
     JobList_ID = db.Column(db.Integer, primary_key=True)
     Staff_ID = db.Column(db.Integer, primary_key=True)
 
-    def __init__(self, JobList_ID, Staff_ID):
-        self.JobList_ID = JobList_ID
-        self.Staff_ID = Staff_ID
+    def __init__(self, job_list_id, staff_id):
+        self.JobList_ID = job_list_id
+        self.Staff_ID = staff_id
 
     def json(self):
         return {

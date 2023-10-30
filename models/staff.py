@@ -11,14 +11,14 @@ class Staff(db.Model):
     Email = db.Column(db.Text, nullable=False)
     Access_Rights = db.Column(db.Integer, db.ForeignKey('AccessRights.Access_ID'))
 
-    def __init__(self, Staff_ID, Staff_FName, Staff_LName, Dept, Country, Email, Access_Rights):
-        self.Staff_ID = Staff_ID
-        self.Staff_FName = Staff_FName
-        self.Staff_LName = Staff_LName
-        self.Dept = Dept
-        self.Country = Country
-        self.Email = Email
-        self.Access_Rights = Access_Rights
+    def __init__(self, staff_id, staff_fname, staff_lname, dept, country, email, access_rights):
+        self.Staff_ID = staff_id
+        self.Staff_FName = staff_fname
+        self.Staff_LName = staff_lname
+        self.Dept = dept
+        self.Country = country
+        self.Email = email
+        self.Access_Rights = access_rights
 
     def json(self):
         return {

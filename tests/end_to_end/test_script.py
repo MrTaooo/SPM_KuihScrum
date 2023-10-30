@@ -746,7 +746,6 @@ def test_Search_Skill_Function():
 
             for skill in skills:
                 skill_text = skill.text  # Extract the text of the "roleSkill" element
-                #print("SKILLTEXT:", skill_text)
                 time.sleep(1)
                 if skill_to_search == skill_text:
                     skill_found_in_current_listing = True

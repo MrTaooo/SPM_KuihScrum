@@ -5,15 +5,15 @@ from models.job_application import JobApplication
 def apply_for_job():
     # using Flask's request object to extract JSON data from the HTTP request sent by a client.
     data = request.get_json()
-    jobID = data['JobList_ID']
-    staffID = data['Staff_ID']
+    job_id = data['JobList_ID']
+    staff_id = data['Staff_ID']
     # create a new job application object
-    job_application = JobApplication(JobList_ID=jobID, Staff_ID=staffID)
+    job_application = JobApplication(JobList_ID=job_id, Staff_ID=staff_id)
 
     try:
         db.session.add(job_application)
         db.session.commit()
-    except Exception as e:
+    except Exception:
         return jsonify({
             "code": 404,
             "message": "Job application has been applied previously."

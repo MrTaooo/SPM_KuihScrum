@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from flask_cors import CORS
 import platform
-import os
     
 db = SQLAlchemy()
 DB_NAME = "database.db"

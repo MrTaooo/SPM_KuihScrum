@@ -1,19 +1,10 @@
-DROP SCHEMA IF EXISTS SPM_KUIH;
-
 CREATE SCHEMA SPM_KUIH;
 USE SPM_KUIH;
 
-DROP TABLE IF EXISTS `AccessRights`;
-DROP TABLE IF EXISTS `Staff`;
-DROP TABLE IF EXISTS `Role`;
-DROP TABLE IF EXISTS `Role_Skill`;
-DROP TABLE IF EXISTS `Staff_Skill`;
-DROP TABLE IF EXISTS `Job_Listing`;
-DROP TABLE IF EXISTS `Job_Application`;  
 
 CREATE TABLE AccessRights (
     Access_ID int PRIMARY KEY,
-    Access_type varchar(50) NOT NULL
+    Access_Control_Name varchar(50) NOT NULL
 );
 
 CREATE TABLE Staff (
@@ -32,12 +23,17 @@ CREATE TABLE Role (
     Role_Desc Longtext Not Null
 );
 
+CREATE TABLE Skill (
+	Skill_Name Varchar(50) Primary Key,
+    Skill_Desc Longtext Not Null
+);
+
 CREATE TABLE Role_Skill (
     Role_Name Varchar(20),
     Skill_Name Varchar(50),
     PRIMARY KEY (Role_Name, Skill_Name),
     FOREIGN KEY (Role_Name) REFERENCES Role(Role_Name),
-    UNIQUE (Skill_Name)
+    FOREIGN KEY (Skill_Name) REFERENCES Skill(Skill_Name)
 );
 
 CREATE TABLE Staff_Skill (
