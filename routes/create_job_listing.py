@@ -54,7 +54,7 @@ def create_listing():
 
     # If no duplicate listing found, save the new listing to the database
     new_listing = JobListing(
-        Role_Name=roleTitle, publish_Date=date, Closing_date=closingDate)
+        role_name=roleTitle, publish_date=date, closing_date=closingDate)
     db.session.add(new_listing)
     db.session.commit()
 

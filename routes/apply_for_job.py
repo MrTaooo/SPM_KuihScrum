@@ -8,7 +8,7 @@ def apply_for_job():
     job_id = data['JobList_ID']
     staff_id = data['Staff_ID']
     # create a new job application object
-    job_application = JobApplication(JobList_ID=job_id, Staff_ID=staff_id)
+    job_application = JobApplication(job_list_id=job_id, staff_id=staff_id)
 
     try:
         db.session.add(job_application)

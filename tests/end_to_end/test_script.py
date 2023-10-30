@@ -781,7 +781,6 @@ def test_Search_Skill_Function():
 # Comment function when pushing to Git to ensure test functions are not run twice in GitHub actions
 # Keyboard shortcuts --> Windows (Ctrl + /) Mac (Cmd + /) to comment and uncomment selected lines
 
-
 if platform.system() != "Linux":
     test_BrowseJobListings_Staff()
     test_BrowseJobListings_HR()
