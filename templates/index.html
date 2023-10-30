@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="container">
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                    <button type="button" class="btn nav-color text-white" data-bs-toggle="modal" data-bs-target="#myModal">
                                         Filter By Skills
                                     </button>
                                 </div>                                
@@ -193,7 +193,7 @@
                                     </div> 
                                        <div class="d-flex justify-content-end">
                                             <button id="Apply/Withdraw_Btn"
-                                                :class="appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle"
+                                                :class="[appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle, 'nav-color', 'text-white', 'btn']"
                                                 @click="applyOrWithdraw($event, job.JobList_ID)"
                                                 :apply-staff-id="staffID">
                                                 {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now'
