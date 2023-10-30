@@ -60,32 +60,29 @@
                                     </button>
                                 </div>
                                 <div class="modal" id="myModal">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                  
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                          <h4 class="modal-title">Filter By Skills</h4>
-                                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                  
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <form id="skillsForm">
-                                                <div v-for="(skillsGroup, groupIndex) in allSkills" :key="groupIndex">
-                                                    <div v-for="(skill, index) in skillsGroup" :key="index" class="form-check">
-                                                        <input type="checkbox" :id="'skillCheckbox' + groupIndex + index" :value="skill" v-model="selectedSkills" @input="filterBySkills">
-                                                        <label class="form-check-label" :for="'skillCheckbox' + groupIndex + index">{{ skill }}</label>
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Filter By Skills</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                        
+                                            <!-- Modal body -->
+                                            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                                                <form id="skillsForm" class="mb-3">
+                                                    <div v-for="(skill, index) in sortedSkills" :key="index" class="form-check">
+                                                        <input type="checkbox" :id="'skillCheckbox' + index" :value="skill" v-model="selectedSkills" @input="filterBySkills" class="form-check-input">
+                                                        <label class="form-check-label" :for="'skillCheckbox' + index" class="ms-2">{{ skill }}</label>
                                                     </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                  
-                                      </div>
+                                                </form>
+                                            </div>
+                                        
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </form>

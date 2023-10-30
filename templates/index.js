@@ -62,6 +62,16 @@ const jobsPage = Vue.createApp({
         console.error('Error fetching skills:', error);
       });
   },
+  // Inside the script section
+  computed: {
+      sortedSkills() {
+          // Extract all skills from the roles and sort them alphabetically
+          const allSkillsArray = Object.values(this.allSkills).flat();
+          const uniqueSkillsSet = new Set(allSkillsArray);
+          const uniqueSortedSkills = Array.from(uniqueSkillsSet).sort((a, b) => a.localeCompare(b));
+          return uniqueSortedSkills;
+      }
+  },
 
   methods: {
     // this function will get all job listings for the staff and hr. Staff will only see job listings that are not closed.
