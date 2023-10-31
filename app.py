@@ -19,6 +19,7 @@ from routes.get_user_skills import get_user_skills
 from routes.withdraw_application import withdraw_application
 from routes.get_applied_jobs_for_user import get_applied_jobs_for_user
 from routes.get_all_applicants import get_applicants
+from routes.get_skills import get_skills
 
 # Register the route functions with the app
 app.route("/apply_for_job", methods=['POST'])(apply_for_job)
@@ -28,6 +29,7 @@ app.route('/editListing', methods=['POST'])(edit_listing)
 app.route("/joblistings")(get_all_joblistings)
 app.route("/roles")(get_all_roles)
 app.route("/rolesSkills")(get_roles_skills)
+app.route("/skills")(get_skills)
 app.route("/userSkills")(get_user_skills)
 app.route("/withdraw_application", methods=['POST'])(withdraw_application)
 app.route("/get_applied_jobs_for_user/<int:staff_id>", methods=['GET'])(get_applied_jobs_for_user)
