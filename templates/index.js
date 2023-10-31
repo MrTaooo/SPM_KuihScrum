@@ -71,7 +71,22 @@ const jobsPage = Vue.createApp({
           const uniqueSkillsSet = new Set(allSkillsArray);
           const uniqueSortedSkills = Array.from(uniqueSkillsSet).sort((a, b) => a.localeCompare(b));
           return uniqueSortedSkills;
-      }
+      },
+      groupedSkills() {
+        const grouped = {};
+        for (let i = 0; i < this.sortedSkills.length; i++) {
+            const skill = this.sortedSkills[i];
+            const firstLetter = skill.charAt(0).toUpperCase();
+            if (!grouped[firstLetter]) {
+                grouped[firstLetter] = [];
+            }
+            grouped[firstLetter].push(skill);
+        }
+        return grouped;
+    },
+    alphabet() {
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    },
   },
 
   methods: {
