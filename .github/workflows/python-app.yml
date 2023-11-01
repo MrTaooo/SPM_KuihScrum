@@ -1,5 +1,5 @@
 # Name and description of the workflow
-name: Python Application CI/CD
+name: Selenium Automated Testing
 
 # Trigger the workflow on pushes to the 'main' branch
 on:

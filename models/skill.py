@@ -1,9 +1,10 @@
 from sqlalchemy_define import db
+from sqlalchemy.dialects.mysql import LONGTEXT
 class Skill(db.Model):
     __tablename__ = 'Skill'
 
-    Skill_Name = db.Column("Skill_Name", primary_key=True)
-    Skill_Desc = db.Column("Skill_Desc", nullable=False)
+    Skill_Name = db.Column(db.String(50), primary_key=True)
+    Skill_Desc = db.Column(LONGTEXT, nullable=False)
 
     def __init__(self, skill_name, skill_desc):
         self.Skill_Name = skill_name

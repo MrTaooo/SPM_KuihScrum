@@ -1,12 +1,12 @@
-const get_roles_URL = "http://127.0.0.1:5100/roles";
-const get_roles_skills_URL = "http://127.0.0.1:5100/rolesSkills";
-const get_user_skills_URL = "http://127.0.0.1:5100/userSkills";
-const get_joblistings_URL = "http://127.0.0.1:5100/joblistings";
-const get_appliedJobs_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
-const get_calculatealignment_URL = "http://127.0.0.1:5100/calculateAlignment";
-const apply_job_URL = "http://127.0.0.1:5100/apply_for_job";
-const withdraw_application_URL = "http://127.0.0.1:5100/withdraw_application";
-const get_all_applicants_URL = "http://127.0.0.1:5100/get_all_applicants";
+const GET_ROLES_URL = "http://127.0.0.1:5100/roles";
+const GET_ROLE_SKILLS_URL = "http://127.0.0.1:5100/rolesSkills";
+const GET_USER_SKILLS_URL = "http://127.0.0.1:5100/userSkills";
+const GET_JOB_LISTING_URL = "http://127.0.0.1:5100/joblistings";
+const GET_APPLIED_JOBS_URL = "http://127.0.0.1:5100/get_applied_jobs_for_user";
+const GET_ALIGNMENT_URL = "http://127.0.0.1:5100/calculateAlignment";
+const APPLY_JOB_URL = "http://127.0.0.1:5100/apply_for_job";
+const WITHDRAW_APPLICATION_URL = "http://127.0.0.1:5100/withdraw_application";
+const GET_SKILLS_URL = "http://127.0.0.1:5100/skills";
 
 // import components 
 import Navbar from "./components/navbar.js";
@@ -29,13 +29,11 @@ const jobsPage = Vue.createApp({
       originalJobListings: [], 
       roles: {},
       accessRight: rights,
-      activeEditJobListingID: "", 
-      activeEditRoleName: "", 
       searchInput: '',
       searchBy: 0,
       roleSkills: {},
-      skill_match_dict: {},
       userSkills: [],
+      skillsMatchDict: {},
       // ---------------- FOR APPLY/WITHDRAW (START) ----------------
       appliedJobs: [],
       applyStyle: "btn btn-primary btn-block mt-2",
@@ -43,9 +41,6 @@ const jobsPage = Vue.createApp({
       // ---------------- FOR APPLY/WITHDRAW (END) ----------------
       // apply or withdraw errorMsg (for error modal)
       errorMsg: "",
-      applicants: [],
-      tempJobID: "",
-      applicantsDict: {},
     };
   },
 
@@ -55,24 +50,18 @@ const jobsPage = Vue.createApp({
 
   mounted() {
     this.getUserSkills(this.staffID);
-    axios.get(get_roles_skills_URL)
-      .then(response => {
-        this.allSkills = response.data.data.roles_skills[0]; // Update the allSkills array with the fetched skills data
-      })
-      .catch(error => {
-        console.error('Error fetching skills:', error);
-      });
+    this.getAllSkills();
   },
   // Inside the script section
   computed: {
-      sortedSkills() {
+    sortedSkills() {
           // Extract all skills from the roles and sort them alphabetically
           const allSkillsArray = Object.values(this.allSkills).flat();
           const uniqueSkillsSet = new Set(allSkillsArray);
           const uniqueSortedSkills = Array.from(uniqueSkillsSet).sort((a, b) => a.localeCompare(b));
           return uniqueSortedSkills;
-      },
-      groupedSkills() {
+    },
+    groupedSkills() {
         const grouped = {};
         for (let i = 0; i < this.sortedSkills.length; i++) {
             const skill = this.sortedSkills[i];
@@ -95,7 +84,7 @@ const jobsPage = Vue.createApp({
     // the 2 functions were not placed at mounted as the page would refresh after the hr creates a new listings wihch will activate the getAllJobListings() function
     getAllJobListings() {
       axios
-        .get(get_joblistings_URL)
+        .get(GET_JOB_LISTING_URL)
         .then((response) => {
           this.jobListings = response.data.data.joblistings;
           this.originalJobListings = response.data.data.joblistings;
@@ -119,7 +108,7 @@ const jobsPage = Vue.createApp({
           // of an asynchronous operation, and .then() is used to specify what should happen when the Promise is resolved (successfully completed).
           this.jobListings.forEach((jobListing) => {
             this.getCalculateAlignment(jobListing.JobList_ID).then((data) => {
-              this.skill_match_dict[jobListing.JobList_ID] = {
+              this.skillsMatchDict[jobListing.JobList_ID] = {
                 alignment_percentage: data.alignment_percentage,
                 role_skills: data.skills_by_role,
                 user_skills: this.userSkills,
@@ -129,7 +118,7 @@ const jobsPage = Vue.createApp({
 
           // retrieve all the applied roles for the current user
           axios
-            .get(get_appliedJobs_URL + "/" + this.staffID)
+            .get(GET_APPLIED_JOBS_URL + "/" + this.staffID)
             .then((response) => {
               this.appliedJobs = response.data.data.appliedJobs;
             })
@@ -150,7 +139,7 @@ const jobsPage = Vue.createApp({
     getAllRoles() {
       // on Vue instance created, load the book list
       axios
-        .get(get_roles_URL)
+        .get(GET_ROLES_URL)
         .then((response) => {
           var roles_list = response.data["data"]["roles"];
           const roleObject = {};
@@ -173,7 +162,7 @@ const jobsPage = Vue.createApp({
     // this function will get all the roles and their respective skills
     getRolesSkills() {
       axios
-        .get(get_roles_skills_URL)
+        .get(GET_ROLE_SKILLS_URL)
         .then((response) => {
           this.roleSkills = response.data.data.roles_skills[0];
         })
@@ -185,7 +174,7 @@ const jobsPage = Vue.createApp({
     // this function will get all the user's/applicant's skills
     getUserSkills(userID) {
       return axios
-        .get(get_user_skills_URL, {
+        .get(GET_USER_SKILLS_URL, {
           params: { userID: userID },
         })
         .then((response) => {
@@ -210,7 +199,7 @@ const jobsPage = Vue.createApp({
         user_Skills: user_Skills.join(","),
       };
       return axios
-        .get(get_calculatealignment_URL, {
+        .get(GET_ALIGNMENT_URL, {
           params: params,
         })
         .then((response) => {
@@ -242,7 +231,6 @@ const jobsPage = Vue.createApp({
     applyOrWithdraw(event, jobID) {
       // checks if the user has applied for the job listing (appliedJobs array contains the jobListID which the user has already applied for)
       if (!this.appliedJobs.includes(jobID)) {
-       
         // stores the data to send to the apply_job URL
         var dataToSend = {
           JobList_ID: jobID,
@@ -251,7 +239,7 @@ const jobsPage = Vue.createApp({
 
         // Sending a POST request to apply
         axios
-          .post(apply_job_URL, dataToSend)
+          .post(APPLY_JOB_URL, dataToSend)
           .then((response) => {
             // console.log("Data sent successfully:", response.data);
             if (response.data.code == "200") {
@@ -288,13 +276,12 @@ const jobsPage = Vue.createApp({
 
         // Sending a POST request to withdraw
         axios
-          .post(withdraw_application_URL, dataToSend)
+          .post(WITHDRAW_APPLICATION_URL, dataToSend)
           .then((response) => {
             if (response.data.code == "200") {
               if (index > -1) {
                 this.appliedJobs.splice(index, 1);
               }
-              // console.log("Data sent successfully:", response.data);
             } else {
               const errorModal = new bootstrap.Modal(
                 document.getElementById("errorModal")
@@ -309,10 +296,7 @@ const jobsPage = Vue.createApp({
             );
             this.errorMsg = "Unable to withdraw now. Please try again later";
             errorModal.show();
-            // console.error("Error sending data:", error);
           });
-
-        // console.log("Withdrawed");
       }
     },
 
@@ -342,7 +326,6 @@ const jobsPage = Vue.createApp({
             });
         }
         else { // search by skills
-          console.log(this.searchInput)
           const roleSkills = this.roleSkills // get all title-skills pairs
           const matchedJobListing = []
           for (const [title, skills] of Object.entries(roleSkills)) {
@@ -367,13 +350,14 @@ const jobsPage = Vue.createApp({
         } 
       }
     },
+
     filterByAlignment() {
       const alignmentThreshold = this.alignmentPercentage; // Get alignment threshold from user input
       console.log('Alignment Threshold:', alignmentThreshold); // Check if the alignment threshold is correct
     
       const filteredJobListings = this.originalJobListings.filter(job => {
-        const jobData = this.skill_match_dict[job.JobList_ID];
-        if (jobData && jobData.alignment_percentage) {
+        const jobData = this.skillsMatchDict[job.JobList_ID];
+        if (jobData && jobData.alignment_percentage>=0) {
           const alignmentPercentage = jobData.alignment_percentage; // Access the alignment percentage
           console.log('Job ID:', job.JobList_ID, 'Alignment Percentage:', alignmentPercentage); // Check alignment percentage for each job
           return alignmentPercentage >= alignmentThreshold; // Compare against the threshold
@@ -382,25 +366,51 @@ const jobsPage = Vue.createApp({
           return false; // Exclude the job if the alignment percentage is not available
         }
       });
-    
       this.jobListings = filteredJobListings;
       console.log('Filtered Job Listings:', this.jobListings); // Log the filtered job listings
     },
 
     filterBySkills() {
-      if (this.selectedSkills.length === 0) {
-        // If no skills are selected, return all listings
-        return this.joblistings;
-      } else {
-        // Filter the listings based on selected skills
-        return this.originalJobListings.filter(job => {
-          const jobData = this.skill_match_dict[job.JobList_ID];
-          if (jobData && selectedSkills) { 
-            return jobData.role_skills.some(skill => this.selectedSkills.includes(skill));
+      var listingContainsAllSkillFilter = true
+      var filteredListings = []
+      if (this.selectedSkills.length > 0) {
+        for (var listing of this.originalJobListings) {
+          var listing_skill = (this.roleSkills[listing.Role_Name])
+          for (var skill of this.selectedSkills) {
+            if (!listing_skill.includes(skill)) {
+              listingContainsAllSkillFilter = false
+              break
+            }
           }
-         
-        });
+          if (listingContainsAllSkillFilter) {
+            filteredListings.push(listing)
+          }
+          listingContainsAllSkillFilter = true
+        }
+        this.jobListings = filteredListings
       }
+      else {
+        this.jobListings = this.originalJobListings
+      }
+    },
+    // filterBySkills() {
+    //   if (this.selectedSkills.length === 0) {
+    //     // If no skills are selected, return all listings
+    //     return
+    //   } else {
+    //     // Filter the listings based on selected skills
+    //     return this.originalJobListings.filter(job => {
+    //       const jobData = this.skillsMatchDict[job.JobList_ID];
+    //       if (jobData && this.selectedSkills) { 
+    //         return jobData.role_skills.some(skill => this.selectedSkills.includes(skill));
+    //       }
+    //     });
+    //   }
+    // },
+
+    clearFilter() {
+      this.selectedSkills=[]
+      this.jobListings = this.originalJobListings
     },
 
     changePlaceholder() {
@@ -410,7 +420,19 @@ const jobsPage = Vue.createApp({
     
     toggleDesc(job) {
       job.showDescription = !job.showDescription;
-  },
+    },
+
+    getAllSkills() {
+      axios.get(GET_SKILLS_URL)
+      .then(response => {
+        for(let i = 0; i < response.data.data.skills.length; i++) {
+          this.allSkills.push(response.data.data.skills[i].Skill_Name)
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching skills:', error);
+      });
+    },
   },
 });
 

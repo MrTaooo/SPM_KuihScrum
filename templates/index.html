@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <title>All-in-one Skill-based Role Portal</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -28,7 +29,6 @@
     
         <div class="container mt-4">
             <div class="row">
-
                 <!-- Left Sidebar - Filter Menu -->
                 <div class="col-md-3" id="filter_menu">
 
@@ -49,6 +49,8 @@
                             <h5 class="card-title">Filter By</h5>
                             <form>
                                 <!-- Add additional filter options here -->
+
+                                <!-- Alignment Filter-->
                                 <div style="max-height: 150px; overflow-y: scroll;" class="mb-3">
                                     <div class="row align-items-center">
                                         <div class="col-8">
@@ -60,12 +62,14 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Skills Filter-->
                                 <div class="container">
-                                    <button type="button" class="btn nav-color text-white" data-bs-toggle="modal" data-bs-target="#myModal">
+                                    <button type="button" class="btn nav-color text-white" data-bs-toggle="modal" data-bs-target="#filterSkillsModal">
                                         Filter By Skills
                                     </button>
-                                </div>                                
-                                <div class="modal" id="myModal">
+                                </div>                               
+                                <div class="modal" id="filterSkillsModal">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
@@ -81,16 +85,16 @@
                                                         <div v-if="groupedSkills[letter] && groupedSkills[letter].length">
                                                             <div style="font-weight: bold;">{{ letter }}</div>
                                                             <div v-for="(skill, index) in groupedSkills[letter]" :key="index" class="form-check">
-                                                                <input type="checkbox" :id="'skillCheckbox' + index" :value="skill" v-model="selectedSkills" @input="filterBySkills" class="form-check-input">
+                                                                <input type="checkbox" :id="'skillCheckbox' + index" :value="skill" v-model="selectedSkills" @change="filterBySkills" class="form-check-input">
                                                                 <label class="form-check-label" :for="'skillCheckbox' + index" class="ms-2">{{ skill }}</label>
-                                                            </div>
                                                         </div>
                                                     </template>
                                                 </form>
                                             </div>                                                                             
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" id="clearButton" class="btn btn-warning" @click="clearFilter">Clear All Checkboxes</button>
+                                                <button type="button" id="filterSkillModalCloseBtn" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>                                        
                                     </div>
@@ -114,7 +118,7 @@
                             <input type="radio" id="job" name="searchby" value=0 v-model="searchBy" @click="emptySearchbar()" checked>
                             <label for="job"> Search by Job Title </label>
                             &nbsp;&nbsp;
-                            <input class="searchSkillName" type="radio" id="staff" name="searchby" v-model="searchBy" value=1 @click="emptySearchbar()"> <!--@change="getSearchedJobListings"-->
+                            <input class="searchSkillName" type="radio" id="staff" name="searchby" v-model="searchBy" value=1 @click="emptySearchbar()"> 
                             <label for="skillname"> Search by Skill Name </label>
                         </div>
                     </div>
@@ -125,7 +129,7 @@
                     <!-- Job listing cards -->
                     <div v-for="job in jobListings" id="joblist_parent">
                         <div id="{{job.JobList_ID}}" class="card mb-4 job_listing">
-                            <div v-if="skill_match_dict[job.JobList_ID] && skill_match_dict[job.JobList_ID] !== undefined"
+                            <div v-if="skillsMatchDict[job.JobList_ID] && skillsMatchDict[job.JobList_ID] !== undefined"
                                 class="card-body">
                                 <div class="flex-row mb-3">
                                     <div class="d-flex justify-content-between">
@@ -155,14 +159,14 @@
                                                 <div class="progress flex-grow-1">
                                                     <div class="progress-bar custom-progress-bar" role="progressbar"
                                                         :class="{
-                                                            'bg-danger': skill_match_dict[job.JobList_ID].alignment_percentage >= 0 && skill_match_dict[job.JobList_ID].alignment_percentage < 40,
-                                                            'bg-warning': skill_match_dict[job.JobList_ID].alignment_percentage >= 40 && skill_match_dict[job.JobList_ID].alignment_percentage < 60,
-                                                            'bg-success': skill_match_dict[job.JobList_ID].alignment_percentage >= 60
+                                                            'bg-danger': skillsMatchDict[job.JobList_ID].alignment_percentage >= 0 && skillsMatchDict[job.JobList_ID].alignment_percentage < 40,
+                                                            'bg-warning': skillsMatchDict[job.JobList_ID].alignment_percentage >= 40 && skillsMatchDict[job.JobList_ID].alignment_percentage < 60,
+                                                            'bg-success': skillsMatchDict[job.JobList_ID].alignment_percentage >= 60
                                                         }"
-                                                        :style="{ width: skill_match_dict[job.JobList_ID].alignment_percentage + '%', 'min-width': '30px' }">
-                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage === 0 ?
+                                                        :style="{ width: skillsMatchDict[job.JobList_ID].alignment_percentage + '%', 'min-width': '30px' }">
+                                                        {{ skillsMatchDict[job.JobList_ID].alignment_percentage === 0 ?
                                                         '' : '' }}
-                                                        {{ skill_match_dict[job.JobList_ID].alignment_percentage }}%
+                                                        {{ skillsMatchDict[job.JobList_ID].alignment_percentage }}%
                                                     </div>
                                                 </div>
                                             </div>
@@ -171,7 +175,7 @@
                                             <p class="matchskills card-text m-2">
                                                 <span class="mr-2"></span>
                                                 <!-- Loop through the role skills -->
-                                                <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
+                                                <template v-for="roleSkill in skillsMatchDict[job.JobList_ID].role_skills">
                                                     <!-- Check if the role skill is in the user's skills -->
                                                     <template v-if="userSkills.includes(roleSkill)">
                                                         <!-- Display the skill with a blue background -->
@@ -182,7 +186,7 @@
                                                     </template>
                                                 </template>
                                                 <!-- Loop through the role skills again -->
-                                                <template v-for="roleSkill in skill_match_dict[job.JobList_ID].role_skills">
+                                                <template v-for="roleSkill in skillsMatchDict[job.JobList_ID].role_skills">
                                                     <!-- Check if the role skill is not in the user's skills -->
                                                     <template v-if="!userSkills.includes(roleSkill)">
                                                         <span class="badge rounded-pill border-blue button2 user-skill-label my-1" style="white-space: nowrap;">
@@ -191,44 +195,39 @@
                                                     </template>
                                                 </template>
                                             </p>
-                                            
-                                            
                                         </div>
                                     </div> 
-                                       <div class="d-flex justify-content-end">
-                                            <button id="Apply/Withdraw_Btn"
-                                                :class="[appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle, 'nav-color', 'text-white', 'btn']"
-                                                @click="applyOrWithdraw($event, job.JobList_ID)"
-                                                :apply-staff-id="staffID">
-                                                {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now'
-                                                }}
-                                            </button>
-                                        </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button id="Apply/Withdraw_Btn"
+                                            :class="[appliedJobs.includes(job.JobList_ID) ? withdrawStyle : applyStyle, 'nav-color', 'text-white', 'btn']"
+                                            @click="applyOrWithdraw($event, job.JobList_ID)"
+                                            :apply-staff-id="staffID">
+                                            {{ appliedJobs.includes(job.JobList_ID) ? 'Withdraw Now' : 'Apply Now'
+                                            }}
+                                        </button>
                                     </div>
-                                       
                                 </div>
 
-                                    <!-- Modal to show apply/withdraw error message-->
-                                    <!-- The modal structure with a dynamic error message and close button -->
-                                    <div class="modal fade" id="errorModal" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Error</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <!-- Bind the error message to the Vue data property errorMsg -->
-                                                    <p id="editErrorMessage">{{ errorMsg }}</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                </div>
+                                <!-- Modal to show apply/withdraw error message-->
+                                <!-- The modal structure with a dynamic error message and close button -->
+                                <div class="modal fade" id="errorModal" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Error</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Bind the error message to the Vue data property errorMsg -->
+                                                <p id="editErrorMessage">{{ errorMsg }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
