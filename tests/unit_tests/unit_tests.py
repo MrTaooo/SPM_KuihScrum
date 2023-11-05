@@ -13,6 +13,8 @@ from role_skill import RoleSkill
 from role import Role
 from skill import Skill
 from staff_skill import StaffSkill
+from staff import Staff
+from access_rights import AccessRights
 
 
 class TestJobApplication(unittest.TestCase):
@@ -449,8 +451,8 @@ class TestSkill(unittest.TestCase):
         self.db_session.commit.assert_called_once()
 
     def tearDown(self):
-        # Here you can add teardown logic if necessary, such as closing database connections.
-        pass
+        self.db_session.reset_mock()
+        self.filter_by_mock.reset_mock()
 
 class TestStaffSkill(unittest.TestCase):
 
@@ -538,9 +540,195 @@ class TestStaffSkill(unittest.TestCase):
         self.db_session.commit.assert_called_once()
 
     def tearDown(self):
-        # Here you can add teardown logic if necessary, such as closing database connections.
-        pass
+        self.db_session.reset_mock()
+        self.filter_by_mock.reset_mock()
 
+class TestStaff(unittest.TestCase):
+
+    def setUp(self):
+        # Mock the database session
+        self.db_session = MagicMock()
+        self.db_session.add = MagicMock()
+        self.db_session.commit = MagicMock()
+        self.db_session.delete = MagicMock()
+        self.db_session.refresh = MagicMock()
+        # Create a MagicMock to represent the query's filter method
+        self.filter_mock = MagicMock()
+        # Mock the query method to return a mock that has a filter method
+        self.db_session.query.return_value.filter = self.filter_mock
+
+    def test_create_staff(self):
+        # Test data
+        staff_data = {
+        'staff_id': 1,  
+        'staff_fname': 'John',
+        'staff_lname': 'Doe',
+        'dept': 'IT',
+        'country': 'USA',
+        'email': 'johndoe@example.com',
+        'access_rights': 101
+        }
+        staff = Staff(**staff_data)
+        
+        # Simulate adding a new staff to the database
+        self.db_session.add(staff)
+        self.db_session.commit()
+
+        # Test that add and commit were called
+        self.db_session.add.assert_called_with(staff)
+        self.db_session.commit.assert_called_once()
+
+    def test_read_staff(self):
+        # Test data
+        staff_data = {
+        'staff_id': 1,  # Assuming you are using this ID for the test.
+        'staff_fname': 'John',
+        'staff_lname': 'Doe',
+        'dept': 'IT',
+        'country': 'USA',
+        'email': 'johndoe@example.com',
+        'access_rights': 101
+        }
+        staff = Staff(**staff_data)
+        self.filter_mock.return_value.first.return_value = staff
+
+        # Perform the read operation
+        queried_staff = self.db_session.query(Staff).filter(Staff.Staff_ID == 1).first()
+
+        # Assuming the staff ID is set to 1 in the test database, assert using that ID
+        staff.Staff_ID = 1  # This should be set to match the ID used in the query filter above
+        self.assertEqual(queried_staff.json(), staff.json())
+
+    def test_update_staff(self):
+        # Test data
+        staff_data = {
+        'staff_id': 1,
+        'staff_fname': 'John',
+        'staff_lname': 'Doe',
+        'dept': 'IT',
+        'country': 'USA',
+        'email': 'johndoe@example.com',
+        'access_rights': 101
+        }
+        staff = Staff(**staff_data)
+        self.filter_mock.return_value.first.return_value = staff
+
+        # Simulate the update
+        staff.Staff_FName = 'Jane'
+        self.db_session.commit()
+
+        # Test that commit was called and the staff's first name was updated
+        self.db_session.commit.assert_called_once()
+        self.assertEqual(staff.Staff_FName, 'Jane')
+
+    def test_delete_staff(self):
+        # Test data
+        staff_data = {
+        'staff_id': 1,
+        'staff_fname': 'John',
+        'staff_lname': 'Doe',
+        'dept': 'IT',
+        'country': 'USA',
+        'email': 'johndoe@example.com',
+        'access_rights': 101
+        }
+        staff = Staff(**staff_data)
+
+        # Simulate deleting the staff
+        self.db_session.delete(staff)
+        self.db_session.commit()
+
+        # Test that delete and commit were called
+        self.db_session.delete.assert_called_with(staff)
+        self.db_session.commit.assert_called_once()
+
+    def tearDown(self):
+        self.db_session.reset_mock()
+        self.filter_mock.reset_mock()
+
+class TestAccessRights(unittest.TestCase):
+
+    def setUp(self):
+        # Mock the database session
+        self.db_session = MagicMock()
+        self.db_session.add = MagicMock()
+        self.db_session.commit = MagicMock()
+        self.db_session.delete = MagicMock()
+        self.db_session.query = MagicMock()
+        self.filter_by_mock = MagicMock()
+
+        # Setup mock return value for query filter_by
+        self.db_session.query.return_value.filter_by = self.filter_by_mock
+
+    def test_create_access_rights(self):
+        # Test data
+        access_data = {
+            'Access_ID': 1,
+            'Access_Control_Name': 'Read'
+        }
+        access_rights = AccessRights(access_data['Access_ID'], access_data['Access_Control_Name'])
+
+        # Simulate adding a new AccessRights to the database
+        self.db_session.add(access_rights)
+        self.db_session.commit()
+
+        # Test that add and commit were called
+        self.db_session.add.assert_called_with(access_rights)
+        self.db_session.commit.assert_called_once()
+
+    def test_read_access_rights(self):
+        # Test data
+        access_data = {
+            'Access_ID': 1,
+            'Access_Control_Name': 'Read'
+        }
+        access_rights = AccessRights(access_data['Access_ID'], access_data['Access_Control_Name'])
+        self.filter_by_mock.return_value.first.return_value = access_rights
+
+        # Perform the read operation
+        queried_access_rights = self.db_session.query(AccessRights).filter_by(
+            Access_ID=access_data['Access_ID']
+        ).first()
+
+        # Test that the returned access rights matches the test data
+        self.assertEqual(queried_access_rights.json(), access_rights.json())
+
+    def test_update_access_rights(self):
+        # Test data
+        access_data = {
+            'Access_ID': 1,
+            'Access_Control_Name': 'Read'
+        }
+        access_rights = AccessRights(access_data['Access_ID'], access_data['Access_Control_Name'])
+        self.filter_by_mock.return_value.first.return_value = access_rights
+
+        # Simulate the update
+        access_rights.Access_Control_Name = 'Write'
+        self.db_session.commit()
+
+        # Test that commit was called
+        self.db_session.commit.assert_called_once()
+        self.assertEqual(access_rights.Access_Control_Name, 'Write')
+
+    def test_delete_access_rights(self):
+        # Test data
+        access_data = {
+            'Access_ID': 1,
+            'Access_Control_Name': 'Read'
+        }
+        access_rights = AccessRights(access_data['Access_ID'], access_data['Access_Control_Name'])
+
+        # Simulate deleting the AccessRights
+        self.db_session.delete(access_rights)
+        self.db_session.commit()
+
+        # Test that delete and commit were called
+        self.db_session.delete.assert_called_with(access_rights)
+        self.db_session.commit.assert_called_once()
+
+    def tearDown(self):
+        self.db_session.reset_mock()
+        self.filter_by_mock.reset_mock()
 
 
 if __name__ == '__main__':
