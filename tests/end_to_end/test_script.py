@@ -779,128 +779,109 @@ def test_Search_Skill_Function():
 
 # automated test case 9.1: select 2 skills where at least 1 listing will show
 def test_twoSkills():
-    try:
-        filter_button = driver.find_element(By.ID, 'skillsFilter')
-        filter_button.click()
+    filter_button = driver.find_element(By.ID, 'skillsFilter')
+    filter_button.click()
 
-        wait = WebDriverWait(driver, 10)
-        skills_modal = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
+    wait = WebDriverWait(driver, 10)
+    skills_modal = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
 
-        labels = skills_modal.find_elements(By.XPATH, ".//label")
-        label1 = 'Account Management'
-        label2 = 'Business Development'
+    labels = skills_modal.find_elements(By.XPATH, ".//label")
+    label1 = 'Account Management'
+    label2 = 'Business Development'
 
-        for label in labels:
-            if label.text == label1 or label.text == label2:
-                
-                # locate checkbox
-                checkbox = label.find_element(By.XPATH, "./preceding-sibling::input")
-                # print(f"Checkbox Selected: {checkbox.is_selected()}")
+    for label in labels:
+        if label.text == label1 or label.text == label2:
+            
+            # locate checkbox
+            checkbox = label.find_element(By.XPATH, "./preceding-sibling::input")
 
-                if not checkbox.is_selected():
-                    # print("Checkbox was not selected, clicking to check it.")
-                    checkbox.click()
-                    # print(checkbox.is_selected())
-        
-        # close the modal
-        closeButton = driver.find_element(By.ID, 'filterSkillModalCloseBtn')
-        closeButton.click()
+            if not checkbox.is_selected():
+                checkbox.click()
+    # close button
+    closeButton = driver.find_element(By.ID, 'filterSkillModalCloseBtn')
+    closeButton.click()
+    # check job listings
+    job_listings = driver.find_elements(By.ID, 'joblist_parent')
+    expected_num_job_listings = 1
+    num_job_listings = len(job_listings)
 
-        job_listings = driver.find_elements(By.ID, 'joblist_parent')
-        # print(job_listings)
-        expected_num_job_listings = 1
-        num_job_listings = len(job_listings)
-        # print(f"Number of job listings: {num_job_listings}")
-        if num_job_listings == expected_num_job_listings:
-            print("===============================================================================")
-            print("Result: Passed!")
-            print("Remarks: Number of job listings shown matches expected number.")
+    assert num_job_listings == expected_num_job_listings, "Number of job listings detected: {num_job_listings}, which is not equal to the actual number of job listings that should be displayed. Run test_data.sql in Mysql or phpAdmin."
+    if num_job_listings == expected_num_job_listings:
+        print("===============================================================================")
+        print("Result: Passed!")
+        print("Remarks: Number of job listings shown matches expected number.")
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
     print("End of Automated Test Case 9.1")
     print("===============================================================================")
 
 # automated test case 9.2: select 1 skill where no listing will show
 def test_oneSkill():
-    try:
-        filter_button = driver.find_element(By.ID, 'skillsFilter')
-        filter_button.click()
+    filter_button = driver.find_element(By.ID, 'skillsFilter')
+    filter_button.click()
+    # wait for modal to load
+    wait = WebDriverWait(driver, 10)
+    skills_modal = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
 
-        wait = WebDriverWait(driver, 10)
-        skills_modal = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
+    labels = skills_modal.find_elements(By.XPATH, ".//label")
+    chosen_label = 'Call Centre Management'
 
-        labels = skills_modal.find_elements(By.XPATH, ".//label")
-        chosen_label = 'Call Centre Management'
+    for label in labels:
+        if label.text == chosen_label:
+            checkbox = label.find_element(By.XPATH, "./preceding-sibling::input") # check input before label in DOM (input=checkbox)
+            if not checkbox.is_selected():
+                checkbox.click()
 
-        for label in labels:
-            if label.text == chosen_label:
-                checkbox = label.find_element(By.XPATH, "./preceding-sibling::input")
-                if not checkbox.is_selected():
-                    checkbox.click()
+    closeButton = driver.find_element(By.ID, 'filterSkillModalCloseBtn')
+    closeButton.click()
+    errormsg = driver.find_element(By.ID, 'niljoblisting').text
 
-        closeButton = driver.find_element(By.ID, 'filterSkillModalCloseBtn')
-        closeButton.click()
-        errormsg = driver.find_element(By.ID, 'niljoblisting').text
-        # print(errormsg)
-        if errormsg == 'No open job listings for now.':
-            print("===============================================================================")
-            print("Result: Passed!")
+    assert errormsg == 'No open job listings for now.', "Presence of job listings detected. Run test_data.sql in Mysql or phpAdmin."
+    if errormsg == 'No open job listings for now.':
+        print("===============================================================================")
+        print("Result: Passed!")
+        print("Remarks: No job listings shown.")
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
     print("End of Automated Test Case 9.2")
     print("===============================================================================")
 
 # automated test case 9.3:  select 1 skills, determine number of listing shown, then click on clear button
 def test_filterClear():
-    try:
-        filter_button = driver.find_element(By.ID, 'skillsFilter')
+    filter_button = driver.find_element(By.ID, 'skillsFilter')
+    filter_button.click()
+
+    wait = WebDriverWait(driver, 10)
+    skills_modal = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
+    clearButton = driver.find_element(By.ID, 'clearButton')
+    clearButton.click()
+    labels = skills_modal.find_elements(By.XPATH, ".//label")
+    chosen_label = 'Account Management'
+
+    for label in labels:
+        if label.text == chosen_label:
+            checkbox = label.find_element(By.XPATH, "./preceding-sibling::input")
+            if not checkbox.is_selected():
+                checkbox.click()
+
+    closeButton = driver.find_element(By.ID, 'filterSkillModalCloseBtn')
+    closeButton.click()
+    # checking job listings
+    job_listings = driver.find_elements(By.ID, 'joblist_parent')
+    expected_num_job_listings = 1
+    num_job_listings = len(job_listings)
+    if num_job_listings == expected_num_job_listings:
         filter_button.click()
-
-        wait = WebDriverWait(driver, 10)
-        skills_modal = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
         clearButton = driver.find_element(By.ID, 'clearButton')
-        clearButton.click()
-        labels = skills_modal.find_elements(By.XPATH, ".//label")
-        chosen_label = 'Account Management'
-
-        for label in labels:
-            if label.text == chosen_label:
-                checkbox = label.find_element(By.XPATH, "./preceding-sibling::input")
-                if not checkbox.is_selected():
-                    checkbox.click()
-
-        closeButton = driver.find_element(By.ID, 'filterSkillModalCloseBtn')
+        clearButton.click() # clear filter
         closeButton.click()
-        time.sleep(3)
-        job_listings = driver.find_elements(By.ID, 'joblist_parent')
-        print("job_listings", job_listings)
-        # time.sleep(3)
-        expected_num_job_listings = 1
-        num_job_listings = len(job_listings)
-        if num_job_listings == expected_num_job_listings:
-            filter_button.click()
-            clearButton = driver.find_element(By.ID, 'clearButton')
-            clearButton.click()
-            closeButton.click()
-            new_job_listings = driver.find_elements(By.ID, 'joblist_parent')
-            aft_expected_num_joblistings = 3
-            aft_num_joblistings = len(new_job_listings)
-            if aft_num_joblistings == aft_expected_num_joblistings:
-                print("===============================================================================")
-                print("Result: Passed!")
-        else:
+        new_job_listings = driver.find_elements(By.ID, 'joblist_parent') # checking job listings after clearing filter
+        aft_expected_num_joblistings = 3
+        aft_num_joblistings = len(new_job_listings)
+        assert aft_num_joblistings == aft_expected_num_joblistings, "Number of job listings displayed: {aft_num_joblistings}, which does not match the expected number of job listings of 3. Run test_data.sql in Mysql or phpAdmin."
+        if aft_num_joblistings == aft_expected_num_joblistings:
             print("===============================================================================")
-            print("Result: Failed")
-            print("num_job_listings:", num_job_listings)
-            print("expected_num_job_listings:", expected_num_job_listings)
-            print("An error has occured. Number of Job Listings are unexpected.")
-            # print("expected:", aft_expected_num_joblistings)
-            # print("returned:", aft_num_joblistings)
+            print("Result: Passed!")
+            print("Remarks: Number of job listings shown matches expected number.")
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
     print("End of Automated Test Case 9.3")
     print("===============================================================================")
 
@@ -911,23 +892,23 @@ def test_filterClear():
 # Keyboard shortcuts --> Windows (Ctrl + /) Mac (Cmd + /) to comment and uncomment selected lines
 
 if platform.system() != "Linux":
-    # test_BrowseJobListings_Staff()
-    # test_BrowseJobListings_HR()
-    # test_ManagePageUI()
-    # test_CofRoleListings()
-    # test_CofRoleListings_Duplicate_Exact()
-    # test_CofRoleListings_Overlap()
-    # test_CofRoleListings_Overlap_2()
-    # test_CofRoleListings_Invalid_Publish_Date()
-    # test_Withdraw_Function()
-    # test_Apply_Function()
-    # test_Alignment_Perc_Accuracy()
-    # test_Update_Job_Listing() 
-    # test_Update_Job_Listing_Overlap()
-    # test_Update_Job_Listing_Invalid_Closing_Date()
-    # test_Search_Function()
-    # test_Invalid_Search()
-    # test_Search_Skill_Function()
+    test_BrowseJobListings_Staff()
+    test_BrowseJobListings_HR()
+    test_ManagePageUI()
+    test_CofRoleListings()
+    test_CofRoleListings_Duplicate_Exact()
+    test_CofRoleListings_Overlap()
+    test_CofRoleListings_Overlap_2()
+    test_CofRoleListings_Invalid_Publish_Date()
+    test_Withdraw_Function()
+    test_Apply_Function()
+    test_Alignment_Perc_Accuracy()
+    test_Update_Job_Listing() 
+    test_Update_Job_Listing_Overlap()
+    test_Update_Job_Listing_Invalid_Closing_Date()
+    test_Search_Function()
+    test_Invalid_Search()
+    test_Search_Skill_Function()
     test_twoSkills()
     test_oneSkill()
     test_filterClear()
