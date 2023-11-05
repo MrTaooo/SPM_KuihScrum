@@ -64,10 +64,11 @@
                                 </div>
 
                                 <!-- Skills Filter-->
-                                <div class="container">
-                                    <button type="button" class="btn nav-color text-white" data-bs-toggle="modal" data-bs-target="#filterSkillsModal">
+                                <div class="container" style="display: flex; justify-content: flex-start; align-items: center;">
+                                    <button type="button" class="btn nav-color text-white" data-bs-toggle="modal" data-bs-target="#filterSkillsModal" style="margin-right: 10px;">
                                         Filter By Skills
                                     </button>
+                                    <button class="btn btn-danger" onclick="window.location.reload();">Clear All Filters</button>
                                 </div>                               
                                 <div class="modal" id="filterSkillsModal">
                                     <div class="modal-dialog modal-lg">
