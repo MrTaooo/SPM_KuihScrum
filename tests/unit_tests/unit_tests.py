@@ -12,6 +12,7 @@ from job_listing import JobListing
 from role_skill import RoleSkill
 from role import Role
 from skill import Skill
+from staff_skill import StaffSkill
 
 
 class TestJobApplication(unittest.TestCase):
@@ -375,12 +376,8 @@ class TestSkill(unittest.TestCase):
         self.db_session.add = MagicMock()
         self.db_session.commit = MagicMock()
         self.db_session.delete = MagicMock()
-        self.db_session.query = MagicMock()
-        self.db_session.flush = MagicMock()
-
         # Create a MagicMock to represent the query's filter_by method
         self.filter_by_mock = MagicMock()
-        
         # Mock the query method to return a mock that has a filter_by method
         self.db_session.query.return_value.filter_by = self.filter_by_mock
 
@@ -388,9 +385,9 @@ class TestSkill(unittest.TestCase):
         # Test data
         skill_data = {
             'Skill_Name': 'Python',
-            'Skill_Desc': 'A high-level programming language.'
+            'Skill_Desc': 'Programming Language'
         }
-        skill = Skill(skill_name=skill_data['Skill_Name'], skill_desc=skill_data['Skill_Desc'])
+        skill = Skill(skill_data['Skill_Name'], skill_data['Skill_Desc'])
         
         # Simulate adding a new skill to the database
         self.db_session.add(skill)
@@ -404,9 +401,9 @@ class TestSkill(unittest.TestCase):
         # Test data
         skill_data = {
             'Skill_Name': 'Python',
-            'Skill_Desc': 'A high-level programming language.'
+            'Skill_Desc': 'Programming Language'
         }
-        skill = Skill(skill_name=skill_data['Skill_Name'], skill_desc=skill_data['Skill_Desc'])
+        skill = Skill(skill_data['Skill_Name'], skill_data['Skill_Desc'])
         self.filter_by_mock.return_value.first.return_value = skill
 
         # Perform the read operation
@@ -421,27 +418,27 @@ class TestSkill(unittest.TestCase):
         # Test data
         skill_data = {
             'Skill_Name': 'Python',
-            'Skill_Desc': 'A high-level programming language.'
+            'Skill_Desc': 'Programming Language'
         }
-        skill = Skill(skill_name=skill_data['Skill_Name'], skill_desc=skill_data['Skill_Desc'])
+        skill = Skill(skill_data['Skill_Name'], skill_data['Skill_Desc'])
         self.filter_by_mock.return_value.first.return_value = skill
 
         # Simulate the update
-        updated_desc = 'An interpreted language with dynamic semantics.'
-        skill.Skill_Desc = updated_desc
+        new_description = "A high-level, general-purpose programming language."
+        skill.Skill_Desc = new_description
         self.db_session.commit()
 
-        # Test that commit was called
+        # Test that commit was called and the description was updated
         self.db_session.commit.assert_called_once()
-        self.assertEqual(skill.Skill_Desc, updated_desc)
+        self.assertEqual(skill.Skill_Desc, new_description)
 
     def test_delete_skill(self):
         # Test data
         skill_data = {
             'Skill_Name': 'Python',
-            'Skill_Desc': 'A high-level programming language.'
+            'Skill_Desc': 'Programming Language'
         }
-        skill = Skill(skill_name=skill_data['Skill_Name'], skill_desc=skill_data['Skill_Desc'])
+        skill = Skill(skill_data['Skill_Name'], skill_data['Skill_Desc'])
 
         # Simulate deleting the skill
         self.db_session.delete(skill)
@@ -452,7 +449,99 @@ class TestSkill(unittest.TestCase):
         self.db_session.commit.assert_called_once()
 
     def tearDown(self):
-        self.db_session.reset_mock()
+        # Here you can add teardown logic if necessary, such as closing database connections.
+        pass
+
+class TestStaffSkill(unittest.TestCase):
+
+    def setUp(self):
+        # Mock the database session
+        self.db_session = MagicMock()
+        self.db_session.add = MagicMock()
+        self.db_session.commit = MagicMock()
+        self.db_session.delete = MagicMock()
+        # Create a MagicMock to represent the query's filter_by method
+        self.filter_by_mock = MagicMock()
+        # Mock the query method to return a mock that has a filter_by method
+        self.db_session.query.return_value.filter_by = self.filter_by_mock
+
+    def test_create_staff_skill(self):
+        # Test data
+        staff_skill_data = {
+            'Staff_ID': 1,
+            'Skill_Name': 'Python Development'
+        }
+        staff_skill = StaffSkill(staff_skill_data['Staff_ID'], staff_skill_data['Skill_Name'])
+        
+        # Simulate adding a new StaffSkill to the database
+        self.db_session.add(staff_skill)
+        self.db_session.commit()
+
+        # Test that add and commit were called with the right parameters
+        self.db_session.add.assert_called_with(staff_skill)
+        self.db_session.commit.assert_called_once()
+
+        # Assert the fields are correctly set
+        self.assertEqual(staff_skill.Staff_ID, staff_skill_data['Staff_ID'])
+        self.assertEqual(staff_skill.Skill_Name, staff_skill_data['Skill_Name'])
+
+    def test_read_staff_skill(self):
+        # Test data
+        staff_skill_data = {
+            'Staff_ID': 1,
+            'Skill_Name': 'Python Development'
+        }
+        staff_skill = StaffSkill(staff_skill_data['Staff_ID'], staff_skill_data['Skill_Name'])
+        self.filter_by_mock.return_value.first.return_value = staff_skill
+
+        # Perform the read operation
+        queried_skill = self.db_session.query(StaffSkill).filter_by(
+            Staff_ID=staff_skill_data['Staff_ID'], 
+            Skill_Name=staff_skill_data['Skill_Name']
+        ).first()
+
+        # Test that the returned StaffSkill matches the test data
+        self.assertEqual(queried_skill.json(), staff_skill.json())
+
+    def test_update_staff_skill(self):
+        # Test data
+        staff_skill_data = {
+            'Staff_ID': 1,
+            'Skill_Name': 'Python Development'
+        }
+        updated_skill_name = 'Data Analysis'
+        staff_skill = StaffSkill(staff_skill_data['Staff_ID'], staff_skill_data['Skill_Name'])
+        self.filter_by_mock.return_value.first.return_value = staff_skill
+
+        # Simulate the update
+        staff_skill.Skill_Name = updated_skill_name
+        self.db_session.commit()
+
+        # Test that commit was called and the field was updated correctly
+        self.db_session.commit.assert_called_once()
+        self.assertEqual(staff_skill.Skill_Name, updated_skill_name)
+
+    def test_delete_staff_skill(self):
+        # Test data
+        staff_skill_data = {
+            'Staff_ID': 1,
+            'Skill_Name': 'Python Development'
+        }
+        staff_skill = StaffSkill(staff_skill_data['Staff_ID'], staff_skill_data['Skill_Name'])
+
+        # Simulate deleting the StaffSkill
+        self.db_session.delete(staff_skill)
+        self.db_session.commit()
+
+        # Test that delete and commit were called with the right parameters
+        self.db_session.delete.assert_called_with(staff_skill)
+        self.db_session.commit.assert_called_once()
+
+    def tearDown(self):
+        # Here you can add teardown logic if necessary, such as closing database connections.
+        pass
+
+
 
 if __name__ == '__main__':
     unittest.main()
