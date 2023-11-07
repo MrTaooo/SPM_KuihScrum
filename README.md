@@ -2,6 +2,9 @@
 
 A self-help portal for staff to apply for jobs, and HR to create job listings and view applicants for each job. 
 
+# Github link
+https://github.com/SPM-Kuih-Git/SPM_KuihScrum
+
 ## Version 
 As this is currently version 2.1, it has yet to be deployed onto a remote server to be run online. 
 
